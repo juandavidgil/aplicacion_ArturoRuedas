@@ -125,60 +125,53 @@ function InicioSesionPantalla() {
 }
 
 //-----------------------------------PANTALLA CARRUSEL-----------------------------------------------------------//
+//-----------------------------------PANTALLA CARRUSEL-----------------------------------------------------------//
+//-----------------------------------PANTALLA CARRUSEL-----------------------------------------------------------//
 const { width, height } = Dimensions.get("window");
 const ANCHO_CONTENEDOR = width * 0.7;
 const ESPACIO_LATERAL = (width - ANCHO_CONTENEDOR) / 2;
 const ESPACIO = 10;
 const ALTURA_BACKDROP = height * 0.5;
+
+// Asegúrate de que las rutas de las imágenes son correctas
 const imagenes = [
-  'https://cdn.leonardo.ai/users/ec93ea68-428d-4597-b04a-4c97d668081f/generations/416f7c83-1e24-4b65-8f38-9e82e9b272ba/Leonardo_Phoenix_A_highly_detailed_realistic_and_dramatic_depi_2.jpg?w=512',
-  'https://cdn.leonardo.ai/users/ec93ea68-428d-4597-b04a-4c97d668081f/generations/0b72e10c-47aa-4553-94aa-4105c2d3ccfe/Leonardo_Phoenix_A_highly_detailed_photorealistic_image_of_a_s_0.jpg?w=512',
-  'https://www.todomountainbike.net/images/articles/2011/fixies.jpg'
+  {id: 1, url: require('./img/carruselMTB.jpg'), title: 'MTB', destino: 'MTB'},
+  {id: 2, url: require('./img/carruselRuta.jpg'), title: 'Ruta', destino: 'Ruta'},
+  {id: 3, url: require('./img/carruselFIJA.jpg'), title: 'Fija', destino: 'Fija'},
 ];
 
-function BackDrop({scrollX }) {
-  return <View style={
-    ([{ height: ALTURA_BACKDROP, 
-    width, position: "absolute", 
-    top: 0
-  }], 
-    StyleSheet.absoluteFillObject)
-  }
-    >
-     
+function BackDrop({ scrollX }) {
+  return (
+    <View style={[StyleSheet.absoluteFillObject, { height: ALTURA_BACKDROP, width, top: 0 }]}>
+      {imagenes.map((imagen, index) => {
+        const inputRange = [
+          (index - 1) * ANCHO_CONTENEDOR,
+          index * ANCHO_CONTENEDOR,
+          (index + 1) * ANCHO_CONTENEDOR,
+        ];
+        const opacity = scrollX.interpolate({
+          inputRange,
+          outputRange: [0, 1, 0],
+        });
 
-  {imagenes.map ((imagen, index)=>{
-
-  const inputRange=  [
-  (index - 1) * ANCHO_CONTENEDOR,
-  index * ANCHO_CONTENEDOR,
-  (index + 1) * ANCHO_CONTENEDOR,
-  ];
-
-  const outputRange = [0, 1, 0];
-
-    const opacity = scrollX.interpolate({
-  inputRange,
-  outputRange,
-  }); 
-
-        return <Animated.Image source={{uri: imagen}} 
-        key={index}
-        blurRadius={10}
-        style={[
-          {height: ALTURA_BACKDROP, 
-            width, position: "absolute", top: 0, opacity},
-        ]}/>;
+        return (
+          <Animated.Image
+            key={imagen.id.toString()}
+            source={imagen.url}  
+            blurRadius={10} //opacidad de la imagen de fondo pa que miremos como queda mejor
+            style={[
+              StyleSheet.absoluteFillObject,
+              { height: ALTURA_BACKDROP, width, opacity },
+            ]}
+          />
+        );
       })}
-
-<LinearGradient
-     colors={["transparent", "white"]}
-     style={{height: ALTURA_BACKDROP, width, 
-      position:"absolute", top: 0}}
-     /> 
-
-  
+      <LinearGradient
+        colors={["transparent", "white"]}
+        style={{ height: ALTURA_BACKDROP, width, position: "absolute", top: 0 }}
+      />
     </View>
+  );
 }
 
 function CarruselPantalla() {
@@ -187,59 +180,99 @@ function CarruselPantalla() {
 
   return (
     <SafeAreaView style={styles.ContenedorCarrusel}>
-      <BackDrop scrollX={scrollX}/>
+      <BackDrop scrollX={scrollX} />
       <StatusBar hidden />
-      <Text style={styles.elige_tipo}>
-        ELIGE TU TIPO
-      </Text>
+      <Text style={styles.elige_tipo}>ELIGE TU ESTILO</Text>
       <Animated.FlatList
-      onScroll={Animated.event(
-        [{nativeEvent: { contentOffset: {x: scrollX}
-        } }], {useNativeDriver: true}
-      )}  
         data={imagenes}
-        horizontal={true}
-        
-      contentContainerStyle={{ paddingTop: 200 ,
-        paddingHorizontal: ESPACIO_LATERAL  }}
-        decelerationRate={0}
+        keyExtractor={(item) => item.id.toString()}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ 
+          paddingTop: 250, 
+          paddingHorizontal: ESPACIO_LATERAL,
+          paddingBottom: 40 
+        }}
         snapToInterval={ANCHO_CONTENEDOR + ESPACIO}
+        decelerationRate="fast" //si lo ven muy rapido lo podemos quitar
         scrollEventThrottle={16}
-        keyExtractor={(item) => item}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          { useNativeDriver: true }
+        )}
         renderItem={({ item, index }) => {
+          const inputRange = [
+            (index - 1) * ANCHO_CONTENEDOR,
+            index * ANCHO_CONTENEDOR,
+            (index + 1) * ANCHO_CONTENEDOR,
+          ];
+          const translateY = scrollX.interpolate({
+            inputRange,
+            outputRange: [0, -75, 0],
+          });
 
-  const inputRange=  [
-      (index - 1) * ANCHO_CONTENEDOR,
-      index * ANCHO_CONTENEDOR,
-      (index + 1) * ANCHO_CONTENEDOR,
-    ];
-
-    const outputRange = [0, -50, 0];
-
-    const translateY = scrollX.interpolate({
-      inputRange,
-      outputRange,
-    });   
           return (
             <View style={{ width: ANCHO_CONTENEDOR }}>
-              <Animated.View style={{
-                marginHorizontal: ESPACIO,
-                padding: ESPACIO,
-                borderRadius: 55,
-                backgroundColor: "white",
-                alignItems: "center",
-                transform: [{ translateY }],
-              }}>
-                <Image source={{ uri: item }} style={styles.posterImage} />
+              <Animated.View
+                style={{
+                  marginHorizontal: ESPACIO,
+                  padding: ESPACIO,
+                  borderRadius: 55,
+                  backgroundColor: "white",
+                  alignItems: "center",
+                  transform: [{ translateY }],
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 10,
+                  },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 20,
+                  elevation: 10,
+                }}
+              >
+                <TouchableOpacity 
+                  onPress={() => navigation.navigate(item.destino)}
+                  activeOpacity={0.9}
+                  style={{width: '100%', alignItems: 'center'}}
+                >
+                  <Image 
+                    source={item.url} 
+                    style={styles.posterImage} 
+                    resizeMode="cover"
+                  />
+                </TouchableOpacity>
               </Animated.View>
             </View>
           );
         }}
       />
-      
-        
     </SafeAreaView>
   );
+}
+//----------------------------------MTB PANTALLA-------------------------------------------------------//
+function MTBPantalla(){
+  return(
+    <Text>
+      soy la pantalla de mtb
+    </Text>
+  )
+}
+//----------------------------------Ruta PANTALLA-------------------------------------------------------//
+function RutaPantalla(){
+  return(
+    <Text>
+      soy la pantalla de Ruta
+    </Text>
+  )
+}
+//----------------------------------Fija PANTALLA-------------------------------------------------------//
+function FijaPantalla(){
+  return(
+    <Text>
+      soy la pantalla de Fija
+    </Text>
+  )
 }
 
 //-----------------------------------FUNCION PARA MOSTRAR PANTALLAS-------------------------------------//
@@ -247,11 +280,14 @@ const Stack = createNativeStackNavigator();
 
 function RootStack() {
   return (
-    <Stack.Navigator initialRouteName="Presentacion">
+    <Stack.Navigator initialRouteName="Carrusel">
       <Stack.Screen name="Presentacion" component={PresentacionPantalla} options={{ title: "Presentacion" }} />
       <Stack.Screen name="Registro" component={RegistroPantalla} options={{ title: "Registro" }} />
       <Stack.Screen name="InicioSesion" component={InicioSesionPantalla} options={{ title: 'inicio sesion' }} />
       <Stack.Screen name='Carrusel' component={CarruselPantalla} options={{ title: 'Carrusel' }} />
+      <Stack.Screen name='MTB' component={MTBPantalla} options={{title: 'MTB'}}/>
+      <Stack.Screen name='Ruta' component={RutaPantalla} options={{title: 'Ruta'}}/>
+      <Stack.Screen name='Fija' component={FijaPantalla} options={{title: 'Fija'}}/>
     </Stack.Navigator>
   );
 }
@@ -340,21 +376,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center",
   },
   elige_tipo: {
-    fontSize:35,
-    fontWeight:900,
+    fontSize: 35,
+    fontWeight: '900',
+    marginTop: 20,
+    marginBottom: 10,
+    color: '#333',
   },
   posterImage: {
-    width: "100%",
-    height: ANCHO_CONTENEDOR * 1.1, 
-    resizeMode: "cover",
+    width: ANCHO_CONTENEDOR * 0.9,
+    height: ANCHO_CONTENEDOR * 1.2,
     borderRadius: 40,
     margin: 0,
-    marginBottom: 10,
-    
   },
+
 });
 
 
