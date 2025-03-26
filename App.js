@@ -247,11 +247,11 @@ const Stack = createNativeStackNavigator();
 
 function RootStack() {
   return (
-    <Stack.Navigator initialRouteName="Carrusel">
+    <Stack.Navigator initialRouteName="Presentacion">
       <Stack.Screen name="Presentacion" component={PresentacionPantalla} options={{ title: "Presentacion" }} />
       <Stack.Screen name="Registro" component={RegistroPantalla} options={{ title: "Registro" }} />
       <Stack.Screen name="InicioSesion" component={InicioSesionPantalla} options={{ title: 'inicio sesion' }} />
-      <Stack.Screen name='Carrusel' component={CarruselPantalla} options={{ title: 'carrusel' }} />
+      <Stack.Screen name='Carrusel' component={CarruselPantalla} options={{ title: 'Carrusel' }} />
     </Stack.Navigator>
   );
 }
@@ -282,14 +282,14 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: 'white',
     marginBottom: 80,
-    marginTop: 20,
-    marginLeft: 100,
+    marginTop: 30,
+    marginLeft: 80,
     fontWeight: '900',
   },
   containerBotonesPresenatacion: {
     padding: 50,
     marginTop: 400,
-    marginLeft: 60,
+    marginLeft: 40,
   },
 
   //pantalla registro e inicio de sesion
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
     color: 'white',
     marginBottom: 80,
     marginTop: 20,
-    marginLeft: 90,
+    marginLeft: 60,
     fontWeight: '900',
   },
   Boton: {
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
   BotonSesion: {
     alignItems: 'center',
     margin: 10,
-    marginLeft: 90,
+    marginLeft: 70,
     width: 210,
     padding: 10,
     borderRadius: 30,
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
   },
   posterImage: {
     width: "100%",
-    height: ANCHO_CONTENEDOR * 1.1, // Usar ANCHO_CONTENEDOR aquí
+    height: ANCHO_CONTENEDOR * 1.1, 
     resizeMode: "cover",
     borderRadius: 40,
     margin: 0,
@@ -358,4 +358,3 @@ const styles = StyleSheet.create({
 });
 
 
-///// descomentar y poner propiedad animated para animar el carrusel
