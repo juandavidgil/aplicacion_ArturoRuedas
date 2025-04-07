@@ -189,7 +189,7 @@ function CarruselPantalla() {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ 
-          paddingTop: 250, 
+          paddingTop: 20, 
           paddingHorizontal: ESPACIO_LATERAL,
           paddingBottom: 40 
         }}
@@ -280,7 +280,7 @@ const Stack = createNativeStackNavigator();
 
 function RootStack() {
   return (
-    <Stack.Navigator initialRouteName="Carrusel">
+    <Stack.Navigator initialRouteName="Presentacion">
       <Stack.Screen name="Presentacion" component={PresentacionPantalla} options={{ title: "Presentacion" }} />
       <Stack.Screen name="Registro" component={RegistroPantalla} options={{ title: "Registro" }} />
       <Stack.Screen name="InicioSesion" component={InicioSesionPantalla} options={{ title: 'inicio sesion' }} />
