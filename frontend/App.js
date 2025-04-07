@@ -188,7 +188,7 @@ function CarruselPantalla() {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ 
-          paddingTop: 20, 
+          paddingTop: 250, 
           paddingHorizontal: ESPACIO_LATERAL,
           paddingBottom: 40 
         }}
@@ -215,8 +215,8 @@ function CarruselPantalla() {
               <Animated.View
                 style={{
                   marginHorizontal: ESPACIO,
-                  padding: ESPACIO,
-                  borderRadius: 55,
+                  padding: 5,
+                  borderRadius: 50,
                   backgroundColor: "white",
                   alignItems: "center",
                   transform: [{ translateY }],
@@ -279,7 +279,7 @@ const Stack = createNativeStackNavigator();
 
 function RootStack() {
   return (
-    <Stack.Navigator initialRouteName="Presentacion">
+    <Stack.Navigator initialRouteName="Carrusel">
       <Stack.Screen name="Presentacion" component={PresentacionPantalla} options={{ title: "Presentacion" }} />
       <Stack.Screen name="Registro" component={RegistroPantalla} options={{ title: "Registro" }} />
       <Stack.Screen name="InicioSesion" component={InicioSesionPantalla} options={{ title: 'inicio sesion' }} />
