@@ -15,18 +15,12 @@
     "@react-navigation/stack": "^7.1.2",
 
 
-    "@react-three/fiber": "^8.14.0",
-    
-    "expo-gl": "~15.0.5",
-
-
-    "axios": "^1.8.4",
-    "cars": "^1.1.6",
+  
 
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "expo": "^52.0.42",
-
+    
     "expo-linear-gradient": "^14.0.2",
     "expo-status-bar": "^2.0.1",
     "expres": "^0.0.5",
