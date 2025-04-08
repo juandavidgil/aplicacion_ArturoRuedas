@@ -82,7 +82,7 @@ const RegistroPantalla: React.FC = () => {
     console.log({ nombre, correo, contraseña, telefono });
   
     try {
-      const response = await fetch('http://192.168.101.85:3001/registrar', {
+      const response = await fetch('http://10.0.2.2:3001/registrar', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

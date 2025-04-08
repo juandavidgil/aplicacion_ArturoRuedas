@@ -22,7 +22,7 @@ pool.connect()
 
 // Inicializa Express
 const app = express();
-const PORT = process.env.PORT || 3001; // Puerto cambiado
+const PORT = process.env.PORT || 3001; 
 
 // Middleware
 app.use(cors());
