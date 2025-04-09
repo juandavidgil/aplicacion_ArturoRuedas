@@ -114,25 +114,71 @@ const RegistroPantalla: React.FC = () => {
   );
 };
 //------------------------------------------------INICIAR SESION-----------------------------------------------------------------//
+
+
+
 const InicioSesionPantalla: React.FC = () => {
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
+  const navigation = useNavigation<Navigation>();
 
-  const presionarBotonSesion = () => {
-    console.log({ correo, contraseña });
+  const presionarBotonSesion = async () => {
+    try {
+      const response = await fetch('http://10.0.2.2:3001/iniciar-sesion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ correo, contraseña }),
+      });
+
+      const texto = await response.text(); // leer como texto
+      console.log('🔍 Respuesta del servidor:', texto);
+
+      // Si el texto comienza con "<", probablemente sea HTML (error del servidor)
+      if (texto.trim().startsWith('<')) {
+        throw new Error('El servidor devolvió una respuesta no válida (HTML). Verifica la ruta o el servidor.');
+      }
+
+      const data = JSON.parse(texto);
+
+      if (response.ok) {
+        alert(data.mensaje || 'Inicio de sesión exitoso');
+        navigation.navigate('Carrusel' as never);
+      } else {
+        alert(data.mensaje || 'Correo o contraseña incorrectos');
+      }
+    } catch (error) {
+      console.error('❌ Error al iniciar sesión:', error);
+      alert('Error al iniciar sesión. Por favor, revisa tu conexión o intenta más tarde.');
+    }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>INICIAR SESION</Text>
-      <TextInput style={styles.input} placeholder="Correo Electronico" value={correo} onChangeText={setCorreo} keyboardType="email-address" />
-      <TextInput style={styles.input} placeholder="Contraseña" secureTextEntry value={contraseña} onChangeText={setContraseña} />
+      <TextInput
+        style={styles.input}
+        placeholder="Correo Electrónico"
+        value={correo}
+        onChangeText={setCorreo}
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Contraseña"
+        secureTextEntry
+        value={contraseña}
+        onChangeText={setContraseña}
+      />
       <TouchableOpacity style={styles.BotonSesion} onPress={presionarBotonSesion}>
-        <Text>Iniciar Sesion</Text>
+        <Text>Iniciar Sesión</Text>
       </TouchableOpacity>
     </View>
   );
 };
+
 //-----------------------------------------------CARRUSEL------------------------------------------------------------------------------
 const BackDrop: React.FC<BackDropProps> = ({ scrollX }) => {
   return (

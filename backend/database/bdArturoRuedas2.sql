@@ -1,2 +1,0 @@
-SELECT * FROM public.usuarios
-ORDER BY "ID_usuario " ASC 

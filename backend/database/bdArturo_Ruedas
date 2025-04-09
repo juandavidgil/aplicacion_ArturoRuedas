@@ -1,0 +1,90 @@
+
+
+
+
+
+
+CREATE TABLE bicicleta (
+    ID_bicicleta SERIAL PRIMARY KEY,
+    tipo VARCHAR(25) NOT NULL,
+    nombre_personalizado VARCHAR(25) NOT NULL,
+    fecha_creacion VARCHAR(25) NOT NULL
+);
+
+
+CREATE TABLE componentes (
+    ID_componentes SERIAL PRIMARY KEY,
+    tipo_bicicleta VARCHAR(25) NOT NULL,
+    nombre VARCHAR(25) NOT NULL,
+    categoria VARCHAR(25) NOT NULL,
+    imagen VARCHAR(25) NOT NULL,
+   
+);
+
+
+CREATE TABLE usuario (
+    ID_usuario SERIAL PRIMARY KEY,
+    nombre VARCHAR(25) NOT NULL,
+    correo VARCHAR(25) NOT NULL,
+    contraseña VARCHAR(25) NOT NULL,
+    telefono VARCHAR(10) NOT NULL,
+    bicicletaID_bicicleta INTEGER,
+    CONSTRAINT fk_bicicleta FOREIGN KEY (bicicletaID_bicicleta) REFERENCES bicicleta(ID_bicicleta)
+);
+
+
+CREATE TABLE mensaje (
+    ID_mensaje SERIAL PRIMARY KEY,
+    mensaje VARCHAR(50) NOT NULL,
+    fecha_envio DATE NOT NULL,
+    usuario_ID_usuario INTEGER NOT NULL,
+    CONSTRAINT fk_usuario_mensaje FOREIGN KEY (usuario_ID_usuario) REFERENCES usuario(ID_usuario)
+);
+
+
+CREATE TABLE chats (
+    ID_chats SERIAL PRIMARY KEY,
+    fecha_inicio DATE NOT NULL,
+    mensajeID_mensaje INTEGER,
+    CONSTRAINT fk_mensaje_chat FOREIGN KEY (mensajeID_mensaje) REFERENCES mensaje(ID_mensaje)
+);
+
+
+CREATE TABLE chats_usuario (
+    chatsID_chats INTEGER,
+    usuario_ID_usuario INTEGER,
+    PRIMARY KEY (chatsID_chats, usuario_ID_usuario),
+    CONSTRAINT fk_chats FOREIGN KEY (chatsID_chats) REFERENCES chats(ID_chats),
+    CONSTRAINT fk_usuario_chat FOREIGN KEY (usuario_ID_usuario) REFERENCES usuario(ID_usuario)
+);
+
+
+CREATE TABLE com_ventas (
+    ID_publicacion SERIAL PRIMARY KEY,
+    precio VARCHAR(25) NOT NULL,
+    estado VARCHAR(25) NOT NULL,
+    descripcion VARCHAR(25) NOT NULL,
+    fecha_publicacion DATE NOT NULL
+);
+
+
+CREATE TABLE com_ventas_usuario (
+    com_ventasID_publicacion INTEGER,
+    usuario_ID_usuario INTEGER,
+    PRIMARY KEY (com_ventasID_publicacion, usuario_ID_usuario),
+    CONSTRAINT fk_ventas FOREIGN KEY (com_ventasID_publicacion) REFERENCES com_ventas(ID_publicacion),
+    CONSTRAINT fk_usuario_venta FOREIGN KEY (usuario_ID_usuario) REFERENCES usuario(ID_usuario)
+);
+
+
+CREATE TABLE com_ventas_componentes (
+    com_ventasID_publicacion INTEGER,
+    componentesID_componentes INTEGER,
+    PRIMARY KEY (com_ventasID_publicacion, componentesID_componentes),
+    CONSTRAINT fk_ventas_componentes FOREIGN KEY (com_ventasID_publicacion) REFERENCES com_ventas(ID_publicacion),
+    CONSTRAINT fk_componentes FOREIGN KEY (componentesID_componentes) REFERENCES componentes(ID_componentes)
+);
+
+
+SELECT * FROM usuario
+

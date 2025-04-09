@@ -34,7 +34,7 @@ app.post('/registrar', async (req: Request, res: Response) => {
 
   try {
     await pool.query(
-      'INSERT INTO usuraios (nombre, correo, contraseña, telefono) VALUES ($1, $2, $3, $4)',
+      'INSERT INTO usuario (nombre, correo, contraseña, telefono) VALUES ($1, $2, $3, $4)',
       [nombre, correo, contraseña, telefono]
     );
     res.status(200).json({ mensaje: 'Usuario registrado correctamente' });
@@ -44,7 +44,28 @@ app.post('/registrar', async (req: Request, res: Response) => {
   }
 });
 
-// Iniciar servidor
+//ruta para iniciar sesion
+app.post('/iniciar-sesion', async (req: Request, res: Response) => {
+  const { correo, contraseña } = req.body;
+
+  try {
+    const resultado = await pool.query(
+      'SELECT * FROM usuario WHERE correo = $1 AND contraseña = $2',
+      [correo, contraseña]
+    );
+
+    if (resultado.rows.length > 0) {
+      res.status(200).json({ mensaje: 'Inicio de sesión exitoso' });
+    } else {
+      res.status(401).json({ mensaje: 'Correo o contraseña incorrectos' });
+    }
+  } catch (error) {
+    console.error('Error al iniciar sesión:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+});
+
+// Iniciar servido
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
