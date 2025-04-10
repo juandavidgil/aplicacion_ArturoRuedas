@@ -17,7 +17,7 @@ CREATE TABLE componentes (
     tipo_bicicleta VARCHAR(25) NOT NULL,
     nombre VARCHAR(25) NOT NULL,
     categoria VARCHAR(25) NOT NULL,
-    imagen VARCHAR(25) NOT NULL,
+    imagen VARCHAR(25) NOT NULL
    
 );
 
