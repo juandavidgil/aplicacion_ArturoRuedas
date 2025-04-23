@@ -19,6 +19,7 @@ type StackParamList = {
   MTB: undefined;
   Ruta: undefined;
   Fija: undefined;
+  Publicar: undefined;
 };
 
 type Navigation = NativeStackNavigationProp<StackParamList>;
@@ -263,12 +264,67 @@ const MTBPantalla: React.FC = () => <Text>soy la pantalla de mtb</Text>;
 const RutaPantalla: React.FC = () => <Text>soy la pantalla de Ruta</Text>;
 const FijaPantalla: React.FC = () => <Text>soy la pantalla de Fija</Text>;
 
+//------------------------------------PUBLICAR UN ARTICULO---------------------------------------------//
+
+const publicarPantalla : React.FC = () => {
+  const [descripcion, setDescripcion] = useState('');
+  const [nombreArticulo, setnombreArticulo] = useState('');
+  const [precio, setPrecio] =useState('');
+
+  const PublicarBoton = async () => {
+    console.log({nombreArticulo ,descripcion, precio });
+  }
+
+  return(
+   <View>
+    <Text>
+      Publicar un articulo
+    </Text>
+
+    <Text>
+      Agrega una descripcion de tu producto
+    </Text>
+    <TextInput
+    placeholder= "Nombre del articulo"
+    value={nombreArticulo}
+    onChangeText={setnombreArticulo}
+    />
+    
+    
+    <TextInput
+    placeholder= "Descripcion"
+    value={descripcion}
+    onChangeText={setDescripcion}
+  />
+
+    <TextInput
+    placeholder='Precio'
+    value={precio}
+    onChangeText={setPrecio}
+    />
+
+  <Text>
+    Sube una foto
+  </Text>
+
+
+  <TouchableOpacity onPress={PublicarBoton}>
+    <Text>
+      Publicar
+    </Text>
+  </TouchableOpacity>
+      
+  
+   </View>
+  )
+}
+
 //------------------------------------ DEFINICION DE PANTALLAS ----------------------------------------//
 const Stack = createNativeStackNavigator<StackParamList>();
 
 const RootStack: React.FC = () => {
   return (
-    <Stack.Navigator initialRouteName="Presentacion">
+    <Stack.Navigator initialRouteName="Publicar">
       <Stack.Screen name="Presentacion" component={PresentacionPantalla} />
       <Stack.Screen name="Registro" component={RegistroPantalla} />
       <Stack.Screen name="InicioSesion" component={InicioSesionPantalla} />
@@ -276,6 +332,7 @@ const RootStack: React.FC = () => {
       <Stack.Screen name="MTB" component={MTBPantalla} />
       <Stack.Screen name="Ruta" component={RutaPantalla} />
       <Stack.Screen name="Fija" component={FijaPantalla} />
+      <Stack.Screen name="Publicar" component={publicarPantalla}/>
     </Stack.Navigator>
   );
 };
