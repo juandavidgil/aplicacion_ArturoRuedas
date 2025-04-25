@@ -2,13 +2,15 @@
 import React, { useRef, useState } from 'react';
 import {
   ImageBackground, View, TextInput, Text, StyleSheet,
-  TouchableOpacity, FlatList, Image, Dimensions, Animated
+  TouchableOpacity, FlatList, Image, Dimensions, Animated,
+  PermissionsAndroid
 } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer, useNavigation, ParamListBase } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
+import {launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 //------------------------------------ TIPOS ----------------------------------------//
 type StackParamList = {
@@ -266,15 +268,37 @@ const FijaPantalla: React.FC = () => <Text>soy la pantalla de Fija</Text>;
 
 //------------------------------------PUBLICAR UN ARTICULO---------------------------------------------//
 
+
 const publicarPantalla : React.FC = () => {
   const [descripcion, setDescripcion] = useState('');
   const [nombreArticulo, setnombreArticulo] = useState('');
   const [precio, setPrecio] =useState('');
-
+  
   const PublicarBoton = async () => {
     console.log({nombreArticulo ,descripcion, precio });
   }
-
+  const options ={
+    mediaType: 'photo',
+    title: 'seleccionar imagen',
+    maxWidth: '2000',
+    maxHeigth: '2000',
+    quality: 0.8,
+  }
+  const seleccionarFoto = async () => {
+    const result =  (await launchCamera(options as any)) as {
+      assets: ImageType[];
+    }
+  }
+  const tomarFoto = async () => {
+    const permiso = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+    )
+    if (permiso ===PermissionsAndroid.RESULTS.GRANTED){
+      const result = (await launchCamera(options as any)) as {
+        assets: ImageType[];
+      }
+    }
+  }
   return(
    <View>
     <Text>
@@ -290,6 +314,16 @@ const publicarPantalla : React.FC = () => {
     onChangeText={setnombreArticulo}
     />
     
+    <TouchableOpacity onPress={tomarFoto}>
+      <Text>
+        Tomar Foto
+      </Text>
+    </TouchableOpacity>
+    <TouchableOpacity onPress={seleccionarFoto}>
+      <Text>
+        Seleccionar Foto
+      </Text>
+    </TouchableOpacity>
     
     <TextInput
     placeholder= "Descripcion"
