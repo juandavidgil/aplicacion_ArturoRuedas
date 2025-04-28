@@ -10,7 +10,11 @@ import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer, useNavigation, ParamListBase } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-import {launchCamera, launchImageLibrary } from 'react-native-image-picker';
+/* import {launchCamera, launchImageLibrary,ImageLibraryOptions, Asset as ImageType } from 'react-native-image-picker'; */
+import * as ImagePicker from 'expo-image-picker';
+
+
+
 
 //------------------------------------ TIPOS ----------------------------------------//
 type StackParamList = {
@@ -267,91 +271,113 @@ const RutaPantalla: React.FC = () => <Text>soy la pantalla de Ruta</Text>;
 const FijaPantalla: React.FC = () => <Text>soy la pantalla de Fija</Text>;
 
 //------------------------------------PUBLICAR UN ARTICULO---------------------------------------------//
-
-
-const publicarPantalla : React.FC = () => {
+const PublicarPantalla: React.FC = () => {
   const [descripcion, setDescripcion] = useState('');
-  const [nombreArticulo, setnombreArticulo] = useState('');
-  const [precio, setPrecio] =useState('');
-  
+  const [nombreArticulo, setNombreArticulo] = useState('');
+  const [precio, setPrecio] = useState('');
+  const [foto, setFoto] = useState<string | null>(null);
+
   const PublicarBoton = async () => {
-    console.log({nombreArticulo ,descripcion, precio });
-  }
-  const options ={
-    mediaType: 'photo',
-    title: 'seleccionar imagen',
-    maxWidth: '2000',
-    maxHeigth: '2000',
-    quality: 0.8,
-  }
-  const seleccionarFoto = async () => {
-    const result =  (await launchCamera(options as any)) as {
-      assets: ImageType[];
-    }
-  }
+    console.log({ nombreArticulo, descripcion, precio, foto });
+  };
+
   const tomarFoto = async () => {
-    const permiso = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-    )
-    if (permiso ===PermissionsAndroid.RESULTS.GRANTED){
-      const result = (await launchCamera(options as any)) as {
-        assets: ImageType[];
-      }
+    console.log("Intentando abrir la cámara...");
+    
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Se requiere permiso para acceder a la cámara.');
+      return;
     }
-  }
-  return(
-   <View>
-    <Text>
-      Publicar un articulo
-    </Text>
 
-    <Text>
-      Agrega una descripcion de tu producto
-    </Text>
-    <TextInput
-    placeholder= "Nombre del articulo"
-    value={nombreArticulo}
-    onChangeText={setnombreArticulo}
-    />
-    
-    <TouchableOpacity onPress={tomarFoto}>
-      <Text>
-        Tomar Foto
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.8,
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    console.log("Resultado de launchCameraAsync:", result);
+
+    if (!result.canceled && result.assets.length > 0) {
+      setFoto(result.assets[0].uri);
+    }
+  };
+
+  const seleccionarFoto = async () => {
+    console.log("Intentando abrir la galería...");
+
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Se requiere permiso para acceder a las fotos.');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.8,
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    console.log("Resultado de launchImageLibraryAsync:", result);
+
+    if (!result.canceled && result.assets.length > 0) {
+      setFoto(result.assets[0].uri);
+    }
+  };
+
+  return (
+    <View style={{ padding: 20 }}>
+      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+        Publicar un artículo
       </Text>
-    </TouchableOpacity>
-    <TouchableOpacity onPress={seleccionarFoto}>
-      <Text>
-        Seleccionar Foto
-      </Text>
-    </TouchableOpacity>
-    
-    <TextInput
-    placeholder= "Descripcion"
-    value={descripcion}
-    onChangeText={setDescripcion}
-  />
 
-    <TextInput
-    placeholder='Precio'
-    value={precio}
-    onChangeText={setPrecio}
-    />
+      <TextInput
+        placeholder="Nombre del artículo"
+        value={nombreArticulo}
+        onChangeText={setNombreArticulo}
+        
+      />
 
-  <Text>
-    Sube una foto
-  </Text>
+      <TextInput
+        placeholder="Descripción"
+        value={descripcion}
+        onChangeText={setDescripcion}
+        
+      />
+
+      <TextInput
+        placeholder="Precio"
+        value={precio}
+        onChangeText={setPrecio}
+        keyboardType="numeric"
+        
+      />
+
+      {foto && (
+        <Image
+          source={{ uri: foto }}
+          style={{ width: 200, height: 200, marginVertical: 10 }}
+        />
+      )}
+
+      <TouchableOpacity onPress={tomarFoto} style={{ marginVertical: 10 }}>
+        <Text >Tomar Foto</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={seleccionarFoto} style={{ marginVertical: 10 }}>
+        <Text >Seleccionar Foto</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={PublicarBoton} style={{ marginTop: 20 }}>
+        <Text >Publicar</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 
-  <TouchableOpacity onPress={PublicarBoton}>
-    <Text>
-      Publicar
-    </Text>
-  </TouchableOpacity>
-      
-  
-   </View>
-  )
-}
 
 //------------------------------------ DEFINICION DE PANTALLAS ----------------------------------------//
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -366,7 +392,7 @@ const RootStack: React.FC = () => {
       <Stack.Screen name="MTB" component={MTBPantalla} />
       <Stack.Screen name="Ruta" component={RutaPantalla} />
       <Stack.Screen name="Fija" component={FijaPantalla} />
-      <Stack.Screen name="Publicar" component={publicarPantalla}/>
+      <Stack.Screen name="Publicar" component={PublicarPantalla}/> 
     </Stack.Navigator>
   );
 };
