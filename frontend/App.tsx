@@ -10,8 +10,8 @@ import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer, useNavigation, ParamListBase } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-/* import {launchCamera, launchImageLibrary,ImageLibraryOptions, Asset as ImageType } from 'react-native-image-picker'; */
 import * as ImagePicker from 'expo-image-picker';
+import { response } from 'express';
 
 
 
@@ -273,16 +273,34 @@ const FijaPantalla: React.FC = () => <Text>soy la pantalla de Fija</Text>;
 //------------------------------------PUBLICAR UN ARTICULO---------------------------------------------//
 const PublicarPantalla: React.FC = () => {
   const [descripcion, setDescripcion] = useState('');
-  const [nombreArticulo, setNombreArticulo] = useState('');
+  const [nombre_Articulo, setNombre_Articulo] = useState('');
   const [precio, setPrecio] = useState('');
   const [foto, setFoto] = useState<string | null>(null);
 
   const PublicarBoton = async () => {
-    console.log({ nombreArticulo, descripcion, precio, foto });
+    console.log({ nombre_Articulo, descripcion, precio, foto });
+
+    try{
+      const response = await fetch('http://10.0.2.2:3001/publicar articulo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({nombre_Articulo, descripcion, precio, foto}),
+      });
+     /*  const data = await response.json();
+
+      console.log(data);
+      alert(data.mensaje || 'Articulo publicado'); */
+      
+    } catch (error) {
+      console.error('Error en el registro:', error);
+      alert('Hubo un problema al registrar');
+    }
   };
 
   const tomarFoto = async () => {
-    console.log("Intentando abrir la cámara...");
+    console.log("Intentando abrir la cámara");
     
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') {
@@ -328,15 +346,15 @@ const PublicarPantalla: React.FC = () => {
   };
 
   return (
-    <View style={{ padding: 20 }}>
+    <View style={styles.containerPublicar}>
       <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
         Publicar un artículo
       </Text>
 
       <TextInput
         placeholder="Nombre del artículo"
-        value={nombreArticulo}
-        onChangeText={setNombreArticulo}
+        value={nombre_Articulo}
+        onChangeText={setNombre_Articulo}
         
       />
 
@@ -358,19 +376,19 @@ const PublicarPantalla: React.FC = () => {
       {foto && (
         <Image
           source={{ uri: foto }}
-          style={{ width: 200, height: 200, marginVertical: 10 }}
+          style={{ width: 200, height: 200, marginVertical: 10, borderRadius: 5}}
         />
       )}
 
-      <TouchableOpacity onPress={tomarFoto} style={{ marginVertical: 10 }}>
+      <TouchableOpacity onPress={tomarFoto} style={styles.BotonTfoto}>
         <Text >Tomar Foto</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={seleccionarFoto} style={{ marginVertical: 10 }}>
+      <TouchableOpacity onPress={seleccionarFoto} style={styles.BotonSfoto}>
         <Text >Seleccionar Foto</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={PublicarBoton} style={{ marginTop: 20 }}>
+      <TouchableOpacity onPress={PublicarBoton} style={styles.BotonPublicar}>
         <Text >Publicar</Text>
       </TouchableOpacity>
     </View>
@@ -495,6 +513,39 @@ const styles = StyleSheet.create({
     margin: 0,
   },
 
+  //pantalla publicar 
+  containerPublicar: {
+    paddingTop: 100,
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+},
+BotonTfoto: {
+ paddingTop: 2,
+ paddingBottom:2,
+ paddingRight: 29,
+ paddingLeft: 29,
+  borderRadius:5,
+  backgroundColor: "#dddd",
+  margin: 5
+   
+},
+BotonSfoto: {
+  
+  paddingTop: 2,
+  paddingBottom:2,
+  paddingRight: 12,
+  paddingLeft: 12,
+   borderRadius:5,
+   backgroundColor: "#dddd",
+   margin: 5
+    
+ },
+BotonPublicar:{
+  padding:10,
+  borderRadius:5,
+  backgroundColor: "#00ff80",
+  margin: 5
+}
 });
-
 

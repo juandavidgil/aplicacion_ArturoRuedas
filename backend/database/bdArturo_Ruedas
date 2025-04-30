@@ -32,6 +32,8 @@ CREATE TABLE usuario (
     CONSTRAINT fk_bicicleta FOREIGN KEY (bicicletaID_bicicleta) REFERENCES bicicleta(ID_bicicleta)
 );
 
+INSERT INTO usuario (nombre, correo, contraseña, telefono)
+VALUES(cristian, cris@gmail.com, 123, 3236870976);
 
 CREATE TABLE mensaje (
     ID_mensaje SERIAL PRIMARY KEY,
@@ -61,9 +63,10 @@ CREATE TABLE chats_usuario (
 
 CREATE TABLE com_ventas (
     ID_publicacion SERIAL PRIMARY KEY,
-    precio VARCHAR(25) NOT NULL,
-    estado VARCHAR(25) NOT NULL,
+    nombre_Articulo VARCHAR(25) NOT NULL,
     descripcion VARCHAR(25) NOT NULL,
+    precio  VARCHAR(25) NOT NULL,
+    foto VARCHAR(1000) NOT NULL,
     fecha_publicacion DATE NOT NULL
 );
 
@@ -86,5 +89,9 @@ CREATE TABLE com_ventas_componentes (
 );
 
 
+
+
 SELECT * FROM usuario
 
+ 
+SELECT * FROM com_ventas

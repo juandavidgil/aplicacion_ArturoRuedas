@@ -65,6 +65,21 @@ app.post('/iniciar-sesion', async (req: Request, res: Response) => {
   }
 });
 
+//Publicar articulo
+app.post('/publicar articulo', async (req: Request, res: Response) =>{
+  const {nombre_Articulo, descripcion, precio, foto} = req.body;
+
+  try{
+    await pool.query(
+      'INSERT INTO com_ventas (nombre_Articulo, descripcion, precio, foto) VALUES ($1, $2, $3, $4)',
+      [nombre_Articulo, descripcion, precio, foto]
+    );
+    res.status(200).json({mensaje: 'Articulo agregado correctamente'});
+  } catch(error){
+    console.error('Error al publicar el articulo', error);
+    res.status(500).json({error: 'Error en el servidor'})
+  }
+  })
 // Iniciar servido
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
