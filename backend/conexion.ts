@@ -66,7 +66,7 @@ app.post('/iniciar-sesion', async (req: Request, res: Response) => {
 });
 
 //Publicar articulo
-app.post('/publicar articulo', async (req: Request, res: Response) =>{
+app.post('/publicar_articulo', async (req: Request, res: Response) =>{
   const {nombre_Articulo, descripcion, precio, foto} = req.body;
 
   try{

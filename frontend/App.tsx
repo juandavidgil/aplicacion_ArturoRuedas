@@ -12,7 +12,7 @@ import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-na
 import { StatusBar } from 'expo-status-bar';
 import * as ImagePicker from 'expo-image-picker';
 import { response } from 'express';
-
+import {Ionicons} from '@expo/vector-icons'
 
 
 
@@ -26,6 +26,7 @@ type StackParamList = {
   Ruta: undefined;
   Fija: undefined;
   Publicar: undefined;
+  Carrito:undefined;
 };
 
 type Navigation = NativeStackNavigationProp<StackParamList>;
@@ -281,7 +282,7 @@ const PublicarPantalla: React.FC = () => {
     console.log({ nombre_Articulo, descripcion, precio, foto });
 
     try{
-      const response = await fetch('http://10.0.2.2:3001/publicar articulo', {
+      const response = await fetch('http://10.0.2.2:3001/publicar_articulo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -395,22 +396,49 @@ const PublicarPantalla: React.FC = () => {
   );
 };
 
-
+//---------------------------------------CARRITO DE COMPRAS---------------------------------------------//
+const carritoPantalla: React.FC = () => {
+  const navigation = useNavigation<Navigation>();
+  
+  return(
+    <SafeAreaProvider>
+       <SafeAreaView> 
+        <Text></Text>
+        
+        <View /* div barra */>
+          
+        </View>
+        
+        <View /* div botones */>
+        <TouchableOpacity>
+          <Ionicons name="chatbubble-ellipses-outline"size={25} color= "#4d82bc"></Ionicons>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Ionicons name="trash-outline" size={25} color= "#ff0000"></Ionicons>
+          </TouchableOpacity>   
+        </View>
+       
+       </SafeAreaView>
+    </SafeAreaProvider>
+  );
+};
 
 //------------------------------------ DEFINICION DE PANTALLAS ----------------------------------------//
 const Stack = createNativeStackNavigator<StackParamList>();
 
 const RootStack: React.FC = () => {
   return (
-    <Stack.Navigator initialRouteName="Publicar">
-      <Stack.Screen name="Presentacion" component={PresentacionPantalla} />
-      <Stack.Screen name="Registro" component={RegistroPantalla} />
-      <Stack.Screen name="InicioSesion" component={InicioSesionPantalla} />
-      <Stack.Screen name="Carrusel" component={CarruselPantalla} />
-      <Stack.Screen name="MTB" component={MTBPantalla} />
-      <Stack.Screen name="Ruta" component={RutaPantalla} />
-      <Stack.Screen name="Fija" component={FijaPantalla} />
-      <Stack.Screen name="Publicar" component={PublicarPantalla}/> 
+    <Stack.Navigator initialRouteName="Carrito">
+      <Stack.Screen name="Presentacion" component={PresentacionPantalla} options={{ headerShown: false}} />
+      <Stack.Screen name="Registro" component={RegistroPantalla} options={{ headerShown: false}} />
+      <Stack.Screen name="InicioSesion" component={InicioSesionPantalla} options={{ headerShown: false}}/>
+      <Stack.Screen name="Carrusel" component={CarruselPantalla} options={{ headerShown: false}}/>
+      <Stack.Screen name="MTB" component={MTBPantalla} options={{ headerShown: false}}/>
+      <Stack.Screen name="Ruta" component={RutaPantalla} options={{ headerShown: false}}/>
+      <Stack.Screen name="Fija" component={FijaPantalla} options={{ headerShown: false}}/>
+      <Stack.Screen name="Publicar" component={PublicarPantalla} options={{ headerShown: false}}/> 
+      <Stack.Screen name="Carrito" component={carritoPantalla} options={{ headerShown: false}}/>
+      
     </Stack.Navigator>
   );
 };
