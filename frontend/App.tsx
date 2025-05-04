@@ -267,9 +267,41 @@ const CarruselPantalla: React.FC = () => {
   );
 };
 
-const MTBPantalla: React.FC = () => <Text>soy la pantalla de mtb</Text>;
-const RutaPantalla: React.FC = () => <Text>soy la pantalla de Ruta</Text>;
-const FijaPantalla: React.FC = () => <Text>soy la pantalla de Fija</Text>;
+//-------------------------------------MTB-------------------------------------------------------------//
+const MTBPantalla: React.FC = () => {
+return(
+  <SafeAreaProvider>
+    <SafeAreaView>
+    <Text>
+      MTB (Mountain Bike)
+    </Text>
+    <View>
+    <Text>
+    Una bicicleta MTB (Mountain Bike) o BTT (Bicicleta Todo Terreno) es una bicicleta diseñada para el ciclismo de montaña, es decir, para ser usada en terrenos irregulares como senderos, caminos de tierra, bosques y montañas. Se caracteriza por su resistencia, durabilidad y capacidad para superar obstáculos.
+    </Text> 
+    </View>
+     <View style={styles.barraIconos}>
+
+      <TouchableOpacity>
+        <Ionicons name='storefront-outline' size={30}></Ionicons>
+      </TouchableOpacity>
+      
+      <TouchableOpacity>
+        <Ionicons name='notifications-outline' size={30}></Ionicons>
+      </TouchableOpacity>
+        
+     </View>
+
+    </SafeAreaView>
+  </SafeAreaProvider>
+)
+}
+//-------------------------------------RUTA-------------------------------------------------------------//
+const RutaPantalla: React.FC = () => 
+<Text>soy la pantalla de Ruta</Text>;
+//-------------------------------------FIJA-------------------------------------------------------------//
+const FijaPantalla: React.FC = () =>
+   <Text>soy la pantalla de Fija</Text>;
 
 //------------------------------------PUBLICAR UN ARTICULO---------------------------------------------//
 const PublicarPantalla: React.FC = () => {
@@ -286,8 +318,10 @@ const PublicarPantalla: React.FC = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          
         },
         body: JSON.stringify({nombre_Articulo, descripcion, precio, foto}),
+       
       });
      /*  const data = await response.json();
 
@@ -428,7 +462,7 @@ const Stack = createNativeStackNavigator<StackParamList>();
 
 const RootStack: React.FC = () => {
   return (
-    <Stack.Navigator initialRouteName="Carrito">
+    <Stack.Navigator initialRouteName="MTB">
       <Stack.Screen name="Presentacion" component={PresentacionPantalla} options={{ headerShown: false}} />
       <Stack.Screen name="Registro" component={RegistroPantalla} options={{ headerShown: false}} />
       <Stack.Screen name="InicioSesion" component={InicioSesionPantalla} options={{ headerShown: false}}/>
@@ -521,6 +555,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
 
+
   //carrusel
   ContenedorCarrusel: {
     flex: 1,
@@ -541,6 +576,15 @@ const styles = StyleSheet.create({
     margin: 0,
   },
 
+  //barra pantallas de bicis
+  barraIconos:{
+    flex: 1,
+    flexDirection: "row",
+    alignSelf: "center",
+    padding: 20,
+    backgroundColor: "#ffff",
+    borderRadius: 20,
+  },
   //pantalla publicar 
   containerPublicar: {
     paddingTop: 100,
