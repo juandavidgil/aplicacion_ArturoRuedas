@@ -1,9 +1,9 @@
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ImageBackground, View, TextInput, Text, StyleSheet,
   TouchableOpacity, FlatList, Image, Dimensions, Animated,
-  PermissionsAndroid
+  PermissionsAndroid, ActivityIndicator, Platform
 } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
@@ -268,34 +268,86 @@ const CarruselPantalla: React.FC = () => {
 };
 
 //-------------------------------------MTB-------------------------------------------------------------//
-const MTBPantalla: React.FC = () => {
-return(
-  <SafeAreaProvider>
-    <SafeAreaView>
-    <Text>
-      MTB (Mountain Bike)
-    </Text>
-    <View>
-    <Text>
-    Una bicicleta MTB (Mountain Bike) o BTT (Bicicleta Todo Terreno) es una bicicleta diseñada para el ciclismo de montaña, es decir, para ser usada en terrenos irregulares como senderos, caminos de tierra, bosques y montañas. Se caracteriza por su resistencia, durabilidad y capacidad para superar obstáculos.
-    </Text> 
-    </View>
-     <View style={styles.barraIconos}>
-
-      <TouchableOpacity>
-        <Ionicons name='storefront-outline' size={30}></Ionicons>
-      </TouchableOpacity>
-      
-      <TouchableOpacity>
-        <Ionicons name='notifications-outline' size={30}></Ionicons>
-      </TouchableOpacity>
-        
-     </View>
-
-    </SafeAreaView>
-  </SafeAreaProvider>
-)
+interface Articulo {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  precio: string;
+  foto: string;
 }
+
+const MTBPantalla: React.FC = () => {
+  const [busqueda, setBusqueda] = useState('');
+  const [articulos, setArticulos] = useState<Articulo[]>([]);
+  const [cargando, setCargando] = useState(false);
+
+  const buscarArticulos = async () => {
+    if (busqueda.trim() === '') return;
+
+    setCargando(true);
+    try {
+      const response = await fetch(`http://10.0.2.2:3001/buscar?nombre=${encodeURIComponent(busqueda)}`);
+      const data: Articulo[] = await response.json();
+      setArticulos(data);
+    } catch (error) {
+      console.error('Error al buscar artículos:', error);
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  return (
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.containerMTB}>
+        {/* Campo de búsqueda */}
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TextInput
+            style={[styles.inputMTB, { flex: 1 }]}
+            placeholder="Buscar artículos..."
+            value={busqueda}
+            onChangeText={setBusqueda}
+          />
+          <TouchableOpacity onPress={buscarArticulos} style={{ marginLeft: 10 }}>
+            <Ionicons name="search-outline" size={28} />
+          </TouchableOpacity>
+        </View>
+
+        {/* Resultados */}
+        {cargando ? (
+          <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />
+        ) : (
+          <FlatList
+            data={articulos}
+            keyExtractor={(item) => (item.id && !isNaN(item.id) ? item.id.toString() : Math.random().toString())}
+            renderItem={({ item }) => (
+              <View style={styles.cardMTB}>
+                <Image source={{ uri: item.foto }} style={styles.imagenMTB} resizeMode="cover" />
+                <View style={styles.infoMTB}>
+                  <Text style={styles.nombreMTB}>{item.nombre}</Text>
+                  <Text style={styles.descripcionMTB}>{item.descripcion}</Text>
+                  <Text style={styles.precioMTB}>Precio: ${item.precio}</Text>
+                </View>
+              </View>
+            )}
+          />
+        )}
+
+        {/* Descripción y barra de iconos */}
+        <Text style={styles.tituloMTB}>MTB (Mountain Bike)</Text>
+        <Text>Una bicicleta MTB es ideal para terrenos difíciles como montaña o tierra.</Text>
+
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginVertical: 10 }}>
+          <TouchableOpacity><Ionicons name='storefront-outline' size={30} /></TouchableOpacity>
+          <TouchableOpacity><Ionicons name='notifications-outline' size={30} /></TouchableOpacity>
+          <TouchableOpacity><Ionicons name='cart-outline' size={25} /></TouchableOpacity>
+          <TouchableOpacity><Ionicons name='chatbubbles-outline' size={25} /></TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
+  );
+};
+ 
+
 //-------------------------------------RUTA-------------------------------------------------------------//
 const RutaPantalla: React.FC = () => 
 <Text>soy la pantalla de Ruta</Text>;
@@ -449,7 +501,11 @@ const carritoPantalla: React.FC = () => {
         </TouchableOpacity>
         <TouchableOpacity>
           <Ionicons name="trash-outline" size={25} color= "#ff0000"></Ionicons>
-          </TouchableOpacity>   
+          </TouchableOpacity> 
+          <TouchableOpacity>
+          <Ionicons name="cart-outline" size={25} color= "#ff0000"></Ionicons>
+          </TouchableOpacity>
+          
         </View>
        
        </SafeAreaView>
@@ -577,14 +633,14 @@ const styles = StyleSheet.create({
   },
 
   //barra pantallas de bicis
-  barraIconos:{
+ /*  barraIconos:{
     flex: 1,
     flexDirection: "row",
     alignSelf: "center",
     padding: 20,
     backgroundColor: "#ffff",
     borderRadius: 20,
-  },
+  }, */
   //pantalla publicar 
   containerPublicar: {
     paddingTop: 100,
@@ -618,6 +674,59 @@ BotonPublicar:{
   borderRadius:5,
   backgroundColor: "#00ff80",
   margin: 5
-}
+},
+item: { padding: 10, borderBottomWidth: 1, borderBottomColor: '#eee' },
+
+containerMTB: {
+  flex: 1,
+  padding: 10,
+},
+inputMTB: {
+  padding: 10,
+  borderWidth: 1,
+  borderColor: '#ccc',
+  borderRadius: 5,
+},
+cardMTB: {
+  flexDirection: 'row',
+  marginBottom: 15,
+  backgroundColor: '#f5f5f5',
+  padding: 10,
+  borderRadius: 8,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.2,
+  shadowRadius: 4,
+  elevation: 5,
+},
+imagenMTB: {
+  width: 100,
+  height: 100,
+  borderRadius: 8,
+},
+infoMTB: {
+  marginLeft: 15,
+  justifyContent: 'center',
+},
+nombreMTB: {
+  fontSize: 18,
+  fontWeight: 'bold',
+},
+descripcionMTB: {
+  fontSize: 14,
+  color: '#666',
+},
+precioMTB: {
+  fontSize: 16,
+  fontWeight: 'bold',
+  color: '#e60000',
+},
+tituloMTB: {
+  fontSize: 24,
+  fontWeight: 'bold',
+  marginTop: 20,
+  textAlign: 'center',
+},
+
 });
 
