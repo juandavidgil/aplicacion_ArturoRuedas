@@ -13,7 +13,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as ImagePicker from 'expo-image-picker';
 import { response } from 'express';
 import {Ionicons} from '@expo/vector-icons'
-import { Interface } from 'readline';
+import { Picker } from '@react-native-picker/picker';
 
 
 
@@ -28,6 +28,10 @@ type StackParamList = {
   Fija: undefined;
   Publicar: undefined;
   Carrito:undefined;
+  DetalleArticulo: undefined;
+  Notificaciones: undefined;
+  chat: undefined;
+
 };
 
 type Navigation = NativeStackNavigationProp<StackParamList>;
@@ -49,7 +53,6 @@ const ANCHO_CONTENEDOR = width * 0.7;
 const ESPACIO_LATERAL = (width - ANCHO_CONTENEDOR) / 2;
 const ESPACIO = 10;
 const ALTURA_BACKDROP = height * 0.5;
-
 const imagenes: ImagenItem[] = [
   { id: 1, url: require('./img/carruselMTB.jpg'), title: 'MTB', destino: 'MTB' },
   { id: 2, url: require('./img/carruselRuta.jpg'), title: 'Ruta', destino: 'Ruta' },
@@ -130,9 +133,6 @@ const RegistroPantalla: React.FC = () => {
   );
 };
 //------------------------------------------------INICIAR SESION-----------------------------------------------------------------//
-
-
-
 const InicioSesionPantalla: React.FC = () => {
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
@@ -212,7 +212,6 @@ const BackDrop: React.FC<BackDropProps> = ({ scrollX }) => {
     </View>
   );
 };
-
 const CarruselPantalla: React.FC = () => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation<Navigation>();
@@ -275,20 +274,20 @@ interface Articulo {
   descripcion: string;
   precio: string;
   foto: string;
-}
-
-const MTBPantalla: React.FC = () => {
+}const MTBPantalla: React.FC = () => {
   const [busqueda, setBusqueda] = useState('');
   const [articulos, setArticulos] = useState<Articulo[]>([]);
   const [cargando, setCargando] = useState(false);
+  const navigation = useNavigation<Navigation>();
 
   const buscarArticulos = async () => {
     if (busqueda.trim() === '') return;
 
     setCargando(true);
     try {
-      const response = await fetch(`http://10.0.2.2:3001/buscar?nombre_Articulo=${encodeURIComponent(busqueda)}`);
+      const response = await fetch(`http://10.0.2.2:3001/buscar?nombre=${encodeURIComponent(busqueda)}`);
       const data: Articulo[] = await response.json();
+      console.log('Artículos encontrados:', data); // Para depuración
       setArticulos(data);
     } catch (error) {
       console.error('Error al buscar artículos:', error);
@@ -297,23 +296,33 @@ const MTBPantalla: React.FC = () => {
     }
   };
 
-  //const guardar al carrito
-  const AgregarCarrito = async () => {
-    console.log(Interface)
-    try{
-      const response = await fetch('http://10.0.2.2:3001/agregar-carrito',{
+  const AgregarCarrito = async (articulo: Articulo) => {
+    try {
+      const response = await fetch('http://10.0.2.2:3001/agregar-carrito', {
         method: 'POST',
-        headers:{
+        headers: {
           'Content-Type': 'application/json',
         },
-        /* body: JSON.stringify{{interface}} */
-      })
-   /*  body: JSON.stringify({Interface}) */
-    }catch(error){
+        body: JSON.stringify({
+          ID_publicacion: articulo.id,
+          nombre_Articulo: articulo.nombre_Articulo,
+          descripcion: articulo.descripcion,
+          precio: articulo.precio,
+          foto: articulo.foto
+        })
+      });
+
+      if (response.ok) {
+        alert('Artículo agregado al carrito');
+      } else {
+        alert('Error al agregar al carrito');
+      }
+    } catch (error) {
       console.error('error al guardar en el carrito', error);
-      alert('hubo un error al guardar en el carrito');
+      alert('Hubo un error al guardar en el carrito');
     }
   };
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.containerMTB}>
@@ -333,10 +342,12 @@ const MTBPantalla: React.FC = () => {
         {/* Resultados */}
         {cargando ? (
           <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />
+        ) : articulos.length === 0 ? (
+          <Text style={{ marginTop: 20, textAlign: 'center' }}>No se encontraron artículos</Text>
         ) : (
           <FlatList
             data={articulos}
-            keyExtractor={(item) => (item.id && !isNaN(item.id) ? item.id.toString() : Math.random().toString())}
+            keyExtractor={(item, index) => (item.id ? item.id.toString() : index.toString())}
             renderItem={({ item }) => (
               <View style={styles.cardMTB}>
                 <Image source={{ uri: item.foto }} style={styles.imagenMTB} resizeMode="cover" />
@@ -344,10 +355,10 @@ const MTBPantalla: React.FC = () => {
                   <Text style={styles.nombreMTB}>{item.nombre_Articulo}</Text>
                   <Text style={styles.descripcionMTB}>{item.descripcion}</Text>
                   <Text style={styles.precioMTB}>Precio: ${item.precio}</Text>
-                  {/* por revisar */}
-                  <TouchableOpacity onPress={() => AgregarCarrito(interface.id)}>
-                  <Ionicons name='cart-outline' size={25} />
-    </TouchableOpacity>
+
+                  <TouchableOpacity onPress={() => AgregarCarrito(item)}>
+                    <Ionicons name='cart-outline' size={25} />
+                  </TouchableOpacity>
                 </View>
               </View>
             )}
@@ -359,16 +370,15 @@ const MTBPantalla: React.FC = () => {
         <Text>Una bicicleta MTB es ideal para terrenos difíciles como montaña o tierra.</Text>
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginVertical: 10 }}>
-          <TouchableOpacity><Ionicons name='storefront-outline' size={30} /></TouchableOpacity>
-          <TouchableOpacity><Ionicons name='notifications-outline' size={30} /></TouchableOpacity>
-          <TouchableOpacity><Ionicons name='cart-outline' size={25} /></TouchableOpacity>
-          <TouchableOpacity><Ionicons name='chatbubbles-outline' size={25} /></TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Publicar')}><Ionicons name='storefront-outline' size={30}  /></TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Carrito') }><Ionicons name='cart-outline' size={25} /></TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}><Ionicons name='notifications-outline' size={30} /></TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('chat')}><Ionicons name='chatbubbles-outline' size={25} /></TouchableOpacity>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );
 };
- 
 
 //-------------------------------------RUTA-------------------------------------------------------------//
 const RutaPantalla: React.FC = () => 
@@ -383,6 +393,7 @@ const PublicarPantalla: React.FC = () => {
   const [nombre_Articulo, setNombre_Articulo] = useState('');
   const [precio, setPrecio] = useState('');
   const [foto, setFoto] = useState<string | null>(null);
+  const [selectedValue, setSelectedValue] = useState<string>('Mtb');
 
   const PublicarBoton = async () => {
     console.log({ nombre_Articulo, descripcion, precio, foto });
@@ -397,10 +408,10 @@ const PublicarPantalla: React.FC = () => {
         body: JSON.stringify({nombre_Articulo, descripcion, precio, foto}),
        
       });
-     /*  const data = await response.json();
+      const data = await response.json();
 
       console.log(data);
-      alert(data.mensaje || 'Articulo publicado'); */
+      alert(data.mensaje || 'Articulo publicado');
       
     } catch (error) {
       console.error('Error en el registro:', error);
@@ -481,6 +492,26 @@ const PublicarPantalla: React.FC = () => {
         keyboardType="numeric"
         
       />
+      <View style={styles.seleccionBicicleta}>
+
+        <Text style={styles.label}>Selecciona un tipo de bicicleta:</Text>
+      <View style={styles.pickerContainer}>
+        <Picker
+        
+          selectedValue={selectedValue}
+          onValueChange={(itemValue) => setSelectedValue(itemValue)}
+          style={styles.picker}
+          
+          >
+          <Picker.Item label="MTB" value="Mtb" />
+          <Picker.Item label="Ruta" value="Ruta" />
+          <Picker.Item label="Fija" value="Fija" />
+        </Picker>
+      </View>
+      </View>
+
+      <Text style={styles.result}>Seleccionaste: {selectedValue}</Text>
+
 
       {foto && (
         <Image
@@ -503,6 +534,18 @@ const PublicarPantalla: React.FC = () => {
     </View>
   );
 };
+
+//------------------------------------DETALLE DEL ARTICULO---------------------------------------------//
+const DetalleArticulo: React.FC =() =>{
+  const navigation = useNavigation<Navigation>();
+  return(
+    <SafeAreaProvider>
+      <SafeAreaView>
+
+      </SafeAreaView>
+    </SafeAreaProvider>
+  )
+}
 
 //---------------------------------------CARRITO DE COMPRAS---------------------------------------------//
 const carritoPantalla: React.FC = () => {
@@ -534,12 +577,34 @@ const carritoPantalla: React.FC = () => {
   );
 };
 
-//------------------------------------ DEFINICION DE PANTALLAS ----------------------------------------//
+//--------------------------------------NOTIFICACIONES-------------------------------------------------//
+const notificacionesPantalla: React.FC=()=>{
+  const navigation = useNavigation<Navigation>();
+  return (
+    <SafeAreaProvider>
+      <SafeAreaView>
+
+      </SafeAreaView>
+    </SafeAreaProvider>
+  )
+}
+
+//--------------------------------------CHATS----------------------------------------------------------//
+const chatPantalla: React.FC = () =>{
+  return(
+    <SafeAreaProvider>
+      <SafeAreaView>
+
+      </SafeAreaView>
+    </SafeAreaProvider>
+  )
+}
+// --- DEFINICION DE PANTALLAS ----------------------------------------//
 const Stack = createNativeStackNavigator<StackParamList>();
 
 const RootStack: React.FC = () => {
   return (
-    <Stack.Navigator initialRouteName="MTB">
+    <Stack.Navigator initialRouteName="Presentacion">
       <Stack.Screen name="Presentacion" component={PresentacionPantalla} options={{ headerShown: false}} />
       <Stack.Screen name="Registro" component={RegistroPantalla} options={{ headerShown: false}} />
       <Stack.Screen name="InicioSesion" component={InicioSesionPantalla} options={{ headerShown: false}}/>
@@ -549,7 +614,9 @@ const RootStack: React.FC = () => {
       <Stack.Screen name="Fija" component={FijaPantalla} options={{ headerShown: false}}/>
       <Stack.Screen name="Publicar" component={PublicarPantalla} options={{ headerShown: false}}/> 
       <Stack.Screen name="Carrito" component={carritoPantalla} options={{ headerShown: false}}/>
-      
+      <Stack.Screen name="DetalleArticulo" component={DetalleArticulo} options={{headerShown: false}}/>
+      <Stack.Screen name="Notificaciones" component={notificacionesPantalla} options={{headerShown: false}}/>
+      <Stack.Screen name="chat" component={chatPantalla} options={{headerShown: false}}/>
     </Stack.Navigator>
   );
 };
@@ -747,6 +814,34 @@ tituloMTB: {
   fontWeight: 'bold',
   marginTop: 20,
   textAlign: 'center',
+},
+seleccionBicicleta: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 15,
+},
+label: {
+  fontSize: 16,
+  color: '#2c3e50',
+  marginRight: 10,
+},
+pickerContainer: {
+  flex: 1,
+  backgroundColor: 'white',
+  borderWidth: 1,
+  borderColor: '#ddd',
+  borderRadius: 8,
+  overflow: 'hidden',
+},
+picker: {
+  height: 50,
+  width: '100%',
+},
+result: {
+  fontSize: 16,
+  color: '#7f8c8d',
+  textAlign: 'center',
+  marginBottom: 15,
 },
 
 });

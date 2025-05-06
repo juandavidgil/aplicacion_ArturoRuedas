@@ -65,33 +65,6 @@ app.post('/iniciar-sesion', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error en el servidor' });
   }
 });
-
-//BARRA BUSQUEDA 
-app.get('/buscar', async (req: Request, res: Response) => {
-  const nombre = req.query.nombre as string;
-
-  try {
-    const resultado = await pool.query(
-      'SELECT ID_publicacion, nombre_Articulo, descripcion, precio, foto FROM com_ventas WHERE nombre_Articulo ILIKE $1',
-      [`%${nombre}%`]
-    );
-
-    const articulos = resultado.rows.map((row) => ({
-      id: row.ID_publicacion,
-      nombre: row.nombre_Articulo,
-      descripcion: row.descripcion,
-      precio: row.precio,
-      foto: row.foto,
-     
-    }));
-
-    res.status(200).json(articulos);
-  } catch (error) {
-    console.error('Error al buscar artículos:', error);
-    res.status(500).json({ error: 'Error en el servidor' });
-  }
-});
-
 //Publicar articulo
 app.post('/publicar_articulo', async (req: Request, res: Response) =>{
   const {nombre_Articulo, descripcion, precio, foto} = req.body;
@@ -108,6 +81,37 @@ app.post('/publicar_articulo', async (req: Request, res: Response) =>{
   }
   })
 
+  app.get('/buscar', async (req: Request, res: Response) => {
+    const nombre = req.query.nombre as string;
+  
+    if (!nombre || nombre.trim() === '') {
+      return res.status(400).json({ error: 'El parámetro nombre es obligatorio' });
+    }
+  
+    try {
+      const resultado = await pool.query(
+        'SELECT ID_publicacion, nombre_Articulo, descripcion, precio, foto FROM com_ventas WHERE nombre_Articulo ILIKE $1',
+        [`%${nombre}%`]
+      );
+  
+      if (resultado.rows.length === 0) {
+        console.log('No se encontraron artículos con ese nombre.');
+      }
+  
+      const articulos = resultado.rows.map((row) => ({
+        id: row.id || row.ID_publicacion, // asegúrate que se mapea como `id`
+        nombre_Articulo: row.nombre_Articulo,
+        descripcion: row.descripcion,
+        precio: row.precio,
+        foto: row.foto,
+      }));
+  
+      res.status(200).json(articulos);
+    } catch (error) {
+      console.error('Error al buscar artículos:', error);
+      res.status(500).json({ error: 'Error en el servidor' });
+    }
+  });
 
 //CARRITO DE COMPRAS
 
