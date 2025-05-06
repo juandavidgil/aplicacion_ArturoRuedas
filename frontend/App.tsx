@@ -13,6 +13,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as ImagePicker from 'expo-image-picker';
 import { response } from 'express';
 import {Ionicons} from '@expo/vector-icons'
+import { Interface } from 'readline';
 
 
 
@@ -270,7 +271,7 @@ const CarruselPantalla: React.FC = () => {
 //-------------------------------------MTB-------------------------------------------------------------//
 interface Articulo {
   id: number;
-  nombre: string;
+  nombre_Articulo: string;
   descripcion: string;
   precio: string;
   foto: string;
@@ -286,7 +287,7 @@ const MTBPantalla: React.FC = () => {
 
     setCargando(true);
     try {
-      const response = await fetch(`http://10.0.2.2:3001/buscar?nombre=${encodeURIComponent(busqueda)}`);
+      const response = await fetch(`http://10.0.2.2:3001/buscar?nombre_Articulo=${encodeURIComponent(busqueda)}`);
       const data: Articulo[] = await response.json();
       setArticulos(data);
     } catch (error) {
@@ -296,6 +297,23 @@ const MTBPantalla: React.FC = () => {
     }
   };
 
+  //const guardar al carrito
+  const AgregarCarrito = async () => {
+    console.log(Interface)
+    try{
+      const response = await fetch('http://10.0.2.2:3001/agregar-carrito',{
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        /* body: JSON.stringify{{interface}} */
+      })
+   /*  body: JSON.stringify({Interface}) */
+    }catch(error){
+      console.error('error al guardar en el carrito', error);
+      alert('hubo un error al guardar en el carrito');
+    }
+  };
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.containerMTB}>
@@ -323,9 +341,13 @@ const MTBPantalla: React.FC = () => {
               <View style={styles.cardMTB}>
                 <Image source={{ uri: item.foto }} style={styles.imagenMTB} resizeMode="cover" />
                 <View style={styles.infoMTB}>
-                  <Text style={styles.nombreMTB}>{item.nombre}</Text>
+                  <Text style={styles.nombreMTB}>{item.nombre_Articulo}</Text>
                   <Text style={styles.descripcionMTB}>{item.descripcion}</Text>
                   <Text style={styles.precioMTB}>Precio: ${item.precio}</Text>
+                  {/* por revisar */}
+                  <TouchableOpacity onPress={() => AgregarCarrito(interface.id)}>
+                  <Ionicons name='cart-outline' size={25} />
+    </TouchableOpacity>
                 </View>
               </View>
             )}
@@ -489,7 +511,7 @@ const carritoPantalla: React.FC = () => {
   return(
     <SafeAreaProvider>
        <SafeAreaView> 
-        <Text></Text>
+        <Text>TU CARRITO</Text>
         
         <View /* div barra */>
           
@@ -502,9 +524,8 @@ const carritoPantalla: React.FC = () => {
         <TouchableOpacity>
           <Ionicons name="trash-outline" size={25} color= "#ff0000"></Ionicons>
           </TouchableOpacity> 
-          <TouchableOpacity>
-          <Ionicons name="cart-outline" size={25} color= "#ff0000"></Ionicons>
-          </TouchableOpacity>
+          
+          
           
         </View>
        
