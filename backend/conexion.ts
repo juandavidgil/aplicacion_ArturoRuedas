@@ -56,7 +56,10 @@ app.post('/iniciar-sesion', async (req: Request, res: Response) => {
     );
 
     if (resultado.rows.length > 0) {
-      res.status(200).json({ mensaje: 'Inicio de sesión exitoso' });
+      res.status(200).json({
+        mensaje: 'Inicio de sesión exitoso',
+        usuario: resultado.rows[0] // debe contener ID_usuario
+      });
     } else {
       res.status(401).json({ mensaje: 'Correo o contraseña incorrectos' });
     }
@@ -99,7 +102,7 @@ app.post('/publicar_articulo', async (req: Request, res: Response) =>{
       }
   
       const articulos = resultado.rows.map((row) => ({
-        id: row.id || row.ID_publicacion, // asegúrate que se mapea como `id`
+        id: row.id || row.ID_publicacion, 
         nombre_Articulo: row.nombre_Articulo,
         descripcion: row.descripcion,
         precio: row.precio,
@@ -114,7 +117,84 @@ app.post('/publicar_articulo', async (req: Request, res: Response) =>{
   });
 
 //CARRITO DE COMPRAS
+app.get('/carrito/:id_usuario', async (req: Request, res: Response) => {
+  const ID_usuario = parseInt(req.params.ID_usuario);
 
+  if (isNaN(ID_usuario)) {
+    return res.status(400).json({ error: 'ID de usuario no válido' });
+  }
+
+  try {
+    const resultado = await pool.query(
+      `SELECT c.ID_carrito, cv.ID_publicacion, cv.nombre_Articulo, cv.descripcion, cv.precio, cv.foto
+       FROM carrito c
+       JOIN com_ventas cv ON c.ID_publicacion = cv.ID_publicacion
+       WHERE c.ID_usuario = $1`,
+      [ID_usuario]
+    );
+
+    const articulos = resultado.rows.map((row) => ({
+      id: row.ID_publicacion,
+      nombre_Articulo: row.nombre_Articulo,
+      descripcion: row.descripcion,
+      precio: row.precio,
+      foto: row.foto,
+    }));
+
+    res.status(200).json(articulos);
+  } catch (error) {
+    console.error('Error al obtener el carrito:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+});
+app.post('/agregar-carrito', async (req: Request, res: Response) => {
+  const { ID_usuario, ID_publicacion } = req.body;
+
+  if (!ID_usuario || !ID_publicacion) {
+    return res.status(400).json({ error: 'Faltan datos necesarios' });
+  }
+
+  try {
+    // Opcional: Verificar que el artículo no esté duplicado en el carrito
+    const existe = await pool.query(
+      'SELECT * FROM carrito WHERE ID_usuario = $1 AND ID_publicacion = $2',
+      [ID_usuario, ID_publicacion]
+    );
+
+    if (existe.rows.length > 0) {
+      return res.status(409).json({ mensaje: 'El artículo ya está en el carrito' });
+    }
+
+    await pool.query(
+      'INSERT INTO carrito (ID_usuario, ID_publicacion) VALUES ($1, $2)',
+      [ID_usuario, ID_publicacion]
+    );
+
+    res.status(200).json({ mensaje: 'Artículo agregado al carrito correctamente' });
+  } catch (error) {
+    console.error('Error al agregar artículo al carrito:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+});
+//eliminar carrito
+app.delete('/eliminar-carrito', async (req: Request, res: Response) => {
+  const { ID_usuario, ID_publicacion } = req.body;
+
+  if (!ID_usuario || !ID_publicacion) {
+    return res.status(400).json({ error: 'Faltan datos necesarios' });
+  }
+
+  try {
+    await pool.query(
+      'DELETE FROM carrito WHERE ID_usuario = $1 AND ID_publicacion = $2',
+      [ID_usuario, ID_publicacion]
+    );
+    res.status(200).json({ mensaje: 'Artículo eliminado del carrito correctamente' });
+  } catch (error) {
+    console.error('Error al eliminar artículo del carrito:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+});
 
 // Iniciar servido
 app.listen(PORT, () => {

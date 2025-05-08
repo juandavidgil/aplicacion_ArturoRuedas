@@ -30,11 +30,11 @@ CREATE TABLE usuario (
     telefono VARCHAR(10) NOT NULL,
     bicicletaID_bicicleta INTEGER,
     CONSTRAINT fk_bicicleta FOREIGN KEY (bicicletaID_bicicleta) REFERENCES bicicleta(ID_bicicleta)
-    CONSTRAINT fk_carrito FOREIGN KEY ()
-);
+    );
+
 
 INSERT INTO usuario (nombre, correo, contraseña, telefono)
-VALUES(cristian, cris@gmail.com, 123, 3236870976);
+VALUES("cristian", "cris@gmail.com", 123, "3236870976");
 
 CREATE TABLE mensaje (
     ID_mensaje SERIAL PRIMARY KEY,
@@ -67,7 +67,7 @@ CREATE TABLE com_ventas (
     nombre_Articulo VARCHAR(25) NOT NULL,
     descripcion VARCHAR(25) NOT NULL,
     precio  VARCHAR(25) NOT NULL,
-    tipo_bicicleta VARCHAR(5) NOT NULL,
+    tipo_bicicleta VARCHAR(5) ,
     foto VARCHAR(1000) NOT NULL
 
 );
@@ -94,11 +94,15 @@ CREATE TABLE com_ventas_componentes (
 );
 
 
-CREATE TABLE carrito(
-    iD_carrito INTEGER(25) SERIAL PRIMARY KEY,
-    ID_publicacion INTEGER
-   
-)
+CREATE TABLE carrito (
+    ID_carrito SERIAL PRIMARY KEY,
+    ID_publicacion INTEGER NOT NULL,
+    ID_usuario INTEGER NOT NULL,
+    CONSTRAINT fk_ID_publicacion FOREIGN KEY (ID_publicacion) REFERENCES com_ventas(ID_publicacion),
+    CONSTRAINT fk_ID_usuario FOREIGN KEY (ID_usuario) REFERENCES usuario (ID_usuario)
+);
+
+
 
 SELECT * FROM usuario
 

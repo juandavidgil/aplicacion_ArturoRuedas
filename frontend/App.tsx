@@ -14,6 +14,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { response } from 'express';
 import {Ionicons} from '@expo/vector-icons'
 import { Picker } from '@react-native-picker/picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -30,7 +31,7 @@ type StackParamList = {
   Carrito:undefined;
   DetalleArticulo: undefined;
   Notificaciones: undefined;
-  chat: undefined;
+  Chat: undefined;
 
 };
 
@@ -155,6 +156,7 @@ const InicioSesionPantalla: React.FC = () => {
      const data = JSON.parse(texto);
 
       if (response.ok) {
+        await AsyncStorage.setItem('usuario', JSON.stringify(data.usuario));
         alert(data.mensaje || 'Inicio de sesión exitoso');
         navigation.navigate('Carrusel' as never);
       } else {
@@ -298,27 +300,29 @@ interface Articulo {
 
   const AgregarCarrito = async (articulo: Articulo) => {
     try {
+      const usuario = await AsyncStorage.getItem('usuario');
+      if (!usuario) return alert('Sesión no encontrada');
+  
+      const { ID_usuario } = JSON.parse(usuario);
+      const ID_publicacion = articulo.id;
+  
       const response = await fetch('http://10.0.2.2:3001/agregar-carrito', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ID_publicacion: articulo.id,
-          nombre_Articulo: articulo.nombre_Articulo,
-          descripcion: articulo.descripcion,
-          precio: articulo.precio,
-          foto: articulo.foto
-        })
+        body: JSON.stringify({ ID_usuario, ID_publicacion }),
       });
-
+  
       if (response.ok) {
         alert('Artículo agregado al carrito');
       } else {
+        const error = await response.json();
+        console.error('❌ Respuesta del backend:', error);
         alert('Error al agregar al carrito');
       }
     } catch (error) {
-      console.error('error al guardar en el carrito', error);
+      console.error('Error al guardar en el carrito:', error);
       alert('Hubo un error al guardar en el carrito');
     }
   };
@@ -373,7 +377,7 @@ interface Articulo {
           <TouchableOpacity onPress={() => navigation.navigate('Publicar')}><Ionicons name='storefront-outline' size={30}  /></TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Carrito') }><Ionicons name='cart-outline' size={25} /></TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}><Ionicons name='notifications-outline' size={30} /></TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('chat')}><Ionicons name='chatbubbles-outline' size={25} /></TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Chat')}><Ionicons name='chatbubbles-outline' size={25} /></TouchableOpacity>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -548,32 +552,112 @@ const DetalleArticulo: React.FC =() =>{
 }
 
 //---------------------------------------CARRITO DE COMPRAS---------------------------------------------//
+
+interface Articulo {
+  id: number;
+  nombre_Articulo: string;
+  descripcion: string;
+  precio: string;
+  foto: string;
+}
+
 const carritoPantalla: React.FC = () => {
-  const navigation = useNavigation<Navigation>();
-  
-  return(
-    <SafeAreaProvider>
-       <SafeAreaView> 
-        <Text>TU CARRITO</Text>
-        
-        <View /* div barra */>
-          
-        </View>
-        
-        <View /* div botones */>
-        <TouchableOpacity>
-          <Ionicons name="chatbubble-ellipses-outline"size={25} color= "#4d82bc"></Ionicons>
+  const [articulos, setArticulos] = useState<Articulo[]>([]);
+  const [cargando, setCargando] = useState(true);
+  const navigation = useNavigation();
+
+  const obtenerCarrito = async () => {
+    try {
+      // Recuperar ID del usuario desde AsyncStorage
+      const usuario = await AsyncStorage.getItem('usuario');
+      if (!usuario) return alert('Sesión no encontrada');
+      
+      const { ID_usuario } = JSON.parse(usuario);
+
+      const response = await fetch(`http://10.0.2.2:3001/carrito/${ID_usuario}`);
+      const data: Articulo[] = await response.json();
+      setArticulos(data);
+    } catch (error) {
+      console.error('Error al cargar el carrito:', error);
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  useEffect(() => {
+    obtenerCarrito();
+  }, []);
+
+  const eliminarArticulo = async (idArticulo: number) => {
+    try {
+      // Llamada a tu API para eliminar el artículo del carrito
+      const usuario = await AsyncStorage.getItem('usuario');
+      if (!usuario) return alert('Sesión no encontrada');
+      
+      const { ID_usuario } = JSON.parse(usuario);
+
+      const response = await fetch('http://10.0.2.2:3001/eliminar-carrito', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ID_usuario,
+          ID_publicacion: idArticulo
+        }),
+      });
+
+      if (response.ok) {
+        // Actualiza los artículos en el carrito
+        alert('Artículo eliminado');
+        obtenerCarrito();
+      } else {
+        alert('Error al eliminar el artículo');
+      }
+    } catch (error) {
+      console.error('Error al eliminar el artículo:', error);
+      alert('Error al eliminar el artículo');
+    }
+  };
+
+  return (
+    <SafeAreaView style={{ flex: 1, padding: 16 }}>
+      <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20 }}>Tu Carrito</Text>
+
+      {/* Barra de herramientas */}
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 }}>
+        <TouchableOpacity /* onPress={() => navigation.navigate('Chat')} */>
+          <Ionicons name="chatbubble-ellipses-outline" size={25} color="#4d82bc" />
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Ionicons name="trash-outline" size={25} color= "#ff0000"></Ionicons>
-          </TouchableOpacity> 
-          
-          
-          
-        </View>
-       
-       </SafeAreaView>
-    </SafeAreaProvider>
+
+        <TouchableOpacity onPress={() => alert('Limpiar carrito')}>
+          <Ionicons name="trash-outline" size={25} color="#ff0000" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Artículos del carrito */}
+      {cargando ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : articulos.length === 0 ? (
+        <Text>No tienes artículos en tu carrito.</Text>
+      ) : (
+        <FlatList
+          data={articulos}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <View style={{ flexDirection: 'row', marginBottom: 20 }}>
+              <Image source={{ uri: item.foto }} style={{ width: 80, height: 80, borderRadius: 8 }} />
+              <View style={{ flex: 1, marginLeft: 10 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.nombre_Articulo}</Text>
+                <Text>{item.descripcion}</Text>
+                <Text style={{ marginVertical: 5 }}>Precio: ${item.precio}</Text>
+                <TouchableOpacity onPress={() => eliminarArticulo(item.id)}>
+                  <Ionicons name="trash-outline" size={20} color="#ff0000" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        />
+      )}
+    </SafeAreaView>
   );
 };
 
@@ -616,7 +700,7 @@ const RootStack: React.FC = () => {
       <Stack.Screen name="Carrito" component={carritoPantalla} options={{ headerShown: false}}/>
       <Stack.Screen name="DetalleArticulo" component={DetalleArticulo} options={{headerShown: false}}/>
       <Stack.Screen name="Notificaciones" component={notificacionesPantalla} options={{headerShown: false}}/>
-      <Stack.Screen name="chat" component={chatPantalla} options={{headerShown: false}}/>
+      <Stack.Screen name="Chat" component={chatPantalla} options={{headerShown: false}}/>
     </Stack.Navigator>
   );
 };
