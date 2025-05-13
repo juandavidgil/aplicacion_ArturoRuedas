@@ -1,6 +1,10 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { Pool } from 'pg';
+import nodemailer from 'nodemailer';
+
+
+
 
 // Configuración mejorada de conexión PostgreSQL
 const pool = new Pool({
@@ -121,6 +125,65 @@ app.post('/iniciar-sesion', async (req: Request, res: Response) => {
 });
 
 
+
+const codigosReset = new Map<string, string>();
+
+// 📧 Envío de código de recuperación
+app.post('/enviar-correo-reset', async (req, res) => {
+  const { correo } = req.body;
+  try {
+    const result = await pool.query('SELECT * FROM usuario WHERE correo = $1', [correo]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ mensaje: 'Correo no registrado' });
+    }
+
+    const codigo = Math.floor(100000 + Math.random() * 900000).toString();
+    codigosReset.set(correo, codigo);
+    console.log(`📩 Código generado para ${correo}: ${codigo}`);
+
+    // 🛠️ Configura tu contraseña de aplicación aquí
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'juandavidgil0911@gmail.com',
+        pass: '123456', // ⚠️ No pongas tu contraseña normal
+      },
+    });
+
+    await transporter.sendMail({
+      from: '"Soporte Ruedas" <tucorreo@gmail.com>',
+      to: correo,
+      subject: 'Código para restablecer contraseña',
+      text: `Tu código es: ${codigo}`,
+    });
+
+    res.json({ mensaje: 'Código enviado al correo' });
+  } catch (error) {
+    console.error('❌ Error enviando correo:', error);
+    res.status(500).json({ mensaje: 'Error del servidor' });
+  }
+});
+
+// 🔄 Restablecer contraseña
+app.post('/restablecer-contrasena', async (req, res) => {
+  const { correo, codigo, nuevaContraseña } = req.body;
+  const codigoGuardado = codigosReset.get(correo);
+  if (!codigoGuardado || codigoGuardado !== codigo) {
+    return res.status(400).json({ mensaje: 'Código incorrecto o expirado' });
+  }
+
+  try {
+    await pool.query('UPDATE usuario SET contraseña = $1 WHERE correo = $2', [nuevaContraseña, correo]);
+    codigosReset.delete(correo);
+    res.json({ mensaje: 'Contraseña actualizada correctamente' });
+  } catch (error) {
+    console.error('❌ Error actualizando contraseña:', error);
+    res.status(500).json({ mensaje: 'Error del servidor' });
+  }
+});
+
+
+
 //Publicar articulo
 app.post('/publicar_articulo', async (req: Request, res: Response) =>{
   const {nombre_Articulo, descripcion, precio, foto} = req.body;
@@ -146,7 +209,7 @@ app.get('/buscar', async (req: Request, res: Response) => {
     }
 
     let query = `
-      SELECT id_publicacion, nombre_articulo, descripcion, precio, foto 
+      SELECT ID_publicacion, nombre_Articulo, descripcion, precio, foto 
       FROM com_ventas 
       WHERE nombre_articulo ILIKE $1
     `;

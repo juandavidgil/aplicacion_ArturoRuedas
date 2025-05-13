@@ -92,7 +92,7 @@ const InicioSesionPantalla: React.FC = () => {
       
       <TouchableOpacity 
         style={styles.forgotPassword}
-        onPress={() => Alert.alert('Recuperar contraseña', 'Funcionalidad en desarrollo')}
+        onPress={() => navigation.navigate('RestablecerContraseña')}
       >
         <Text style={styles.forgotText}>¿Olvidaste tu contraseña?</Text>
       </TouchableOpacity>

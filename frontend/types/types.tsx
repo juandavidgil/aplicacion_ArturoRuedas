@@ -13,6 +13,7 @@ export type StackParamList = {
   DetalleArticulo: { articulo: Articulo };
   Notificaciones: undefined;
   Chat: undefined;
+  RestablecerContraseña: undefined;
 };
 
 export interface Articulo {

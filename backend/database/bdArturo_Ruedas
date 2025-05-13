@@ -27,7 +27,7 @@ CREATE TABLE componentes (
 CREATE TABLE usuario (
     ID_usuario SERIAL PRIMARY KEY,
     nombre VARCHAR(25) NOT NULL,
-    correo VARCHAR(25) NOT NULL,
+    correo VARCHAR(50) NOT NULL,
     contraseña VARCHAR(25) NOT NULL,
     telefono VARCHAR(10) NOT NULL,
     bicicletaID_bicicleta INTEGER,
@@ -67,9 +67,9 @@ CREATE TABLE chats_usuario (
 
 CREATE TABLE com_ventas (
     ID_publicacion SERIAL PRIMARY KEY,
-    nombre_ion VARCHAR(25) NOT NULL,
-    preciArticulo VARCHAR(25) NOT NULL,
-    descripco  VARCHAR(25) NOT NULL,
+    nombre_Articulo VARCHAR(25) NOT NULL,
+    precio VARCHAR(25) NOT NULL,
+    descripcion VARCHAR(25) NOT NULL,
     tipo_bicicleta VARCHAR(5) ,
     foto VARCHAR(1000) NOT NULL
     
@@ -77,8 +77,12 @@ CREATE TABLE com_ventas (
 
 );
 
-ALTER TABLE com_ventas add COLUMN id_usuario INT NOT NULL
-ALTER TABLE com_ventas add COLUMN CONSTRAINT fk_usuario_ventas FOREIGN KEY (id_usuario) REFERENCES usuario(ID_usuario)
+ALTER TABLE com_ventas 
+ADD COLUMN ID_usuario INT;
+
+ALTER TABLE com_ventas 
+ADD CONSTRAINT fk_usuario_ventas 
+FOREIGN KEY (ID_usuario) REFERENCES usuario (ID_usuario);
  
 
 
@@ -116,4 +120,5 @@ SELECT * FROM usuario
 
  
 SELECT * FROM com_ventas
+
 

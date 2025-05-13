@@ -11,6 +11,8 @@ import FijaPantalla from './components/FijaPantalla';
 import PublicarPantalla from './components/PublicarPantalla';
 import CarritoPantalla from './components/CarritoPantalla';
 import { StackParamList } from './types/types';
+import RestablecerContraseñaPantalla from './components/RestablecerContraseñaPantalla';
+
 
 const Stack = createNativeStackNavigator<StackParamList>();
 
@@ -33,6 +35,7 @@ const App = () => {
         <Stack.Screen name="Fija" component={FijaPantalla} />
         <Stack.Screen name="Publicar" component={PublicarPantalla} />
         <Stack.Screen name="Carrito" component={CarritoPantalla} />
+        <Stack.Screen name="RestablecerContraseña" component={RestablecerContraseñaPantalla} />
       </Stack.Navigator>
     </NavigationContainer>
   );
