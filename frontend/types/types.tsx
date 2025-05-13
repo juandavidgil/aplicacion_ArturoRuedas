@@ -14,6 +14,7 @@ export type StackParamList = {
   Notificaciones: undefined;
   Chat: undefined;
   RestablecerContraseña: undefined;
+  MODELO3d: undefined
 };
 
 export interface Articulo {
@@ -25,6 +26,7 @@ export interface Articulo {
   tipo_bicicleta: string;
 }
 
+
 // Tipos para las rutas
 export type MTBScreenRouteProp = RouteProp<StackParamList, 'MTB'>;
 export type RutaScreenRouteProp = RouteProp<StackParamList, 'Ruta'>;
@@ -33,3 +35,8 @@ export type DetalleArticuloRouteProp = RouteProp<StackParamList, 'DetalleArticul
 export type RegistroScreenNavigationProp =RouteProp<StackParamList, 'Registro'>;
 export type InicioSesionScreenNavigationProp = RouteProp<StackParamList, 'InicioSesion'>;
 export type CarruselScreenNavigationProp = RouteProp<StackParamList, 'Carrusel'>;
+export type PublicarScreenNavigationProp = RouteProp<StackParamList, 'Publicar'>;
+export type NotificacionesScreenNavigationProp = RouteProp<StackParamList, 'Notificaciones'>;
+export type ChatScreenNavigationProp = RouteProp<StackParamList, 'Chat'>;
+export type CarritoScreenNavigationProp = RouteProp<StackParamList, 'Carrito'>;
+export type ProductVideoCardScreenNavigationProp = RouteProp<StackParamList, 'MODELO3d'>;

@@ -14,7 +14,7 @@ const InicioSesionPantalla: React.FC = () => {
   const [contraseña, setContraseña] = useState('');
   const [cargando, setCargando] = useState(false);
 
-  const handleLogin = async () => {
+   const handleLogin = async () => {
     if (!correo || !contraseña) {
       Alert.alert('Error', 'Por favor ingresa correo y contraseña');
       return;
@@ -31,17 +31,19 @@ const InicioSesionPantalla: React.FC = () => {
       });
 
       const data = await response.json();
+      console.log('Respuesta del servidor:', data); // Log para depuración
       
       if (response.ok) {
-        // Guardar datos del usuario
+        // Guardar TODOS los datos del usuario incluyendo el ID
         await AsyncStorage.setItem('usuario', JSON.stringify(data.usuario));
+        console.log('Usuario guardado:', data.usuario); // Log para depuración
         Alert.alert('Éxito', 'Inicio de sesión correcto');
         navigation.navigate('Carrusel');
       } else {
-        Alert.alert('Error', data.mensaje || 'Credenciales incorrectas');
+        Alert.alert('Error', data.error || 'Credenciales incorrectas');
       }
     } catch (error) {
-      console.error('Error al iniciar sesión:', error);
+      console.error('Error completo al iniciar sesión:', error);
       Alert.alert('Error', 'No se pudo iniciar sesión');
     } finally {
       setCargando(false);

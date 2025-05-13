@@ -104,7 +104,7 @@ app.post('/iniciar-sesion', async (req: Request, res: Response) => {
     }
 
     const result = await pool.query(
-      `SELECT id_usuario, nombre, correo 
+      `SELECT id_usuario AS "ID_usuario", nombre, correo 
        FROM usuario 
        WHERE correo = $1 AND contraseña = $2`,
       [correo, contraseña]
@@ -116,14 +116,13 @@ app.post('/iniciar-sesion', async (req: Request, res: Response) => {
 
     res.status(200).json({ 
       mensaje: 'Inicio de sesión exitoso',
-      usuario: result.rows[0]
+      usuario: result.rows[0] // Esto ahora incluye ID_usuario
     });
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
     res.status(500).json({ error: 'Error en el servidor' });
   }
 });
-
 
 
 const codigosReset = new Map<string, string>();
@@ -186,12 +185,12 @@ app.post('/restablecer-contrasena', async (req, res) => {
 
 //Publicar articulo
 app.post('/publicar_articulo', async (req: Request, res: Response) =>{
-  const {nombre_Articulo, descripcion, precio, foto} = req.body;
+  const {nombre_Articulo, descripcion, precio,  tipo_bicicleta, foto} = req.body;
 
   try{
     await pool.query(
-      'INSERT INTO com_ventas (nombre_Articulo, descripcion, precio, foto) VALUES ($1, $2, $3, $4)',
-      [nombre_Articulo, descripcion, precio, foto]
+      'INSERT INTO com_ventas (nombre_Articulo, descripcion, precio, tipo_bicicleta ,foto ) VALUES ($1, $2, $3, $4, $5)',
+      [nombre_Articulo, descripcion, precio, tipo_bicicleta, foto ]
     );
     res.status(200).json({mensaje: 'Articulo agregado correctamente'});
   } catch(error){
@@ -199,68 +198,68 @@ app.post('/publicar_articulo', async (req: Request, res: Response) =>{
     res.status(500).json({error: 'Error en el servidor'})
   }
   })
-// Ruta para buscar artículos - Mejorada
-app.get('/buscar', async (req: Request, res: Response) => {
+
+  //buscar
+  app.get('/buscar', async (req: Request, res: Response) => {
+  const nombre = req.query.nombre as string;
+
+  if (!nombre || nombre.trim() === '') {
+    return res.status(400).json({ error: 'El parámetro "nombre" es obligatorio' });
+  }
+
   try {
-    const { nombre, min_precio, max_precio } = req.query;
-    
-    if (!nombre || typeof nombre !== 'string') {
-      return res.status(400).json({ error: 'Parámetro nombre es obligatorio' });
-    }
+    const resultado = await pool.query(
+      'SELECT ID_publicacion, nombre_Articulo, descripcion, precio, tipo_bicicleta, foto FROM com_ventas WHERE nombre_Articulo ILIKE $1',
+      [`%${nombre}%`]
+    );
 
-    let query = `
-      SELECT ID_publicacion, nombre_Articulo, descripcion, precio, foto 
-      FROM com_ventas 
-      WHERE nombre_articulo ILIKE $1
-    `;
-    const params = [`%${nombre}%`];
-    
-    if (min_precio) {
-      query += ' AND precio >= $2';
-      params.push(min_precio as string);
-    }
-    
-    if (max_precio) {
-      query += ` AND precio <= $${params.length + 1}`;
-      params.push(max_precio as string);
-    }
+    const articulos = resultado.rows.map((row) => ({
+      id: row.id || row.id_publicacion || row.ID_publicacion,
+      nombre_Articulo: row.nombre_articulo || row.nombre_Articulo,
+      descripcion: row.descripcion,
+      precio: row.precio,
+      tipo_bicicleta: row.tipo_bicicleta, // ✅ Este nombre debe coincidir con el frontend
+      foto: row.foto,
+    }));
 
-    const resultado = await pool.query(query, params);
-    
-    res.status(200).json(resultado.rows);
+    res.status(200).json(articulos);
   } catch (error) {
-    console.error('Error al buscar artículos:', error);
-    res.status(500).json({ error: 'Error en el servidor' });
+    console.error('❌ Error al buscar artículos:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
-
 // Ruta para agregar al carrito - Mejorada
 app.post('/agregar-carrito', async (req: Request, res: Response) => {
   try {
-    const { id_usuario, id_publicacion } = req.body;
-    
-    if (!id_usuario || !id_publicacion) {
+    const { ID_usuario, ID_publicacion } = req.body;
+    console.log('ID_usuario recibido:', ID_usuario);
+console.log('ID_publicacion recibido:', ID_publicacion);
+
+    if (!ID_usuario || !ID_publicacion) {
       return res.status(400).json({ error: 'IDs de usuario y publicación son obligatorios' });
+      
     }
 
-    // Verificar existencia en una sola consulta
+    // Verificar existencia del usuario por correo
     const verificacion = await pool.query(
       `SELECT 
-        (SELECT 1 FROM usuario WHERE id_usuario = $1) AS usuario_existe,
-        (SELECT 1 FROM com_ventas WHERE id_publicacion = $2) AS articulo_existe,
-        (SELECT 1 FROM carrito WHERE id_usuario = $1 AND id_publicacion = $2) AS en_carrito`,
-      [id_usuario, id_publicacion]
+        (SELECT 1 FROM usuario WHERE ID_usuario = $1) AS usuario_existe,
+        (SELECT 1 FROM com_ventas WHERE ID_publicacion = $2) AS articulo_existe,
+        (SELECT 1 FROM carrito WHERE ID_usuario = $1 AND ID_publicacion = $2) AS en_carrito`,
+      [ID_usuario, ID_publicacion]
     );
-    
+
+    console.log('Resultado de verificación:', verificacion.rows[0]);
+
     const { usuario_existe, articulo_existe, en_carrito } = verificacion.rows[0];
-    
+
     if (!usuario_existe) return res.status(404).json({ error: 'Usuario no encontrado' });
     if (!articulo_existe) return res.status(404).json({ error: 'Artículo no encontrado' });
     if (en_carrito) return res.status(409).json({ error: 'Artículo ya está en el carrito' });
 
     await pool.query(
-      'INSERT INTO carrito (id_usuario, id_publicacion) VALUES ($1, $2)',
-      [id_usuario, id_publicacion]
+      'INSERT INTO carrito (ID_usuario, ID_publicacion) VALUES ($1, $2)',
+      [ID_usuario, ID_publicacion]
     );
 
     res.status(201).json({ mensaje: 'Artículo agregado al carrito correctamente' });
@@ -270,30 +269,103 @@ app.post('/agregar-carrito', async (req: Request, res: Response) => {
   }
 });
 
-// Eliminar del carrito - Mejorada
-app.delete('/eliminar-carrito', async (req: Request, res: Response) => {
+// Endpoint para obtener los artículos del carrito de un usuario
+app.get('/carrito/:id_usuario', async (req: Request, res: Response) => {
+  console.log('🔍 Solicitud GET recibida en /carrito/:id_usuario');
+  
   try {
-    const { id_usuario, id_publicacion } = req.body;
+    const { id_usuario } = req.params;
     
-    if (!id_usuario || !id_publicacion) {
-      return res.status(400).json({ error: 'IDs de usuario y publicación son obligatorios' });
+    // Validación del ID
+    if (!id_usuario || isNaN(Number(id_usuario))) {
+      console.error('❌ ID de usuario inválido:', id_usuario);
+      return res.status(400).json({ 
+        error: 'ID de usuario inválido',
+        received: id_usuario
+      });
     }
 
-    const result = await pool.query(
-      `DELETE FROM carrito 
-       WHERE id_usuario = $1 AND id_publicacion = $2 
-       RETURNING 1`,
-      [id_usuario, id_publicacion]
+    console.log(`🛒 Buscando carrito para usuario ID: ${id_usuario}`);
+    
+    const query = `
+      SELECT 
+        cv.ID_publicacion as id,
+        cv.nombre_Articulo as nombre_articulo,
+        cv.descripcion,
+        cv.precio,
+        cv.foto,
+        cv.tipo_bicicleta
+      FROM carrito c
+      JOIN com_ventas cv ON c.ID_publicacion = cv.ID_publicacion
+      WHERE c.ID_usuario = $1
+    `;
+
+    const result = await pool.query(query, [id_usuario]);
+    
+    console.log(`✅ Encontrados ${result.rows.length} artículos para usuario ${id_usuario}`);
+    
+    res.status(200).json(result.rows);
+    
+  } catch (error) {
+    console.error('❌ Error en GET /carrito/:id_usuario:', error);
+    res.status(500).json({ 
+      error: 'Error al obtener el carrito',
+      
+    });
+  }
+});
+
+// Endpoint para eliminar un artículo del carrito
+app.delete('/eliminar-carrito', async (req: Request, res: Response) => {
+  console.log('🗑️ Solicitud DELETE recibida en /eliminar-carrito');
+  console.log('Body recibido:', req.body);
+  
+  try {
+    const { ID_usuario, ID_publicacion } = req.body;
+
+    // Validación de campos
+    if (!ID_usuario || !ID_publicacion) {
+      console.error('❌ Faltan campos requeridos');
+      return res.status(400).json({ 
+        error: 'IDs de usuario y publicación son obligatorios',
+        received: req.body
+      });
+    }
+
+    // Verificar existencia antes de eliminar
+    const existe = await pool.query(
+      'SELECT 1 FROM carrito WHERE ID_usuario = $1 AND ID_publicacion = $2',
+      [ID_usuario, ID_publicacion]
     );
     
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: 'Artículo no encontrado en el carrito' });
+    if (existe.rows.length === 0) {
+      console.error('❌ Artículo no encontrado en carrito');
+      return res.status(404).json({ 
+        error: 'Artículo no encontrado en el carrito',
+        details: `Usuario: ${ID_usuario}, Artículo: ${ID_publicacion}`
+      });
     }
 
-    res.status(200).json({ mensaje: 'Artículo eliminado del carrito correctamente' });
+    // Eliminar el artículo
+    const result = await pool.query(
+      'DELETE FROM carrito WHERE ID_usuario = $1 AND ID_publicacion = $2 RETURNING *',
+      [ID_usuario, ID_publicacion]
+    );
+
+    console.log(`✅ Artículo eliminado:`, result.rows[0]);
+    
+    res.status(200).json({ 
+      success: true,
+      mensaje: 'Artículo eliminado del carrito',
+      data: result.rows[0]
+    });
+    
   } catch (error) {
-    console.error('Error al eliminar del carrito:', error);
-    res.status(500).json({ error: 'Error en el servidor' });
+    console.error('❌ Error en DELETE /eliminar-carrito:', error);
+    res.status(500).json({ 
+      error: 'Error al eliminar del carrito',
+     
+    });
   }
 });
 

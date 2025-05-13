@@ -21,7 +21,7 @@ const PresentacionPantalla: React.FC = () => {
         >
           <View style={styles.content}>
             <Text style={styles.title}>ARTURO RUEDAS</Text>
-            <Text style={styles.subtitle}>Tu tienda de ciclismo favorita</Text>
+            <Text style={styles.subtitle}>Personaliza sin limites</Text>
             
             <View style={styles.buttonContainer}>
               <TouchableOpacity 

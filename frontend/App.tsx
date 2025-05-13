@@ -12,6 +12,10 @@ import PublicarPantalla from './components/PublicarPantalla';
 import CarritoPantalla from './components/CarritoPantalla';
 import { StackParamList } from './types/types';
 import RestablecerContraseñaPantalla from './components/RestablecerContraseñaPantalla';
+import ChatPantalla from './components/ChatPantalla';
+import NotificacionesPantalla from './components/NotificacionesPantalla';
+import ProductVideoCard from './components/MODELO3d';
+
 
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -29,13 +33,17 @@ const App = () => {
         <Stack.Screen name="Presentacion" component={PresentacionPantalla} />
         <Stack.Screen name="Registro" component={RegistroPantalla} />
         <Stack.Screen name="InicioSesion" component={InicioSesionPantalla} />
+        <Stack.Screen name="RestablecerContraseña" component={RestablecerContraseñaPantalla} />
         <Stack.Screen name="Carrusel" component={CarruselPantalla} />
         <Stack.Screen name="MTB" component={MTBPantalla} />
         <Stack.Screen name="Ruta" component={RutaPantalla} />
         <Stack.Screen name="Fija" component={FijaPantalla} />
         <Stack.Screen name="Publicar" component={PublicarPantalla} />
         <Stack.Screen name="Carrito" component={CarritoPantalla} />
-        <Stack.Screen name="RestablecerContraseña" component={RestablecerContraseñaPantalla} />
+        <Stack.Screen name= "Chat" component={ChatPantalla}/>
+        <Stack.Screen name= "Notificaciones" component={NotificacionesPantalla}/>
+        <Stack.Screen name= "MODELO3d" component={ProductVideoCard}/>
+
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -122,3 +122,7 @@ SELECT * FROM usuario
 SELECT * FROM com_ventas
 
 
+SELECT * FROM com_ventas 
+WHERE nombre_Articulo ILIKE '%llantas%' 
+AND LOWER(tipo_bicicleta) = 'MTB';
+
