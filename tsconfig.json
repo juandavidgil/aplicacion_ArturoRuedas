@@ -1,9 +1,11 @@
 {
-  "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "target": "es2021",
     "module": "esnext",
-    "lib": ["dom", "es2021"],
+    "lib": [
+      "dom",
+      "es2021"
+    ],
     "moduleResolution": "node",
     "strict": true,
     "noEmit": true,
@@ -14,10 +16,20 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": "./",
     "paths": {
-      "@backend/*": ["backend/*"],
-      "@frontend/*": ["frontend/*"]
+      "@backend/*": [
+        "backend/*"
+      ],
+      "@frontend/*": [
+        "frontend/*"
+      ]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "extends": "expo/tsconfig.base"
 }

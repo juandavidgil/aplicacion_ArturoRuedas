@@ -6,13 +6,10 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StackParamList } from '../types/types';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 interface Articulo {
-  id: number;
-  nombre_articulo: string;
+  ID_publicacion: number;
+  nombre_Articulo: string;
   descripcion: string;
   precio: string;
   foto: string;
@@ -20,185 +17,66 @@ interface Articulo {
 }
 
 const CarritoPantalla: React.FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [articulos, setArticulos] = useState<Articulo[]>([]);
   const [cargando, setCargando] = useState(true);
   const [total, setTotal] = useState(0);
-const obtenerCarrito = async () => {
-  try {
-    setCargando(true);
-    
-    // 1. Obtener usuario de AsyncStorage
-    const usuarioStr = await AsyncStorage.getItem('usuario');
-    if (!usuarioStr) {
-      Alert.alert('Error', 'Debes iniciar sesión primero');
-      return;
-    }
 
-    // 2. Parsear datos del usuario
-    const usuario = JSON.parse(usuarioStr);
-    const ID_usuario = usuario.ID_usuario;
-    
-    if (!ID_usuario) {
-      throw new Error('No se pudo obtener el ID de usuario');
-    }
-
-    console.log(`🔄 Obteniendo carrito para usuario: ${ID_usuario}`);
-    
-    // 3. Hacer la petición al backend
-    const apiUrl = `http://10.0.2.2:3001/carrito/${ID_usuario}`;
-    console.log(`🌐 URL de la solicitud: ${apiUrl}`);
-    
-    const response = await fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+  const obtenerCarrito = async () => {
+    try {
+      const usuarioStr = await AsyncStorage.getItem('usuario');
+      if (!usuarioStr) {
+        Alert.alert('Error', 'Debes iniciar sesión primero');
+        return;
       }
-    });
 
-    // 4. Verificar la respuesta
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('❌ Respuesta no OK:', {
-        status: response.status,
-        statusText: response.statusText,
-        responseText: errorText
-      });
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
+      const usuario = JSON.parse(usuarioStr);
+      const ID_usuario = usuario.ID_usuario;
 
-    // 5. Procesar la respuesta JSON
-    const contentType = response.headers.get('content-type');
-    if (!contentType?.includes('application/json')) {
-      const text = await response.text();
-      console.error('⚠️ Respuesta no es JSON:', text);
-      throw new Error('La respuesta no es JSON válido');
-    }
-
-    const data = await response.json();
-    console.log('📦 Datos recibidos:', data);
-    
-    // 6. Actualizar el estado
-    setArticulos(data);
-    
-    // 7. Calcular el total
-    const suma = data.reduce((acc: number, item: any) => {
-      const precio = parseFloat(item.precio) || 0;
-      return acc + precio;
-    }, 0);
-    setTotal(suma);
-    
-  } catch (error) {
-    console.error('🚨 Error completo en obtenerCarrito:', {
-    
-    });
-    Alert.alert('Error', 'No se pudo cargar el carrito. Verifica tu conexión.');
-  } finally {
-    setCargando(false);
-  }
-};
-
-  const eliminarArticulo = async (id: number) => {
-  try {
-    // 1. Obtener usuario de AsyncStorage
-    const usuarioStr = await AsyncStorage.getItem('usuario');
-    if (!usuarioStr) {
-      Alert.alert('Error', 'Debes iniciar sesión primero');
-      return;
-    }
-
-    // 2. Parsear datos del usuario
-    const usuario = JSON.parse(usuarioStr);
-    const ID_usuario = usuario.ID_usuario || usuario.id_usuario || usuario.id;
-    
-    if (!ID_usuario) {
-      throw new Error('No se pudo obtener el ID de usuario');
-    }
-
-    console.log(`🗑️ Intentando eliminar artículo ID: ${id} del usuario ID: ${ID_usuario}`);
-    
-    // 3. Configurar la solicitud
-    const apiUrl = 'http://10.0.2.2:3001/eliminar-carrito';
-    const body = JSON.stringify({ 
-      ID_usuario: ID_usuario, 
-      ID_publicacion: id 
-    });
-
-    console.log(`🌐 URL: ${apiUrl}, Body: ${body}`);
-    
-    // 4. Hacer la petición
-    const response = await fetch(apiUrl, {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: body
-    });
-
-    // 5. Verificar la respuesta
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('❌ Error en la respuesta:', {
-        status: response.status,
-        errorData
-      });
-      throw new Error(errorData.error || 'Error al eliminar el artículo');
-    }
-
-    // 6. Procesar la respuesta exitosa
-    const result = await response.json();
-    console.log('✅ Artículo eliminado:', result);
-    
-    // 7. Actualizar el carrito
-    await obtenerCarrito();
-    Alert.alert('Éxito', 'Artículo eliminado del carrito');
-    
-  } catch (error) {
-    console.error('🚨 Error completo en eliminarArticulo:', {
+      const response = await fetch(`http://10.0.2.2:3001/carrito/${ID_usuario}`);
+      const data: Articulo[] = await response.json();
       
-    });
-    Alert.alert('No se pudo eliminar el artículo');
-  }
-};
+      setArticulos(data);
+      
+      // Calcular total
+      const suma = data.reduce((acc, item) => acc + parseFloat(item.precio), 0);
+      setTotal(suma);
+    } catch (error) {
+      console.error('Error al obtener carrito:', error);
+      Alert.alert('Error', 'No se pudo cargar el carrito');
+    } finally {
+      setCargando(false);
+    }
+  };
 
+  const eliminarArticulo = async (ID_publicacion: number) => {
+    try {
+      const usuarioStr = await AsyncStorage.getItem('usuario');
+      if (!usuarioStr) return;
 
+      const usuario = JSON.parse(usuarioStr);
+      const ID_usuario = usuario.ID_usuario;
+
+      const response = await fetch('http://10.0.2.2:3001/eliminar-carrito', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ID_usuario, ID_publicacion }),
+      });
+
+      if (response.ok) {
+        obtenerCarrito(); // Refrescar la lista
+        Alert.alert('Éxito', 'Artículo eliminado del carrito');
+      } else {
+        Alert.alert('Error', 'No se pudo eliminar el artículo');
+      }
+    } catch (error) {
+      console.error('Error al eliminar artículo:', error);
+      Alert.alert('Error', 'Error al eliminar el artículo');
+    }
+  };
 
   useEffect(() => {
     obtenerCarrito();
   }, []);
-
-  const renderItem = ({ item }: { item: Articulo }) => (
-    <View style={styles.card}>
-      <Image 
-        source={{ uri: item.foto }} 
-        style={styles.imagen} 
-        resizeMode="cover" 
-        onError={() => console.log("Error cargando imagen")}
-      />
-      <View style={styles.info}>
-        <Text style={styles.nombre}>{item.nombre_articulo}</Text>
-        <Text style={styles.descripcion}>{item.descripcion}</Text>
-        <Text style={styles.precio}>${item.precio}</Text>
-        <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
-        <TouchableOpacity 
-          onPress={() => eliminarArticulo(item.id)}
-          style={styles.botonEliminar}
-        >
-          <Ionicons name="trash-outline" size={20} color="#e63946" />
-          <Text style={styles.textoEliminar}>Eliminar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          onPress={() => navigation.navigate('Chat')}
-          style={styles.botonMensajeAlVendedor}
-        >
-          <Ionicons name="chatbubble-ellipses-outline" size={20} color="#51AFF7" />
-          <Text style={styles.textoMensajeAlVendedor}>Mensaje al vendedor</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -212,8 +90,25 @@ const obtenerCarrito = async () => {
         <>
           <FlatList
             data={articulos}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderItem}
+            keyExtractor={(item) => item.ID_publicacion.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.item}>
+                <Image source={{ uri: item.foto }} style={styles.imagen} />
+                 <View style={styles.info}>
+                  <Text style={styles.nombre}>{item.nombre_Articulo}</Text>
+                  <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
+                  <Text style={styles.precio}>${item.precio}</Text>
+                  
+                  <TouchableOpacity 
+                    style={styles.botonEliminar}
+                    onPress={() => eliminarArticulo(item.ID_publicacion)}
+                  >
+                    <Ionicons name="trash-outline" size={20} color="#e63946" />
+                    <Text style={styles.textoEliminar}>Eliminar</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
             contentContainerStyle={styles.lista}
           />
           
@@ -235,19 +130,17 @@ const obtenerCarrito = async () => {
   );
 };
 
-// Estilos (se mantienen igual que en tu código original)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: '#f0f4f7',
+    backgroundColor: '#f8f9fa',
+    padding: 15,
   },
   titulo: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1a202c',
     marginBottom: 20,
-    marginTop: 40,
+    color: '#333',
     textAlign: 'center',
   },
   loader: {
@@ -259,59 +152,48 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#666',
   },
-  card: {
+  item: {
     flexDirection: 'row',
-    marginBottom: 20,
-    backgroundColor: '#ffffff',
-    padding: 12,
-    borderRadius: 12,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 4,
+    shadowRadius: 4,
+    elevation: 3,
   },
   imagen: {
-    width: 110,
-    height: 110,
-    borderRadius: 10,
-    backgroundColor: '#e0e0e0',
+    width: 80,
+    height: 80,
+    borderRadius: 8,
   },
   info: {
     flex: 1,
     marginLeft: 15,
-    justifyContent: 'space-around',
+    justifyContent: 'center',
   },
   nombre: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
   },
-  descripcion: {
-    fontSize: 14,
-    color: '#666',
+  tipo: {
+    fontSize: 12,
+    color: '#4d82bc',
+    marginTop: 2,
   },
   precio: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#2c7a7b',
-  },
-  tipo: {
-    fontSize: 14,
-    color: '#666',
+    fontWeight: 'bold',
+    color: '#e63946',
+    marginTop: 5,
   },
   botonEliminar: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 8,
-  },
-  botonMensajeAlVendedor :{
-     flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  textoMensajeAlVendedor:{
-color:"#51AFF7"
   },
   textoEliminar: {
     color: '#e63946',

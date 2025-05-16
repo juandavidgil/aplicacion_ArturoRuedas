@@ -69,23 +69,17 @@ CREATE TABLE com_ventas (
     ID_publicacion SERIAL PRIMARY KEY,
     nombre_Articulo VARCHAR(25) NOT NULL,
     precio VARCHAR(25) NOT NULL,
-    descripcion VARCHAR(25) NOT NULL,
+    descripcion VARCHAR(500) NOT NULL,
     tipo_bicicleta VARCHAR(5) ,
     foto VARCHAR(1000) NOT NULL
-    
-   
-
 );
-
 ALTER TABLE com_ventas 
 ADD COLUMN ID_usuario INT;
 
 ALTER TABLE com_ventas 
 ADD CONSTRAINT fk_usuario_ventas 
 FOREIGN KEY (ID_usuario) REFERENCES usuario (ID_usuario);
- 
-
-
+DROP TABLE com_ventas
 
 
 CREATE TABLE com_ventas_usuario (
@@ -125,4 +119,5 @@ SELECT * FROM com_ventas
 SELECT * FROM com_ventas 
 WHERE nombre_Articulo ILIKE '%llantas%' 
 AND LOWER(tipo_bicicleta) = 'MTB';
+
 

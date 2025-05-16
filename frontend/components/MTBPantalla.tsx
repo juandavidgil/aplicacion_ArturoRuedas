@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import {
   View, Text, TextInput, FlatList, Image,
   TouchableOpacity, StyleSheet, ActivityIndicator,
-  SafeAreaView, Alert, ScrollView
+  SafeAreaView, Alert, ScrollView,
+  Touchable
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -124,6 +125,16 @@ const MTBPantalla: React.FC = () => {
                   }
                 />
               )}
+              {/* barra informacion de componentes */}
+              <View style={styles.barraComponentes}>
+              <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
+                <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER}  source={require('../iconos/marcoMtb.jpeg')} />
+              </TouchableOpacity>
+                <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
+                 <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
+                  <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
+              </View>
+
 
               {/* Mostrar el video y descripción solo si no hay búsqueda activa */}
               {busqueda.trim() === '' && (
@@ -253,6 +264,24 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginTop:30,
   },
+  barraComponentes:{
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 12,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 30,
+    position: 'absolute',
+    bottom: 120,
+    left: 16,
+    right: 16,
+  },
+  iconoComponentes:{
+  width: 35,
+  height: 35
+  
+  },
   video: {
     width: '100%',
     height: '100%',
@@ -263,8 +292,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     paddingVertical: 12,
     backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: '#ccc',
+    borderWidth: 1,
+    borderColor: '#ccc',
     borderRadius: 30,
     position: 'absolute',
     bottom: 60,
