@@ -123,3 +123,16 @@ AND LOWER(tipo_bicicleta) = 'MTB';
 SELECT * FROM carrito
 
 
+SELECT 
+    cv.nombre_Articulo, 
+    cv.descripcion, 
+    cv.precio, 
+    cv.tipo_bicicleta, 
+    cv.foto, 
+    cv.ID_usuario,
+    u.nombre 
+FROM 
+    com_ventas cv
+INNER JOIN 
+    usuario u ON cv.ID_usuario = u.ID_usuario
+

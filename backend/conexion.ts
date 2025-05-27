@@ -185,12 +185,12 @@ app.post('/restablecer-contrasena', async (req, res) => {
 
 //Publicar articulo
 app.post('/publicar_articulo', async (req: Request, res: Response) =>{
-  const {nombre_Articulo, descripcion, precio,  tipo_bicicleta, foto} = req.body;
+  const {nombre_Articulo, descripcion, precio,  tipo_bicicleta, foto, ID_usuario} = req.body;
 
   try{
     await pool.query(
-      'INSERT INTO com_ventas (nombre_Articulo, descripcion, precio, tipo_bicicleta ,foto ) VALUES ($1, $2, $3, $4, $5)',
-      [nombre_Articulo, descripcion, precio, tipo_bicicleta, foto ]
+      'INSERT INTO com_ventas (nombre_Articulo, descripcion, precio, tipo_bicicleta ,foto, ID_usuario ) VALUES ($1, $2, $3, $4, $5)',
+      [nombre_Articulo, descripcion, precio, tipo_bicicleta, foto, ID_usuario ]
     );
     res.status(200).json({mensaje: 'Articulo agregado correctamente'});
   } catch(error){
@@ -209,17 +209,20 @@ app.post('/publicar_articulo', async (req: Request, res: Response) =>{
 
   try {
     const resultado = await pool.query(
-      'SELECT ID_publicacion, nombre_Articulo, descripcion, precio, tipo_bicicleta, foto FROM com_ventas WHERE nombre_Articulo ILIKE $1',
-      [`%${nombre}%`]
+      'SELECT cv.nombre_Articulo, cv.descripcion, cv.precio, cv.tipo_bicicleta, cv.foto, cv.ID_usuario ,u.nombre  FROM com_ventas cv INNER JOIN usuario u ON cv.ID_usuario = u.ID_usuario WHERE nombre_Articulo ILIKE $1',
+[`%${nombre}%`]
     );
 
     const articulos = resultado.rows.map((row) => ({
       id: row.id || row.id_publicacion || row.ID_publicacion,
+      
       nombre_Articulo: row.nombre_articulo || row.nombre_Articulo,
       descripcion: row.descripcion,
       precio: row.precio,
-      tipo_bicicleta: row.tipo_bicicleta, // ✅ Este nombre debe coincidir con el frontend
+      tipo_bicicleta: row.tipo_bicicleta, 
       foto: row.foto,
+      nombre: row.nombre,
+      
     }));
 
     res.status(200).json(articulos);
@@ -295,6 +298,7 @@ app.get('/carrito/:id_usuario', async (req: Request, res: Response) => {
         cv.precio,
         cv.foto,
         cv.tipo_bicicleta
+
       FROM carrito c
       JOIN com_ventas cv ON c.ID_publicacion = cv.ID_publicacion
       WHERE c.ID_usuario = $1
