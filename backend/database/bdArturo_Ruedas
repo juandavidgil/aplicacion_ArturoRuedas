@@ -1,9 +1,4 @@
-
-
-
-
-
-
+-- Crear tabla bicicleta
 CREATE TABLE bicicleta (
     ID_bicicleta SERIAL PRIMARY KEY,
     tipo VARCHAR(25) NOT NULL,
@@ -11,19 +6,16 @@ CREATE TABLE bicicleta (
     fecha_creacion VARCHAR(25) NOT NULL
 );
 
-DROP TABLE bicicleta
-
-
+-- Crear tabla componentes
 CREATE TABLE componentes (
     ID_componentes SERIAL PRIMARY KEY,
     tipo_bicicleta VARCHAR(25) NOT NULL,
     nombre VARCHAR(25) NOT NULL,
     categoria VARCHAR(25) NOT NULL,
     imagen VARCHAR(25) NOT NULL
-   
 );
 
-
+-- Crear tabla usuario
 CREATE TABLE usuario (
     ID_usuario SERIAL PRIMARY KEY,
     nombre VARCHAR(25) NOT NULL,
@@ -32,13 +24,13 @@ CREATE TABLE usuario (
     telefono VARCHAR(10) NOT NULL,
     bicicletaID_bicicleta INTEGER,
     CONSTRAINT fk_bicicleta FOREIGN KEY (bicicletaID_bicicleta) REFERENCES bicicleta(ID_bicicleta)
-    );
+);
 
-DROP TABLE usuario
-
+-- Insertar un usuario de ejemplo
 INSERT INTO usuario (nombre, correo, contraseña, telefono)
-VALUES("cristian", "cris@gmail.com", 123, "3236870976");
+VALUES ('cristian', 'cris@gmail.com', '123', '3236870976');
 
+-- Crear tabla mensaje
 CREATE TABLE mensaje (
     ID_mensaje SERIAL PRIMARY KEY,
     mensaje VARCHAR(50) NOT NULL,
@@ -47,7 +39,7 @@ CREATE TABLE mensaje (
     CONSTRAINT fk_usuario_mensaje FOREIGN KEY (usuario_ID_usuario) REFERENCES usuario(ID_usuario)
 );
 
-
+-- Crear tabla chats
 CREATE TABLE chats (
     ID_chats SERIAL PRIMARY KEY,
     fecha_inicio DATE NOT NULL,
@@ -55,7 +47,7 @@ CREATE TABLE chats (
     CONSTRAINT fk_mensaje_chat FOREIGN KEY (mensajeID_mensaje) REFERENCES mensaje(ID_mensaje)
 );
 
-
+-- Crear tabla chats_usuario
 CREATE TABLE chats_usuario (
     chatsID_chats INTEGER,
     usuario_ID_usuario INTEGER,
@@ -64,24 +56,19 @@ CREATE TABLE chats_usuario (
     CONSTRAINT fk_usuario_chat FOREIGN KEY (usuario_ID_usuario) REFERENCES usuario(ID_usuario)
 );
 
-
+-- Crear tabla com_ventas
 CREATE TABLE com_ventas (
     ID_publicacion SERIAL PRIMARY KEY,
     nombre_Articulo VARCHAR(25) NOT NULL,
     precio VARCHAR(25) NOT NULL,
     descripcion VARCHAR(500) NOT NULL,
-    tipo_bicicleta VARCHAR(5) ,
-    foto VARCHAR(1000) NOT NULL
+    tipo_bicicleta VARCHAR(5),
+    foto VARCHAR(1000) NOT NULL,
+    ID_usuario INTEGER,
+    CONSTRAINT fk_usuario_ventas FOREIGN KEY (ID_usuario) REFERENCES usuario(ID_usuario)
 );
-ALTER TABLE com_ventas 
-ADD COLUMN ID_usuario INT;
 
-ALTER TABLE com_ventas 
-ADD CONSTRAINT fk_usuario_ventas 
-FOREIGN KEY (ID_usuario) REFERENCES usuario (ID_usuario);
-DROP TABLE com_ventas
-
-
+-- Crear tabla com_ventas_usuario
 CREATE TABLE com_ventas_usuario (
     com_ventasID_publicacion INTEGER,
     usuario_ID_usuario INTEGER,
@@ -90,7 +77,7 @@ CREATE TABLE com_ventas_usuario (
     CONSTRAINT fk_usuario_venta FOREIGN KEY (usuario_ID_usuario) REFERENCES usuario(ID_usuario)
 );
 
-
+-- Crear tabla com_ventas_componentes
 CREATE TABLE com_ventas_componentes (
     com_ventasID_publicacion INTEGER,
     componentesID_componentes INTEGER,
@@ -99,40 +86,13 @@ CREATE TABLE com_ventas_componentes (
     CONSTRAINT fk_componentes FOREIGN KEY (componentesID_componentes) REFERENCES componentes(ID_componentes)
 );
 
-
+-- Crear tabla carrito
 CREATE TABLE carrito (
     ID_carrito SERIAL PRIMARY KEY,
     ID_publicacion INTEGER NOT NULL,
     ID_usuario INTEGER NOT NULL,
     CONSTRAINT fk_ID_publicacion FOREIGN KEY (ID_publicacion) REFERENCES com_ventas(ID_publicacion),
-    CONSTRAINT fk_ID_usuario FOREIGN KEY (ID_usuario) REFERENCES usuario (ID_usuario)
+    CONSTRAINT fk_ID_usuario FOREIGN KEY (ID_usuario) REFERENCES usuario(ID_usuario)
 );
 
-
-
-SELECT * FROM usuario
-
- 
 SELECT * FROM com_ventas
-
-
-SELECT * FROM com_ventas 
-WHERE nombre_Articulo ILIKE '%llantas%' 
-AND LOWER(tipo_bicicleta) = 'MTB';
-
-SELECT * FROM carrito
-
-
-SELECT 
-    cv.nombre_Articulo, 
-    cv.descripcion, 
-    cv.precio, 
-    cv.tipo_bicicleta, 
-    cv.foto, 
-    cv.ID_usuario,
-    u.nombre 
-FROM 
-    com_ventas cv
-INNER JOIN 
-    usuario u ON cv.ID_usuario = u.ID_usuario
-

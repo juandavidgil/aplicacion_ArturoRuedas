@@ -184,20 +184,31 @@ app.post('/restablecer-contrasena', async (req, res) => {
 
 
 //Publicar articulo
-app.post('/publicar_articulo', async (req: Request, res: Response) =>{
-  const {nombre_Articulo, descripcion, precio,  tipo_bicicleta, foto, ID_usuario} = req.body;
+app.post('/publicar_articulo', async (req: Request, res: Response) => {
+  const { nombre_Articulo, descripcion, precio, tipo_bicicleta, foto, ID_usuario } = req.body;
 
-  try{
-    await pool.query(
-      'INSERT INTO com_ventas (nombre_Articulo, descripcion, precio, tipo_bicicleta ,foto, ID_usuario ) VALUES ($1, $2, $3, $4, $5)',
-      [nombre_Articulo, descripcion, precio, tipo_bicicleta, foto, ID_usuario ]
-    );
-    res.status(200).json({mensaje: 'Articulo agregado correctamente'});
-  } catch(error){
-    console.error('Error al publicar el articulo', error);
-    res.status(500).json({error: 'Error en el servidor'})
+  if (!ID_usuario) {
+    return res.status(400).json({ error: 'ID de usuario es requerido' });
   }
-  })
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO com_ventas 
+       (nombre_Articulo, descripcion, precio, tipo_bicicleta, foto, ID_usuario) 
+       VALUES ($1, $2, $3, $4, $5, $6) 
+       RETURNING ID_publicacion`,
+      [nombre_Articulo, descripcion, precio, tipo_bicicleta, foto, ID_usuario]
+    );
+    
+    res.status(201).json({ 
+      mensaje: 'Artículo publicado con éxito',
+      id_publicacion: result.rows[0].ID_publicacion
+    });
+  } catch (error) {
+    console.error('Error al publicar artículo:', error);
+    res.status(500).json({ error: 'Error al publicar el artículo' });
+  }
+});
 
   //buscar
   app.get('/buscar', async (req: Request, res: Response) => {
