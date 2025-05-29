@@ -95,4 +95,23 @@ CREATE TABLE carrito (
     CONSTRAINT fk_ID_usuario FOREIGN KEY (ID_usuario) REFERENCES usuario(ID_usuario)
 );
 
+ALTER TABLE carrito ADD COLUMN ID_vendedor INTEGER,
+ADD CONSTRAINT fk_vendedor FOREIGN KEY (ID_vendedor) REFERENCES usuario(ID_usuario);
+
 SELECT * FROM com_ventas
+
+SELECT 
+  cv.id_publicacion as id,
+  cv.nombre_articulo, 
+  cv.descripcion, 
+  cv.precio, 
+  cv.tipo_bicicleta, 
+  cv.foto, 
+  cv.id_usuario,
+  u.nombre as nombre_vendedor 
+FROM com_ventas cv 
+INNER JOIN usuario u ON cv.id_usuario = u.id_usuario 
+WHERE cv.nombre_articulo ILIKE '%hola%';
+
+
+SELECT * FROM carrito

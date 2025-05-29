@@ -211,7 +211,8 @@ app.post('/publicar_articulo', async (req: Request, res: Response) => {
 });
 
   //buscar
-  app.get('/buscar', async (req: Request, res: Response) => {
+ //guarda pero no muestra
+app.get('/buscar', async (req: Request, res: Response) => {
   const nombre = req.query.nombre as string;
 
   if (!nombre || nombre.trim() === '') {
@@ -220,28 +221,28 @@ app.post('/publicar_articulo', async (req: Request, res: Response) => {
 
   try {
     const resultado = await pool.query(
-      'SELECT cv.nombre_Articulo, cv.descripcion, cv.precio, cv.tipo_bicicleta, cv.foto, cv.ID_usuario ,u.nombre  FROM com_ventas cv INNER JOIN usuario u ON cv.ID_usuario = u.ID_usuario WHERE nombre_Articulo ILIKE $1',
-[`%${nombre}%`]
+      `SELECT 
+        cv.ID_publicacion as id,
+        cv.nombre_Articulo, 
+        cv.descripcion, 
+        cv.precio, 
+        cv.tipo_bicicleta, 
+        cv.foto, 
+        cv.ID_usuario,
+        u.nombre as nombre_vendedor
+      FROM com_ventas cv 
+      INNER JOIN usuario u ON cv.ID_usuario = u.ID_usuario 
+      WHERE cv.nombre_Articulo ILIKE $1`,
+      [`%${nombre}%`]
     );
 
-    const articulos = resultado.rows.map((row) => ({
-      id: row.id || row.id_publicacion || row.ID_publicacion,
-      
-      nombre_Articulo: row.nombre_articulo || row.nombre_Articulo,
-      descripcion: row.descripcion,
-      precio: row.precio,
-      tipo_bicicleta: row.tipo_bicicleta, 
-      foto: row.foto,
-      nombre: row.nombre,
-      
-    }));
-
-    res.status(200).json(articulos);
+    res.status(200).json(resultado.rows);
   } catch (error) {
     console.error('❌ Error al buscar artículos:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 });
+ 
 // Ruta para agregar al carrito - Mejorada
 app.post('/agregar-carrito', async (req: Request, res: Response) => {
   try {
@@ -282,7 +283,6 @@ console.log('ID_publicacion recibido:', ID_publicacion);
     res.status(500).json({ error: 'Error en el servidor' });
   }
 });
-
 // Endpoint para obtener los artículos del carrito de un usuario
 app.get('/carrito/:id_usuario', async (req: Request, res: Response) => {
   console.log('🔍 Solicitud GET recibida en /carrito/:id_usuario');
@@ -309,7 +309,6 @@ app.get('/carrito/:id_usuario', async (req: Request, res: Response) => {
         cv.precio,
         cv.foto,
         cv.tipo_bicicleta
-
       FROM carrito c
       JOIN com_ventas cv ON c.ID_publicacion = cv.ID_publicacion
       WHERE c.ID_usuario = $1

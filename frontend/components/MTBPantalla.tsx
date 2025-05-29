@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+ import React, { useState } from 'react';
 import {
   View, Text, TextInput, FlatList, Image,
   TouchableOpacity, StyleSheet, ActivityIndicator,
@@ -15,7 +15,7 @@ import { Video, ResizeMode } from 'expo-av';
 
 interface Articulo {
   id: number;
-  nombre_Articulo: string;
+  nombre_articulo: string;
   descripcion: string;
   precio: string;
   tipo_bicicleta: string;
@@ -43,40 +43,50 @@ const MTBPantalla: React.FC = () => {
     }
   };
 
-  const AgregarCarrito = async (articulo: Articulo) => {
-    try {
-      const usuarioStr = await AsyncStorage.getItem('usuario');
-      if (!usuarioStr) {
-        Alert.alert('Error', 'Debes iniciar sesión primero');
-        navigation.navigate('InicioSesion');
-        return;
-      }
-
-      const usuario = JSON.parse(usuarioStr);
-      const ID_usuario = usuario.ID_usuario || usuario.id_usuario || usuario.id;
-
-      if (!ID_usuario) {
-        throw new Error(`No se pudo obtener ID de usuario. Datos: ${JSON.stringify(usuario)}`);
-      }
-
-      const response = await fetch('http://10.0.2.2:3001/agregar-carrito', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ID_usuario, ID_publicacion: articulo.id }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al agregar al carrito');
-      }
-
-      Alert.alert('Éxito', 'Artículo agregado al carrito');
-    } catch (error) {
-      console.error('Error completo en AgregarCarrito:', error);
-      Alert.alert('Error al agregar al carrito');
+ const AgregarCarrito = async (articulo: Articulo) => {
+  try {
+    console.log('Artículo recibido:', articulo); // Verifica que el artículo tenga el ID
+    
+    const usuarioStr = await AsyncStorage.getItem('usuario');
+    if (!usuarioStr) {
+      Alert.alert('Error', 'Debes iniciar sesión primero');
+      navigation.navigate('InicioSesion');
+      return;
     }
-  };
 
+    const usuario = JSON.parse(usuarioStr);
+    const ID_usuario = usuario.ID_usuario;
+
+    if (!ID_usuario) {
+      throw new Error('No se pudo obtener el ID de usuario');
+    }
+
+    if (!articulo.id) {
+      throw new Error('El artículo no tiene ID definido');
+    }
+
+    const response = await fetch('http://10.0.2.2:3001/agregar-carrito', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        ID_usuario: ID_usuario, 
+        ID_publicacion: articulo.id ,
+       
+      }),
+    });
+
+    const responseData = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(responseData.error || 'Error al agregar al carrito');
+    }
+
+    Alert.alert('Éxito', 'Artículo agregado al carrito');
+  } catch (error) {
+    console.error('Error completo en AgregarCarrito:', error);
+    Alert.alert('Error al agregar al carrito');
+  }
+};
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
@@ -103,17 +113,19 @@ const MTBPantalla: React.FC = () => {
               {articulos.length > 0 && (
                 <FlatList
                   data={articulos}
-                  keyExtractor={(item) => item.id.toString()}
+                   keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
                   contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }} // Aquí agregamos el marginTop
                   renderItem={({ item }) => (
+                   
                     <View style={styles.cardMTB}>
                       <Image source={{ uri: item.foto }} style={styles.imagenMTB} resizeMode="cover" />
                       <View style={styles.infoMTB}>
-                        <Text style={styles.nombreMTB}>{item.nombre_Articulo}</Text>
+                        <Text style={styles.nombreMTB}>{item.nombre_articulo}</Text>
                         <Text style={styles.descripcionMTB}>{item.descripcion}</Text>
                         <Text style={styles.precioMTB}>Precio: ${item.precio}</Text>
                         <Text>Tipo: {item.tipo_bicicleta}</Text>
                         <Text style={styles.descripcionMTB}>vendedor: {item.nombre}</Text>
+                        
                         <TouchableOpacity onPress={() => AgregarCarrito(item)}>
                           <Ionicons name='cart-outline' size={25} />
                         </TouchableOpacity>
@@ -304,4 +316,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MTBPantalla;
+export default MTBPantalla; 

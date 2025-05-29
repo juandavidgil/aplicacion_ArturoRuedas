@@ -17,6 +17,7 @@ interface Articulo {
   precio: string;
   foto: string;
   tipo_bicicleta: string;
+  nombre:string;
 }
 
 const CarritoPantalla: React.FC = () => {
@@ -182,6 +183,7 @@ const obtenerCarrito = async () => {
         <Text style={styles.descripcion}>{item.descripcion}</Text>
         <Text style={styles.precio}>${item.precio}</Text>
         <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
+        <Text style={styles.descripcion}>Vendedor: {item.nombre}</Text>
         <TouchableOpacity 
           onPress={() => eliminarArticulo(item.id)}
           style={styles.botonEliminar}

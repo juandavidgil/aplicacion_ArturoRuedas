@@ -24,6 +24,7 @@ export interface Articulo {
   precio: string;
   foto: string;
   tipo_bicicleta: string;
+  ID_usuario: number;
 }
 
 
