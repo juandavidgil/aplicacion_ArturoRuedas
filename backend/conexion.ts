@@ -302,15 +302,17 @@ app.get('/carrito/:id_usuario', async (req: Request, res: Response) => {
     console.log(`🛒 Buscando carrito para usuario ID: ${id_usuario}`);
     
     const query = `
-      SELECT 
-        cv.ID_publicacion as id,
-        cv.nombre_Articulo as nombre_articulo,
-        cv.descripcion,
-        cv.precio,
-        cv.foto,
-        cv.tipo_bicicleta
-      FROM carrito c
-      JOIN com_ventas cv ON c.ID_publicacion = cv.ID_publicacion
+  SELECT 
+  cv.ID_publicacion as id,
+  cv.nombre_Articulo as nombre_articulo,
+  cv.descripcion,
+  cv.precio,
+  cv.tipo_bicicleta,
+  u.nombre as nombre_vendedor,
+  cv.ID_usuario as id_vendedor
+  FROM carrito c
+  JOIN com_ventas cv ON c.ID_publicacion = cv.ID_publicacion 
+  JOIN usuario u ON cv.ID_usuario = u.ID_usuario
       WHERE c.ID_usuario = $1
     `;
 

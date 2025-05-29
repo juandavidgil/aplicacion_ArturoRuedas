@@ -20,7 +20,7 @@ interface Articulo {
   precio: string;
   tipo_bicicleta: string;
   foto: string;
-  nombre: string;
+  nombre_vendedor: string;
 }
 
 const MTBPantalla: React.FC = () => {
@@ -124,7 +124,7 @@ const MTBPantalla: React.FC = () => {
                         <Text style={styles.descripcionMTB}>{item.descripcion}</Text>
                         <Text style={styles.precioMTB}>Precio: ${item.precio}</Text>
                         <Text>Tipo: {item.tipo_bicicleta}</Text>
-                        <Text style={styles.descripcionMTB}>vendedor: {item.nombre}</Text>
+                        <Text style={styles.descripcionMTB}>vendedor: {item.nombre_vendedor}</Text>
                         
                         <TouchableOpacity onPress={() => AgregarCarrito(item)}>
                           <Ionicons name='cart-outline' size={25} />

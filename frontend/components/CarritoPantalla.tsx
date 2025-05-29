@@ -15,10 +15,11 @@ interface Articulo {
   nombre_articulo: string;
   descripcion: string;
   precio: string;
-  foto: string;
   tipo_bicicleta: string;
-  nombre:string;
+  foto: string;
+  nombre_vendedor: string;
 }
+
 
 const CarritoPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
@@ -183,7 +184,7 @@ const obtenerCarrito = async () => {
         <Text style={styles.descripcion}>{item.descripcion}</Text>
         <Text style={styles.precio}>${item.precio}</Text>
         <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
-        <Text style={styles.descripcion}>Vendedor: {item.nombre}</Text>
+        <Text style={styles.descripcion}>vendedor: {item.nombre_vendedor}</Text>
         <TouchableOpacity 
           onPress={() => eliminarArticulo(item.id)}
           style={styles.botonEliminar}
