@@ -18,6 +18,7 @@ interface Articulo {
   tipo_bicicleta: string;
   foto: string;
   nombre_vendedor: string;
+  id_vendedor:number;
 }
 
 
@@ -180,6 +181,7 @@ const obtenerCarrito = async () => {
         onError={() => console.log("Error cargando imagen")}
       />
       <View style={styles.info}>
+        
         <Text style={styles.nombre}>{item.nombre_articulo}</Text>
         <Text style={styles.descripcion}>{item.descripcion}</Text>
         <Text style={styles.precio}>${item.precio}</Text>
@@ -193,12 +195,16 @@ const obtenerCarrito = async () => {
           <Text style={styles.textoEliminar}>Eliminar</Text>
         </TouchableOpacity>
         <TouchableOpacity 
-          onPress={() => navigation.navigate('Chat')}
-          style={styles.botonMensajeAlVendedor}
-        >
-          <Ionicons name="chatbubble-ellipses-outline" size={20} color="#51AFF7" />
-          <Text style={styles.textoMensajeAlVendedor}>Mensaje al vendedor</Text>
-        </TouchableOpacity>
+  onPress={() => navigation.navigate('ChatPrivado', { 
+    chatId: null, 
+    idOtroUsuario: item.id_vendedor,
+    nombreOtroUsuario: item.nombre_vendedor 
+  })}
+  style={styles.botonMensajeAlVendedor}
+>
+  <Ionicons name="chatbubble-ellipses-outline" size={20} color="#51AFF7" />
+  <Text style={styles.textoMensajeAlVendedor}>Mensaje al vendedor</Text>
+</TouchableOpacity>
       </View>
     </View>
   );

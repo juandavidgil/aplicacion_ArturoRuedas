@@ -15,6 +15,7 @@ import RestablecerContraseñaPantalla from './components/RestablecerContraseñaP
 import ChatPantalla from './components/ChatPantalla';
 import NotificacionesPantalla from './components/NotificacionesPantalla';
 import ProductVideoCard from './components/MODELO3d';
+import ChatPrivadoPantalla from './components/ChatPrivadoPantalla';
 
 
 
@@ -41,6 +42,7 @@ const App = () => {
         <Stack.Screen name="Publicar" component={PublicarPantalla} />
         <Stack.Screen name="Carrito" component={CarritoPantalla} />
         <Stack.Screen name= "Chat" component={ChatPantalla}/>
+        <Stack.Screen name='ChatPrivado' component={ChatPrivadoPantalla}/>
         <Stack.Screen name= "Notificaciones" component={NotificacionesPantalla}/>
         <Stack.Screen name= "MODELO3d" component={ProductVideoCard}/>
 

@@ -12,9 +12,15 @@ export type StackParamList = {
   Carrito: undefined;
   DetalleArticulo: { articulo: Articulo };
   Notificaciones: undefined;
-  Chat: undefined;
+   Chat: undefined;
+ ChatPrivado: {
+    chatId: number | null;
+    idOtroUsuario: number;
+    nombreOtroUsuario: string;
+  };
   RestablecerContraseña: undefined;
   MODELO3d: undefined
+
 };
 
 export interface Articulo {
@@ -39,5 +45,6 @@ export type CarruselScreenNavigationProp = RouteProp<StackParamList, 'Carrusel'>
 export type PublicarScreenNavigationProp = RouteProp<StackParamList, 'Publicar'>;
 export type NotificacionesScreenNavigationProp = RouteProp<StackParamList, 'Notificaciones'>;
 export type ChatScreenNavigationProp = RouteProp<StackParamList, 'Chat'>;
+export type ChatPrivadoScreenNavigationProp = RouteProp<StackParamList, 'ChatPrivado'>;
 export type CarritoScreenNavigationProp = RouteProp<StackParamList, 'Carrito'>;
 export type ProductVideoCardScreenNavigationProp = RouteProp<StackParamList, 'MODELO3d'>;
