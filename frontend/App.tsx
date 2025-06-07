@@ -16,6 +16,7 @@ import ChatPantalla from './components/ChatPantalla';
 import NotificacionesPantalla from './components/NotificacionesPantalla';
 import ProductVideoCard from './components/MODELO3d';
 import ChatPrivadoPantalla from './components/ChatPrivadoPantalla';
+import Administrador from './components/Administrador';
 
 
 
@@ -25,7 +26,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator 
-        initialRouteName="Presentacion" 
+        initialRouteName="Administrador" 
         screenOptions={{
           headerShown: false,
           animation: 'fade',
@@ -45,7 +46,8 @@ const App = () => {
         <Stack.Screen name='ChatPrivado' component={ChatPrivadoPantalla}/>
         <Stack.Screen name= "Notificaciones" component={NotificacionesPantalla}/>
         <Stack.Screen name= "MODELO3d" component={ProductVideoCard}/>
-
+       
+        <Stack.Screen name='Administrador' component={Administrador}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
