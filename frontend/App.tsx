@@ -17,7 +17,7 @@ import NotificacionesPantalla from './components/NotificacionesPantalla';
 import ProductVideoCard from './components/MODELO3d';
 import ChatPrivadoPantalla from './components/ChatPrivadoPantalla';
 import Administrador from './components/Administrador';
-
+import PublicacionesAdmin from './components/PublicacionesAdmin';
 
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -26,7 +26,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator 
-        initialRouteName="Administrador" 
+        initialRouteName="Presentacion" 
         screenOptions={{
           headerShown: false,
           animation: 'fade',
@@ -48,9 +48,12 @@ const App = () => {
         <Stack.Screen name= "MODELO3d" component={ProductVideoCard}/>
        
         <Stack.Screen name='Administrador' component={Administrador}/>
+        <Stack.Screen name='PublicacionesAdmin' component={PublicacionesAdmin}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
 export default App;
+
+

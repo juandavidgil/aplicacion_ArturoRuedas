@@ -98,6 +98,11 @@ const InicioSesionPantalla: React.FC = () => {
       >
         <Text style={styles.forgotText}>¿Olvidaste tu contraseña?</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.forgotPassword} onPress={()=>navigation.navigate('Administrador')}>
+        <Text>
+          Administrar
+        </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -151,6 +156,9 @@ const styles = StyleSheet.create({
   forgotText: {
     color: '#666',
   },
+  administrador:{
+     color: '#666',
+  }
 });
 
 export default InicioSesionPantalla;

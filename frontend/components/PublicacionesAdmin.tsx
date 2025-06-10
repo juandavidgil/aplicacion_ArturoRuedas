@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackParamList } from '../types/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import Administrador from "./Administrador";
 
 interface Usuario {
   id: number;
@@ -18,13 +19,13 @@ interface Usuario {
 
 }
 
-const Administrador : React.FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+const PublicacionesAdmin : React.FC = () => {
+    const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
     return(
       <View style={styles.container}> 
-        <Text style={styles.titulo}>ADMINISTRAR USUARIOS</Text>
-        <TouchableOpacity style={styles.adminPublicaciones} onPress={()=> navigation.navigate('PublicacionesAdmin')}>
-          <Text>ADMIN. PUBLICACIONES</Text>
+        <Text style={styles.titulo}>ADMINISTRAR PUBLICACIONES</Text>
+        <TouchableOpacity style={styles.adminPublicaciones} onPress={()=> navigation.navigate('Administrador')}>
+          <Text>ADMIN. USUARIOS</Text>
         </TouchableOpacity>
       </View>
         
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     marginTop: '130%',
     borderRadius: 30,
-     alignItems: 'center'
+    alignItems: 'center'
     
   },
   titulo:{
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
 
 
 
-export default Administrador 
+export default PublicacionesAdmin
 
 
 
