@@ -225,6 +225,7 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
     borderBottomWidth: 1,
+    borderTopWidth:40,
     borderBottomColor: '#e0e0e0',
     backgroundColor: '#fff',
   },
@@ -283,6 +284,7 @@ const estilos = StyleSheet.create({
     padding: 8,
     backgroundColor: '#fff',
     borderTopWidth: 1,
+    borderBottomWidth: 40,
     borderTopColor: '#e0e0e0',
   },
   entradaTexto: {

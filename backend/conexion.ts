@@ -270,7 +270,7 @@ console.log('ID_publicacion recibido:', ID_publicacion);
 
     if (!usuario_existe) return res.status(404).json({ error: 'Usuario no encontrado' });
     if (!articulo_existe) return res.status(404).json({ error: 'Artículo no encontrado' });
-    if (en_carrito) return res.status(409).json({ error: 'Artículo ya está en el carrito' });
+    if (en_carrito) return res.status(409).json({ error: 'Artículo ya está en el                                                                                               carrito' });
 
     await pool.query(
       'INSERT INTO carrito (ID_usuario, ID_publicacion) VALUES ($1, $2)',
@@ -370,9 +370,35 @@ app.delete('/eliminar-carrito', async (req: Request, res: Response) => {
 });
 
 
+///////////////////////////////////////////////////
+// Middleware para validar acceso al chat
+const validateChatAccess = async (req: Request, res: Response, next: Function) => {
+  const { id_chat } = req.params;
+  const { user_id } = req.body; // Obtener ID de usuario del cuerpo o headers
+  
+  if (!user_id) {
+    return res.status(401).json({ error: 'Usuario no autenticado' });
+  }
 
+  try {
+    const chat = await pool.query(
+      `SELECT 1 FROM chats_usuario 
+       WHERE chatsID_chats = $1 AND usuario_ID_usuario = $2`,
+      [id_chat, user_id]
+    );
+    
+    if (chat.rows.length === 0) {
+      return res.status(403).json({ error: 'No tienes acceso a este chat' });
+    }
+    
+    next();
+  } catch (error) {
+    console.error('Error validando acceso al chat:', error);
+    res.status(500).json({ error: 'Error del servidor' });
+  }
+};
 
-//CHAT // 1. Endpoint para obtener los chats de un usuario
+// Obtener chats de un usuario
 app.get('/chats-usuario/:id_usuario', async (req: Request, res: Response) => {
   try {
     const { id_usuario } = req.params;
@@ -381,7 +407,6 @@ app.get('/chats-usuario/:id_usuario', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'ID de usuario inválido' });
     }
 
-    // Consulta para obtener todos los chats del usuario con información del otro participante
     const query = `
       SELECT 
         c.ID_chats,
@@ -402,7 +427,7 @@ app.get('/chats-usuario/:id_usuario', async (req: Request, res: Response) => {
       JOIN usuario u2 ON cu2.usuario_ID_usuario = u2.ID_usuario
       LEFT JOIN mensaje m ON c.mensajeID_mensaje = m.ID_mensaje
       WHERE cu1.usuario_ID_usuario = $1
-      ORDER BY m.fecha_envio DESC NULLS LAST
+      ORDER BY COALESCE(m.fecha_envio, c.fecha_inicio) DESC
     `;
 
     const result = await pool.query(query, [id_usuario]);
@@ -413,15 +438,11 @@ app.get('/chats-usuario/:id_usuario', async (req: Request, res: Response) => {
   }
 });
 
-// 2. Endpoint para obtener los mensajes de un chat específico
-app.get('/mensajes-chat/:id_chat', async (req: Request, res: Response) => {
+// Obtener mensajes de un chat
+app.get('/mensajes-chat/:id_chat', validateChatAccess, async (req: Request, res: Response) => {
   try {
     const { id_chat } = req.params;
     
-    if (!id_chat || isNaN(Number(id_chat))) {
-      return res.status(400).json({ error: 'ID de chat inválido' });
-    }
-
     const query = `
       SELECT 
         m.ID_mensaje AS id_mensaje,
@@ -431,12 +452,9 @@ app.get('/mensajes-chat/:id_chat', async (req: Request, res: Response) => {
         u.nombre AS nombre_usuario
       FROM mensaje m
       JOIN usuario u ON m.usuario_ID_usuario = u.ID_usuario
+      JOIN chats c ON c.ID_chats = $1
       WHERE m.ID_mensaje IN (
         SELECT mensajeID_mensaje FROM chats WHERE ID_chats = $1
-        UNION
-        SELECT ID_mensaje FROM mensaje WHERE ID_mensaje IN (
-          SELECT mensajeID_mensaje FROM chats WHERE ID_chats = $1
-        )
       )
       ORDER BY m.fecha_envio ASC
     `;
@@ -449,7 +467,7 @@ app.get('/mensajes-chat/:id_chat', async (req: Request, res: Response) => {
   }
 });
 
-// 3. Endpoint para enviar un mensaje
+// Enviar mensaje
 app.post('/enviar-mensaje', async (req: Request, res: Response) => {
   try {
     const { ID_chats, ID_usuario, mensaje } = req.body;
@@ -458,17 +476,7 @@ app.post('/enviar-mensaje', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Faltan campos obligatorios' });
     }
 
-    // Verificar que el usuario pertenece al chat
-    const verificarChat = await pool.query(
-      'SELECT 1 FROM chats_usuario WHERE chatsID_chats = $1 AND usuario_ID_usuario = $2',
-      [ID_chats, ID_usuario]
-    );
-
-    if (verificarChat.rows.length === 0) {
-      return res.status(403).json({ error: 'Usuario no pertenece a este chat' });
-    }
-
-    // Insertar el mensaje
+    // Insertar mensaje
     const result = await pool.query(
       `INSERT INTO mensaje (mensaje, fecha_envio, usuario_ID_usuario)
        VALUES ($1, NOW(), $2)
@@ -478,7 +486,7 @@ app.post('/enviar-mensaje', async (req: Request, res: Response) => {
 
     const idMensaje = result.rows[0].id_mensaje;
 
-    // Actualizar el chat con el último mensaje
+    // Actualizar chat con último mensaje
     await pool.query(
       'UPDATE chats SET mensajeID_mensaje = $1 WHERE ID_chats = $2',
       [idMensaje, ID_chats]
@@ -495,7 +503,7 @@ app.post('/enviar-mensaje', async (req: Request, res: Response) => {
   }
 });
 
-// 4. Endpoint para iniciar un nuevo chat
+// Iniciar nuevo chat
 app.post('/iniciar-chat', async (req: Request, res: Response) => {
   try {
     const { ID_usuario1, ID_usuario2 } = req.body;
@@ -508,7 +516,7 @@ app.post('/iniciar-chat', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'No puedes chatear contigo mismo' });
     }
 
-    // Verificar si ya existe un chat entre estos usuarios
+    // Verificar si ya existe un chat
     const chatExistente = await pool.query(
       `SELECT c.ID_chats 
        FROM chats_usuario c1
@@ -524,14 +532,14 @@ app.post('/iniciar-chat', async (req: Request, res: Response) => {
       });
     }
 
-    // Crear un nuevo chat
+    // Crear nuevo chat
     const result = await pool.query(
       'INSERT INTO chats (fecha_inicio) VALUES (NOW()) RETURNING ID_chats'
     );
 
     const idChat = result.rows[0].id_chats;
 
-    // Asociar ambos usuarios al chat
+    // Asociar usuarios al chat
     await pool.query(
       'INSERT INTO chats_usuario (chatsID_chats, usuario_ID_usuario) VALUES ($1, $2), ($1, $3)',
       [idChat, ID_usuario1, ID_usuario2]
@@ -548,29 +556,6 @@ app.post('/iniciar-chat', async (req: Request, res: Response) => {
   }
 });
 
-// 5. Endpoint para buscar usuarios para chatear
-app.get('/buscar-usuarios-chat', async (req: Request, res: Response) => {
-  try {
-    const { nombre, id_usuario_actual } = req.query;
-    
-    if (!nombre || !id_usuario_actual) {
-      return res.status(400).json({ error: 'Faltan parámetros de búsqueda' });
-    }
-
-    const query = `
-      SELECT ID_usuario, nombre, correo
-      FROM usuario
-      WHERE nombre ILIKE $1 AND ID_usuario != $2
-      LIMIT 10
-    `;
-
-    const result = await pool.query(query, [`%${nombre}%`, id_usuario_actual]);
-    res.status(200).json(result.rows);
-  } catch (error) {
-    console.error('Error al buscar usuarios:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
 
 // Iniciar servidor con manejo de errores
 app.listen(PORT, () => {

@@ -134,6 +134,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
     backgroundColor: '#fff',
+    borderTopWidth: 10,
   },
   avatar: {
     marginRight: 16,
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#333',
-    marginBottom: 4,
+    marginTop: 4,
   },
   lastMessage: {
     fontSize: 14,
