@@ -20,7 +20,7 @@ export type StackParamList = {
   };
   RestablecerContraseña: undefined;
   MODELO3d: undefined
-
+  Administrador: undefined;
 };
 
 export interface Articulo {
@@ -48,3 +48,4 @@ export type ChatScreenNavigationProp = RouteProp<StackParamList, 'Chat'>;
 export type ChatPrivadoScreenNavigationProp = RouteProp<StackParamList, 'ChatPrivado'>;
 export type CarritoScreenNavigationProp = RouteProp<StackParamList, 'Carrito'>;
 export type ProductVideoCardScreenNavigationProp = RouteProp<StackParamList, 'MODELO3d'>;
+export type AdministradorScreenNavigationProp = RouteProp<StackParamList, 'Administrador'>;
