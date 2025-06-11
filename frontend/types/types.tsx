@@ -22,6 +22,7 @@ export type StackParamList = {
   MODELO3d: undefined
   Administrador: undefined;
   PublicacionesAdmin: undefined
+  ComponenteDetalle: undefined
 };
 
 export interface Articulo {
@@ -51,3 +52,4 @@ export type CarritoScreenNavigationProp = RouteProp<StackParamList, 'Carrito'>;
 export type ProductVideoCardScreenNavigationProp = RouteProp<StackParamList, 'MODELO3d'>;
 export type AdministradorScreenNavigationProp = RouteProp<StackParamList, 'Administrador'>;
 export type PublicacionesAdminScreenNavigationProp = RouteProp<StackParamList, 'PublicacionesAdmin'>;
+export type ComponenteDetalleScreenNavigationProp = RouteProp<StackParamList, 'ComponenteDetalle'>;

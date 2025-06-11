@@ -18,6 +18,7 @@ import ProductVideoCard from './components/MODELO3d';
 import ChatPrivadoPantalla from './components/ChatPrivadoPantalla';
 import Administrador from './components/Administrador';
 import PublicacionesAdmin from './components/PublicacionesAdmin';
+import ComponenteDetallePantalla from './components/ComponenteDetalladoPantalla';
 
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -46,6 +47,7 @@ const App = () => {
         <Stack.Screen name='ChatPrivado' component={ChatPrivadoPantalla}/>
         <Stack.Screen name= "Notificaciones" component={NotificacionesPantalla}/>
         <Stack.Screen name= "MODELO3d" component={ProductVideoCard}/>
+        <Stack.Screen name="ComponenteDetalle" component={ComponenteDetallePantalla}/>
        
         <Stack.Screen name='Administrador' component={Administrador}/>
         <Stack.Screen name='PublicacionesAdmin' component={PublicacionesAdmin}/>

@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackParamList } from '../types/types';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { Video, ResizeMode } from 'expo-av';
+import { constants } from 'buffer';
 
 interface Articulo {
   id: number;
@@ -43,7 +44,7 @@ const MTBPantalla: React.FC = () => {
     }
   };
 
- const AgregarCarrito = async (articulo: Articulo) => {
+  const AgregarCarrito = async (articulo: Articulo) => {
   try {
     console.log('Artículo recibido:', articulo); // Verifica que el artículo tenga el ID
     
@@ -71,7 +72,7 @@ const MTBPantalla: React.FC = () => {
       body: JSON.stringify({ 
         ID_usuario: ID_usuario, 
         ID_publicacion: articulo.id ,
-       
+      
       }),
     });
 
