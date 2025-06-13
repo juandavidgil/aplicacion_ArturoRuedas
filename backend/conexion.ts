@@ -556,6 +556,35 @@ app.post('/iniciar-chat', async (req: Request, res: Response) => {
   }
 });
 
+//TRAER USUARIOS
+app.get('/obtener-usuarios', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT
+        ID_usuario,
+        nombre,
+        correo,
+        telefono
+      FROM usuario 
+    `);
+    console.log('Usuarios obtenidos:', result.rows.length);
+    res.status(200).json(result.rows); // ✔️ Devuelve JSON
+  } catch (error) {
+    console.error('Error al obtener usuarios:', error);
+    res.status(500).json({ error: 'Error en el servidor' }); // ✔️ Siempre devuelve JSON
+  }
+});
+//eliminar usuario
+app.delete('/eliminar-usuario/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query('DELETE FROM usuario WHERE ID_usuario = $1', [id]);
+    res.status(200).json({ message: "Usuario eliminado correctamente" });
+  } catch (error) {
+    console.error("Error al eliminar usuario:", error);
+    res.status(500).json({ error: "Error al eliminar usuario" });
+  }
+});
 
 // Iniciar servidor con manejo de errores
 app.listen(PORT, () => {

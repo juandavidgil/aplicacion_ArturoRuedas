@@ -135,3 +135,12 @@ FROM carrito c
 JOIN com_ventas cv ON c.ID_publicacion = cv.ID_publicacion 
 JOIN usuario u ON cv.ID_usuario = u.ID_usuario
       WHERE c.ID_usuario = 1
+
+
+
+      SELECT
+      u.ID_usuario,
+      u.nombre,
+      u.correo,
+      u.telefono
+      FROM usuario u

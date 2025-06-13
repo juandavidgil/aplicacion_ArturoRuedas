@@ -1,67 +1,230 @@
-import React,{ useState, useEffect}  from "react";
-import { View,Text,FlatList,TouchableOpacity,TextInput,Alert, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackParamList } from '../types/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 interface Usuario {
-  id: number;
-  usuario: string;
-  componente: string;
-  tipo: string;
-  estado: string;         // Opcional
-  precio: string;        // Opcional
-  activo: boolean;
-
+  ID_usuario: number;
+  nombre: string;
+  correo: string;
+  telefono: string;
 }
 
-const Administrador : React.FC = () => {
+const Administrador: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-    return(
-      <View style={styles.container}> 
-        <Text style={styles.titulo}>ADMINISTRAR USUARIOS</Text>
-        <TouchableOpacity style={styles.adminPublicaciones} onPress={()=> navigation.navigate('PublicacionesAdmin')}>
-          <Text>ADMIN. PUBLICACIONES</Text>
-        </TouchableOpacity>
-      </View>
-        
-    )
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-}
+  const obtenerUsuarios = async () => {
+    try {
+      setRefreshing(true);
+      const response = await fetch('http://10.0.2.2:3001/obtener-usuarios');
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Error ${response.status}: ${errorText}`);
+      }
+
+      const data = await response.json();
+      
+      // Validación de datos
+      if (!Array.isArray(data)) {
+        throw new Error("La respuesta no es un array válido");
+      }
+
+      setUsuarios(data);
+    } catch (error) {
+      console.error('Error al obtener usuarios:', error);
+      Alert.alert('Error', 'No se pudieron cargar los usuarios. Verifica la conexión al servidor.');
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  const handleEliminarUsuario = async (id: number) => {
+    try {
+      Alert.alert(
+        "Confirmar eliminación",
+        "¿Estás seguro de que deseas eliminar este usuario?",
+        [
+          {
+            text: "Cancelar",
+            style: "cancel"
+          },
+          { 
+            text: "Eliminar", 
+            onPress: async () => {
+              const response = await fetch(`http://10.0.2.2:3001/eliminar-usuario/${id}`, {
+                method: 'DELETE'
+              });
+              
+              if (response.ok) {
+                obtenerUsuarios(); // Refrescar la lista
+                Alert.alert("Éxito", "Usuario eliminado correctamente");
+              } else {
+                throw new Error("Error al eliminar usuario");
+              }
+            }
+          }
+        ]
+      );
+    } catch (error) {
+      console.error('Error al eliminar usuario:', error);
+      Alert.alert('Error', 'No se pudo eliminar el usuario');
+    }
+  };
+
+  useEffect(() => {
+    obtenerUsuarios();
+  }, []);
+
+  const renderItem = ({ item }: { item: Usuario }) => (
+    <View style={styles.card}>
+      <View style={styles.info}>
+        <Text style={styles.label}>ID: <Text style={styles.value}>{item.ID_usuario}</Text></Text>
+        <Text style={styles.label}>Nombre: <Text style={styles.value}>{item.nombre}</Text></Text>
+        <Text style={styles.label}>Correo: <Text style={styles.value}>{item.correo}</Text></Text>
+        <Text style={styles.label}>Teléfono: <Text style={styles.value}>{item.telefono}</Text></Text>
+        
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity style={[styles.button, styles.blockButton]}>
+            <Text style={styles.buttonText}>Bloquear</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.button, styles.deleteButton]}
+            onPress={() => handleEliminarUsuario(item.ID_usuario)}
+          >
+            <Text style={styles.buttonText}>Eliminar</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.titulo}>ADMINISTRAR USUARIOS</Text>
+      
+      <FlatList
+        data={usuarios}
+        keyExtractor={(item) => item.ID_usuario?.toString() || Math.random().toString()}
+        renderItem={renderItem}
+        contentContainerStyle={styles.lista}
+        refreshing={refreshing}
+        onRefresh={obtenerUsuarios}
+      />
+
+      <TouchableOpacity 
+        style={styles.refreshButton}
+        onPress={obtenerUsuarios}
+      >
+        <Ionicons name="refresh" size={24} color="white" />
+        <Text style={styles.refreshButtonText}>Actualizar lista</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity 
+        style={styles.adminPublicaciones} 
+        onPress={() => navigation.navigate('PublicacionesAdmin')}
+      >
+        <Text style={styles.adminPublicacionesText}>ADMIN. PUBLICACIONES</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    height: '100%',
-    alignContent: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex: 1,
     backgroundColor: '#f8f9fa',
+    paddingHorizontal: 16,
+    paddingTop: 20,
   },
-  adminPublicaciones:{
-    width: '45%',
-    backgroundColor: '#00c774',
-    padding: '2%',
-    borderWidth: 2,
-    marginTop: '130%',
-    borderRadius: 30,
-     alignItems: 'center'
-    
+  titulo: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+     marginTop: 22,
+    marginBottom: 20,
+    color: '#333',
   },
-  titulo:{
-    fontSize: 25
-  }
-})
+  lista: {
+    paddingBottom: 20,
+  },
+  card: {
+    backgroundColor: '#ffffff',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  info: {
+    flex: 1,
+  },
+  label: {
+    fontWeight: 'bold',
+    marginBottom: 4,
+    color: '#555',
+  },
+  value: {
+    fontWeight: 'normal',
+    color: '#333',
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 12,
+  },
+  button: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    marginHorizontal: 4,
+  },
+  blockButton: {
+    backgroundColor: '#ffc107',
+  },
+  deleteButton: {
+    backgroundColor: '#dc3545',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  refreshButton: {
+    flexDirection: 'row',
+    backgroundColor: '#007bff',
+    padding: 12,
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
+  refreshButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    marginLeft: 8,
+  },
+  adminPublicaciones: {
+    backgroundColor: '#28a745',
+    padding: 12,
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  adminPublicacionesText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+});
 
-
-
-
-
-
-export default Administrador 
-
-
-
+export default Administrador;

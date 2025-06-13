@@ -24,6 +24,17 @@ const PublicacionesAdmin : React.FC = () => {
     return(
       <View style={styles.container}> 
         <Text style={styles.titulo}>ADMINISTRAR PUBLICACIONES</Text>
+        
+        
+        {/* PUBLICACIONES */}
+        <View >
+          
+        </View>
+        <TouchableOpacity>
+          <Text>
+            Mostrar publicaciones disponibles
+          </Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.adminPublicaciones} onPress={()=> navigation.navigate('Administrador')}>
           <Text>ADMIN. USUARIOS</Text>
         </TouchableOpacity>

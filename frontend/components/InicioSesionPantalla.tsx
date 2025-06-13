@@ -156,9 +156,7 @@ const styles = StyleSheet.create({
   forgotText: {
     color: '#666',
   },
-  administrador:{
-     color: '#666',
-  }
+ 
 });
 
 export default InicioSesionPantalla;

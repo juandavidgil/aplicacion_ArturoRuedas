@@ -34,6 +34,12 @@ export interface Articulo {
   tipo_bicicleta: string;
   ID_usuario: number;
 }
+export interface Usuario {
+ID_usuario: number;
+nombre: string;
+correo: string;
+telefono: string
+}
 
 
 // Tipos para las rutas
