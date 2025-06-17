@@ -140,16 +140,7 @@ const MTBPantalla: React.FC = () => {
                   }
                 />
               )}
-              {/* barra informacion de componentes */}
-              <View style={styles.barraComponentes}>
-              <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
-                <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER}  source={require('../iconos/marcoMtb.jpeg')} />
-              </TouchableOpacity>
-                <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
-                 <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
-                  <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
-              </View>
-
+              
 
               {/* Mostrar el video y descripción solo si no hay búsqueda activa */}
               {busqueda.trim() === '' && (
@@ -177,6 +168,22 @@ const MTBPantalla: React.FC = () => {
               )}
             </>
           )}
+          {/* barra informacion de componentes */}
+              <View style={styles.barraComponentes}>
+              <TouchableOpacity 
+              onPress={() => navigation.navigate('ComponenteDetalle')}>
+                <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER}   source={require('../iconos/rueda.jpeg')} />
+              </TouchableOpacity>
+            <TouchableOpacity>
+                <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
+            </TouchableOpacity>
+            <TouchableOpacity>
+                <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
+            </TouchableOpacity>
+            <TouchableOpacity>
+                  <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
+            </TouchableOpacity>
+              </View>
 
           {/* Barra de iconos */}
           <View style={styles.iconBar}>
@@ -291,11 +298,10 @@ const styles = StyleSheet.create({
     bottom: 120,
     left: 16,
     right: 16,
-  },
+ },
   iconoComponentes:{
   width: 35,
   height: 35
-  
   },
   video: {
     width: '100%',
