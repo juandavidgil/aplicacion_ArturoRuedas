@@ -1,13 +1,12 @@
 {
   "expo": {
-    
     "name": "aplicacion-arturoRuedas",
     "slug": "aplicacion-arturoRuedas",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -17,21 +16,24 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.anonymous.aplicacionarturoRuedas",
+      "versionCode": 1,
+      "permissions": [
+        "CAMERA",
+        "READ_MEDIA_IMAGES"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-        
-      },
-      "permissions": [
-        "CAMERA",
-        "READ_MEDIA_IMAGES",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
-      ],
-      "package": "com.anonymous.aplicacionarturoRuedas"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8a0b0f97-c440-42f9-afaf-b0c781f4a2fd"
+      }
     }
   }
 }

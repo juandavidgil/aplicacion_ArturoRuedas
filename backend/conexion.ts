@@ -124,10 +124,36 @@ app.post('/iniciar-sesion', async (req: Request, res: Response) => {
   }
 });
 
+//Iniciar sesion como administrador
+app.post('/iniciar-administrador', async (req: Request, res: Response) =>{
+  try{
+    const {usuario, contraseña, contraseña2} = req.body;
+    if( !usuario || !contraseña || !contraseña2){
+      return res.status(400).json({error: 'usuario y contraseñas son obligatorios'});
+    }
+    const result = await pool.query(
+      //constulta sql
+      `SELECT usuario, contraseña, contraseña2 
+      FROM usuarioadmin
+      WHERE usuario = $1 AND contraseña = $2 AND contraseña2 =$3`,
+    [usuario, contraseña, contraseña2]
+    ); 
+    if(result.rows.length === 0) {
+      return res.status(401).json({error: 'Credenciales incorrectas'})
+    }
+    res.status(200).json({
+      mensaje: 'Inicio de sesion exitoso',
+      usuario: result.rows[0]
+    })
+  }catch (error){
+    console.error('Error al iniciar sesion', error)
+    res.status(500).json({error: 'usuario y contraseña con obligatorios'})
+  }
+})
 
-const codigosReset = new Map<string, string>();
 
 // 📧 Envío de código de recuperación
+const codigosReset = new Map<string, string>();
 app.post('/enviar-correo-reset', async (req, res) => {
   const { correo } = req.body;
   try {

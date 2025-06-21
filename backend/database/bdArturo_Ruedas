@@ -30,6 +30,18 @@ CREATE TABLE usuario (
 INSERT INTO usuario (nombre, correo, contraseña, telefono)
 VALUES ('cristian', 'cris@gmail.com', '123', '3236870976');
 
+-- Crear tabla usuario administrador
+CREATE TABLE usuarioadmin (
+    ID_administrador SERIAL PRIMARY KEY,
+    usuario VARCHAR(20) NOT NULL,
+    contraseña VARCHAR(25) NOT NULL,
+    contraseña2 VARCHAR(25) NOT NULL
+)
+
+--usuario administrador
+INSERT INTO usuarioadmin ( usuario, contraseña, contraseña2)
+    VALUES ('admin1', 'hola', 'hola2')
+
 -- Crear tabla mensaje
 CREATE TABLE mensaje (
     ID_mensaje SERIAL PRIMARY KEY,
@@ -118,6 +130,8 @@ SELECT * FROM com_ventas
 SELECT * FROM carrito
 
 SELECT * FROM usuario
+
+SELECT * FROM usuarioadmin
 
 
 

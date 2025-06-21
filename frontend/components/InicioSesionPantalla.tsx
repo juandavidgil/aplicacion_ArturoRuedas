@@ -98,7 +98,7 @@ const InicioSesionPantalla: React.FC = () => {
       >
         <Text style={styles.forgotText}>¿Olvidaste tu contraseña?</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.forgotPassword} onPress={()=>navigation.navigate('Administrador')}>
+      <TouchableOpacity style={styles.forgotPassword} onPress={()=>navigation.navigate('FiltroAdmin')}>
         <Text>
           Administrar
         </Text>
