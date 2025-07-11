@@ -174,13 +174,16 @@ const MTBPantalla: React.FC = () => {
               onPress={() => navigation.navigate('ComponenteDetalle')}>
                 <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER}   source={require('../iconos/rueda.jpeg')} />
               </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+            onPress={() => navigation.navigate('ComponenteDetallePantalla2')}>
                 <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+            onPress={() => navigation.navigate('ComponenteDetallePantalla3')}>
                 <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+            onPress={() => navigation.navigate('ComponenteDetallePantalla4')}>
                   <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
             </TouchableOpacity>
               </View>

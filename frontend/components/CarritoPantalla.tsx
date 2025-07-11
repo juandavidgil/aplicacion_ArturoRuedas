@@ -173,6 +173,7 @@ const obtenerCarrito = async () => {
   }, []);
 
   const renderItem = ({ item }: { item: Articulo }) => (
+      <TouchableOpacity>
     <View style={styles.card}>
       <Image 
         source={{ uri: item.foto }} 
@@ -180,6 +181,7 @@ const obtenerCarrito = async () => {
         resizeMode="cover" 
         onError={() => console.log("Error cargando imagen")}
       />
+
       <View style={styles.info}>
         
         <Text style={styles.nombre}>{item.nombre_articulo}</Text>
@@ -190,7 +192,7 @@ const obtenerCarrito = async () => {
         <TouchableOpacity 
           onPress={() => eliminarArticulo(item.id)}
           style={styles.botonEliminar}
-        >
+          >
           <Ionicons name="trash-outline" size={20} color="#e63946" />
           <Text style={styles.textoEliminar}>Eliminar</Text>
         </TouchableOpacity>
@@ -207,6 +209,7 @@ const obtenerCarrito = async () => {
 </TouchableOpacity>
       </View>
     </View>
+  </TouchableOpacity>
   );
 
   return (

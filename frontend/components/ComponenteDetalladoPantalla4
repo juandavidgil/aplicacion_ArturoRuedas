@@ -17,7 +17,7 @@ return (
 
      
     <Image
-        source={require('../img/suspe.webp')}
+        source={require('../img/manubrio.png')}
         style={styles.image}
         resizeMode="contain"
     /> 

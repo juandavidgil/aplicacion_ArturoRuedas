@@ -17,7 +17,7 @@ const Administrador: React.FC = () => {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  const obtenerUsuarios = async () => {
+  const obtenerUsuarios = async () => {     
     try {
       setRefreshing(true);
       const response = await fetch('http://10.0.2.2:3001/obtener-usuarios');
@@ -98,6 +98,13 @@ const Administrador: React.FC = () => {
           >
             <Text style={styles.buttonText}>Eliminar</Text>
           </TouchableOpacity>
+
+           <TouchableOpacity 
+        style={styles.adminPublicaciones} 
+        onPress={() => navigation.navigate('PublicacionesAdmin')}
+      >
+        <Text style={styles.buttonText}>Publicaciones</Text>
+      </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -124,12 +131,7 @@ const Administrador: React.FC = () => {
         <Text style={styles.refreshButtonText}>Actualizar lista</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity 
-        style={styles.adminPublicaciones} 
-        onPress={() => navigation.navigate('PublicacionesAdmin')}
-      >
-        <Text style={styles.adminPublicacionesText}>ADMIN. PUBLICACIONES</Text>
-      </TouchableOpacity>
+     
     </View>
   );
 };
@@ -178,11 +180,12 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 12,
+    marginTop: 10,
+    gap: 10,
   },
   button: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 6,
     borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
@@ -195,7 +198,25 @@ const styles = StyleSheet.create({
   deleteButton: {
     backgroundColor: '#dc3545',
   },
+  adminPublicaciones: {
+    backgroundColor: '#28a745',
+    borderRadius: 6,
+    padding: '1%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: '5%',
+    paddingLeft: '5%'
+
+   },
   buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+   
+
+
+
+  adminPublicacionesText: {
     color: 'white',
     fontWeight: 'bold',
   },
@@ -213,18 +234,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 8,
   },
-  adminPublicaciones: {
-    backgroundColor: '#28a745',
-    padding: 12,
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
-  adminPublicacionesText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
+ 
 });
 
 export default Administrador;

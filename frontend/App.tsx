@@ -52,9 +52,9 @@ const App = () => {
         <Stack.Screen name= "Notificaciones" component={NotificacionesPantalla}/>
         <Stack.Screen name= "MODELO3d" component={ProductVideoCard}/>
         <Stack.Screen name="ComponenteDetalle" component={ComponenteDetallePantalla}/>
-         <Stack.Screen name="ComponenteDetalle" component={ComponenteDetallePantalla2}/>
-          <Stack.Screen name="ComponenteDetalle" component={ComponenteDetallePantalla3}/>
-           <Stack.Screen name="ComponenteDetalle" component={ComponenteDetallePantalla4}/>
+         <Stack.Screen name="ComponenteDetallePantalla2" component={ComponenteDetallePantalla2}/>
+          <Stack.Screen name="ComponenteDetallePantalla3" component={ComponenteDetallePantalla3}/>
+           <Stack.Screen name="ComponenteDetallePantalla4" component={ComponenteDetallePantalla4}/>
         <Stack.Screen name='FiltroAdmin' component={FiltroAdminPantalla}/>
         <Stack.Screen name='Administrador' component={Administrador}/>
         <Stack.Screen name='PublicacionesAdmin' component={PublicacionesAdmin}/>

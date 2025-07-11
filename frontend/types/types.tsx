@@ -24,6 +24,9 @@ export type StackParamList = {
   PublicacionesAdmin: undefined;
   FiltroAdmin: undefined;
   ComponenteDetalle: undefined;
+  ComponenteDetallePantalla2: undefined;
+  ComponenteDetallePantalla3: undefined;
+  ComponenteDetallePantalla4: undefined;
 };
 
 export interface Articulo {
@@ -61,6 +64,6 @@ export type FiltroAdminScreenNavigationProp = RouteProp<StackParamList, 'FiltroA
 export type AdministradorScreenNavigationProp = RouteProp<StackParamList, 'Administrador'>;
 export type PublicacionesAdminScreenNavigationProp = RouteProp<StackParamList, 'PublicacionesAdmin'>;
 export type ComponenteDetalleScreenNavigationProp = RouteProp<StackParamList, 'ComponenteDetalle'>;
-export type ComponenteDetalle2ScreenNavigationProp = RouteProp<StackParamList, 'ComponenteDetalle'>;
-export type ComponenteDetalleS3creenNavigationProp = RouteProp<StackParamList, 'ComponenteDetalle'>;
-export type ComponenteDetalleS4creenNavigationProp = RouteProp<StackParamList, 'ComponenteDetalle'>;
+export type ComponenteDetalle2ScreenNavigationProp = RouteProp<StackParamList, 'ComponenteDetallePantalla2'>;
+export type ComponenteDetalleS3creenNavigationProp = RouteProp<StackParamList, 'ComponenteDetallePantalla3'>;
+export type ComponenteDetalleS4creenNavigationProp = RouteProp<StackParamList, 'ComponenteDetallePantalla4'>;

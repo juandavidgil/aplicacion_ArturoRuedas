@@ -620,6 +620,31 @@ app.listen(PORT, () => {
   process.exit(1);
 });
 
+
+//administrar publicaciones 
+app.get('/publicacion-usuario', async (req, res) => {
+  try {
+    const result = await pool.query(`
+     SELECT 
+  cv.ID_publicacion,
+  cv.nombre_Articulo,
+  cv.descripcion,
+  cv.precio,
+  cv.tipo_bicicleta,
+  cv.foto,
+  u.nombre AS nombre_vendedor
+
+FROM com_ventas cv
+JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+ORDER BY cv.ID_publicacion DESC;
+    `);
+    console.log('Usuarios obtenidos:', result.rows.length);
+    res.status(200).json(result.rows); // ✔️ Devuelve JSON
+  } catch (error) {
+    console.error('Error al obtener usuarios:', error);
+    res.status(500).json({ error: 'Error en el servidor' }); // ✔️ Siempre devuelve JSON
+  }
+});
 // Manejo de cierre limpio
 process.on('SIGTERM', () => {
   console.log('🛑 Recibida señal SIGTERM. Cerrando servidor...');
@@ -628,6 +653,8 @@ process.on('SIGTERM', () => {
     process.exit(0);
   });
 });
+
+
 
 process.on('SIGINT', () => {
   console.log('🛑 Recibida señal SIGINT. Cerrando servidor...');

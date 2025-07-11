@@ -158,3 +158,32 @@ JOIN usuario u ON cv.ID_usuario = u.ID_usuario
       u.correo,
       u.telefono
       FROM usuario u
+
+
+      SELECT 
+  cv.ID_publicacion,
+  cv.nombre_Articulo,
+  cv.descripcion,
+  cv.precio,
+  cv.tipo_bicicleta,
+  cv.foto,
+  u.ID_usuario,
+  u.nombre AS nombre_usuario,
+  u.correo
+FROM com_ventas cv
+JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+ORDER BY cv.ID_publicacion DESC;
+
+
+     SELECT 
+  cv.ID_publicacion,
+  cv.nombre_Articulo,
+  cv.descripcion,
+  cv.precio,
+  cv.tipo_bicicleta,
+  cv.foto,
+  u.nombre AS nombre_vendedor
+
+FROM com_ventas cv
+JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+ORDER BY cv.ID_publicacion DESC;

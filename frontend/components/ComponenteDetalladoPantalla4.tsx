@@ -60,7 +60,7 @@ return (
         <>
             <View style={styles.infoBox}>
               <Text style={styles.bold}>¿Para qué sirve?</Text>
-              <Text>La suspencion es escencial para el Mtb al momento de bajar por una montaña, si tienes un tenedor, este podria partirse al momento de caer en un bache</Text>
+              <Text>El pedal es escencial para el equilibrio y el manejo de tu bicicleta</Text>
             </View>
             <View style={styles.infoBox}>
               <Text style={styles.bold}>Mantenimiento</Text>
