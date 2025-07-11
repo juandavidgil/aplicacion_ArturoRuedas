@@ -61,3 +61,6 @@ export type FiltroAdminScreenNavigationProp = RouteProp<StackParamList, 'FiltroA
 export type AdministradorScreenNavigationProp = RouteProp<StackParamList, 'Administrador'>;
 export type PublicacionesAdminScreenNavigationProp = RouteProp<StackParamList, 'PublicacionesAdmin'>;
 export type ComponenteDetalleScreenNavigationProp = RouteProp<StackParamList, 'ComponenteDetalle'>;
+export type ComponenteDetalle2ScreenNavigationProp = RouteProp<StackParamList, 'ComponenteDetalle'>;
+export type ComponenteDetalleS3creenNavigationProp = RouteProp<StackParamList, 'ComponenteDetalle'>;
+export type ComponenteDetalleS4creenNavigationProp = RouteProp<StackParamList, 'ComponenteDetalle'>;
