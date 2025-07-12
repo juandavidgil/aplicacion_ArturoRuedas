@@ -45,6 +45,17 @@ correo: string;
 telefono: string
 }
 
+export interface Publicacion {
+  ID_publicacion: number;
+  nombre_Articulo: string;
+  descripcion: string;
+  precio: string;
+  tipo_bicicleta: string;
+  foto: string;
+  nombre_vendedor: string;
+
+}
+
 
 // Tipos para las rutas
 export type MTBScreenRouteProp = RouteProp<StackParamList, 'MTB'>;

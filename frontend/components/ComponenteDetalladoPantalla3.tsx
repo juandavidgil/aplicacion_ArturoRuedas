@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10,
+    marginTop: '10%'
   },
   image: {
     width: '100%',

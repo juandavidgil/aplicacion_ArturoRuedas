@@ -85,7 +85,7 @@ const PublicacionesAdmin : React.FC = () => {
 
     return(
       <View style={styles.container}>
-            <Text style={styles.titulo}>ADMINISTRAR USUARIOS</Text>
+            <Text style={styles.titulo}>ADMINISTRAR PUBLICACIONES</Text>
             
             <FlatList
               data={articulos}

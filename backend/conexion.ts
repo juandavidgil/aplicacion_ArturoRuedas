@@ -622,7 +622,7 @@ app.listen(PORT, () => {
 
 
 //administrar publicaciones 
-app.get('/publicacion-usuario', async (req, res) => {
+app.get('/obtener-publicaciones', async (req, res) => {
   try {
     const result = await pool.query(`
      SELECT 

@@ -99,12 +99,7 @@ const Administrador: React.FC = () => {
             <Text style={styles.buttonText}>Eliminar</Text>
           </TouchableOpacity>
 
-           <TouchableOpacity 
-        style={styles.adminPublicaciones} 
-        onPress={() => navigation.navigate('PublicacionesAdmin')}
-      >
-        <Text style={styles.buttonText}>Publicaciones</Text>
-      </TouchableOpacity>
+          
         </View>
       </View>
     </View>
@@ -129,6 +124,12 @@ const Administrador: React.FC = () => {
       >
         <Ionicons name="refresh" size={24} color="white" />
         <Text style={styles.refreshButtonText}>Actualizar lista</Text>
+      </TouchableOpacity>
+       <TouchableOpacity 
+        style={styles.adminPublicaciones} 
+        onPress={() => navigation.navigate('PublicacionesAdmin')}
+      >
+        <Text style={styles.buttonText}>Publicaciones</Text>
       </TouchableOpacity>
 
      
