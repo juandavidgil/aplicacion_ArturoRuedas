@@ -27,6 +27,8 @@ export type StackParamList = {
   ComponenteDetallePantalla2: undefined;
   ComponenteDetallePantalla3: undefined;
   ComponenteDetallePantalla4: undefined;
+  DetallePublicacion:undefined;
+  
 };
 
 export interface Articulo {
@@ -78,3 +80,4 @@ export type ComponenteDetalleScreenNavigationProp = RouteProp<StackParamList, 'C
 export type ComponenteDetalle2ScreenNavigationProp = RouteProp<StackParamList, 'ComponenteDetallePantalla2'>;
 export type ComponenteDetalleS3creenNavigationProp = RouteProp<StackParamList, 'ComponenteDetallePantalla3'>;
 export type ComponenteDetalleS4creenNavigationProp = RouteProp<StackParamList, 'ComponenteDetallePantalla4'>;
+export type DetallePublicacioncreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacion'>;

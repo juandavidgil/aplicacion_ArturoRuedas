@@ -173,7 +173,7 @@ const obtenerCarrito = async () => {
   }, []);
 
   const renderItem = ({ item }: { item: Articulo }) => (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=>navigation.navigate ('DetallePublicacion')}>
     <View style={styles.card}>
       <Image 
         source={{ uri: item.foto }} 
@@ -185,10 +185,10 @@ const obtenerCarrito = async () => {
       <View style={styles.info}>
         
         <Text style={styles.nombre}>{item.nombre_articulo}</Text>
-        <Text style={styles.descripcion}>{item.descripcion}</Text>
-        <Text style={styles.precio}>${item.precio}</Text>
+        <Text style={styles.descripcion}>Descripcion: {item.descripcion}</Text>
+        <Text style={styles.precio}>Precio: ${item.precio}</Text>
         <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
-        <Text style={styles.descripcion}>vendedor: {item.nombre_vendedor}</Text>
+        <Text style={styles.descripcion}>Vendedor: {item.nombre_vendedor}</Text>
         <TouchableOpacity 
           onPress={() => eliminarArticulo(item.id)}
           style={styles.botonEliminar}

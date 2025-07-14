@@ -117,7 +117,7 @@ const MTBPantalla: React.FC = () => {
                    keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
                   contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }} // Aquí agregamos el marginTop
                   renderItem={({ item }) => (
-                   
+                   <TouchableOpacity onPress={()=>navigation.navigate('DetallePublicacion')}>
                     <View style={styles.cardMTB}>
                       <Image source={{ uri: item.foto }} style={styles.imagenMTB} resizeMode="cover" />
                       <View style={styles.infoMTB}>
@@ -132,6 +132,7 @@ const MTBPantalla: React.FC = () => {
                         </TouchableOpacity>
                       </View>
                     </View>
+                   </TouchableOpacity>
                   )}
                   ListEmptyComponent={
                     <Text style={{ marginTop: 20, textAlign: 'center' }}>

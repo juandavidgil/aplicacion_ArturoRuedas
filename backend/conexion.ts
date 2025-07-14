@@ -621,7 +621,7 @@ app.listen(PORT, () => {
 });
 
 
-//administrar publicaciones 
+//administrar publicaciones npm 
 app.get('/obtener-publicaciones', async (req, res) => {
   try {
     const result = await pool.query(`
@@ -638,10 +638,10 @@ FROM com_ventas cv
 JOIN usuario u ON cv.ID_usuario = u.ID_usuario
 ORDER BY cv.ID_publicacion DESC;
     `);
-    console.log('Usuarios obtenidos:', result.rows.length);
+    console.log('Publicaciones obtenidas:', result.rows.length);
     res.status(200).json(result.rows); // ✔️ Devuelve JSON
   } catch (error) {
-    console.error('Error al obtener usuarios:', error);
+    console.error('Error al obtener publicaciones:', error);
     res.status(500).json({ error: 'Error en el servidor' }); // ✔️ Siempre devuelve JSON
   }
 });

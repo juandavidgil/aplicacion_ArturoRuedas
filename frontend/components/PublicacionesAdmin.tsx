@@ -10,7 +10,7 @@ import Administrador from "./Administrador";
 
 interface Publicacion {
   ID_publicacion: number;
-  nombre_Articulo: string;
+  nombre_articulo: string;
   descripcion: string;
   precio: string;
   tipo_bicicleta: string;
@@ -43,7 +43,7 @@ const PublicacionesAdmin : React.FC = () => {
      
            setPublicaciones(data);
          } catch (error) {
-           console.error('Error al obtener usuarios:', error);
+           console.error('Error al obtener publicaciones:', error);
            Alert.alert('Error', 'No se pudieron cargar los usuarios. Verifica la conexión al servidor.');
          } finally {
            setRefreshing(false);
@@ -53,7 +53,15 @@ const PublicacionesAdmin : React.FC = () => {
     obtenerPublicaciones();
   }, []);
     const renderItem = ({ item }: { item: Publicacion }) => (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={async ()=>{
+        try{
+        await AsyncStorage.setItem('idPublicacionSeleccionada', item.ID_publicacion.toString())
+        console.error(AsyncStorage)
+          navigation.navigate('DetallePublicacion');
+        }catch (error){
+          console.error('Error guardando el ID', error)
+        }
+      }}>
     <View style={styles.card}>
       <Image 
         source={{ uri: item.foto }} 
@@ -63,20 +71,20 @@ const PublicacionesAdmin : React.FC = () => {
       />
 
       <View style={styles.info}>
-       <Text style={styles.nombre}>id {item.ID_publicacion}</Text>
-        <Text style={styles.nombre}>nombre articulo {item.nombre_Articulo}</Text>
-        <Text style={styles.descripcion}>descripcion {item.descripcion}</Text>
-        <Text style={styles.precio}>precio {item.precio}</Text>
+      
+        <Text style={styles.nombre}>{item.nombre_articulo}</Text>
+        <Text style={styles.descripcion}>Descripcion: {item.descripcion}</Text>
+        <Text style={styles.precio}>Precio: {item.precio}</Text>
         <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
-        <Text style={styles.tipo}>id_vendedor: {item.nombre_vendedor}</Text>
+        <Text style={styles.tipo}>Vendedor: {item.nombre_vendedor}</Text>
      
-        {/* <TouchableOpacity 
+         {/* <TouchableOpacity 
           onPress={() => eliminarArticulo(item.id)}
           style={styles.botonEliminar}
           >
           <Ionicons name="trash-outline" size={20} color="#e63946" />
           <Text style={styles.textoEliminar}>Eliminar</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>  */}
        
       </View>
     </View>
@@ -89,7 +97,7 @@ const PublicacionesAdmin : React.FC = () => {
             
             <FlatList
               data={articulos}
-              /* keyExtractor={(item) => item.ID_publicacion?.toString() || Math.random().toString()} */
+              keyExtractor={(item) => item.ID_publicacion ? item.ID_publicacion.toString() : Math.random().toString()}
               renderItem={renderItem}
               contentContainerStyle={styles.lista}
               refreshing={refreshing}

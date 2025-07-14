@@ -206,7 +206,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingRight: '5%',
-    paddingLeft: '5%'
+    paddingLeft: '5%',
+    marginBottom: '10%'
 
    },
   buttonText: {

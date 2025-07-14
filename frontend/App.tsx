@@ -23,6 +23,7 @@ import ComponenteDetallePantalla2 from './components/ComponenteDetalladoPantalla
 import ComponenteDetallePantalla3 from './components/ComponenteDetalladoPantalla3';
 import ComponenteDetallePantalla4 from './components/ComponenteDetalladoPantalla4';
 import FiltroAdminPantalla from './components/FiltroAdmin';
+import DetallePublicacion from './components/DetallePublicacion';
 
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -58,6 +59,7 @@ const App = () => {
         <Stack.Screen name='FiltroAdmin' component={FiltroAdminPantalla}/>
         <Stack.Screen name='Administrador' component={Administrador}/>
         <Stack.Screen name='PublicacionesAdmin' component={PublicacionesAdmin}/>
+        <Stack.Screen name='DetallePublicacion' component={DetallePublicacion}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
