@@ -17,10 +17,13 @@ const Administrador: React.FC = () => {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
+
   const obtenerUsuarios = async () => {     
     try {
       setRefreshing(true);
       const response = await fetch('http://10.0.2.2:3001/obtener-usuarios');
+
+    
       
       if (!response.ok) {
         const errorText = await response.text();
@@ -28,6 +31,7 @@ const Administrador: React.FC = () => {
       }
 
       const data = await response.json();
+       console.log("🔍 Usuarios desde backend:", data);
       
       // Validación de datos
       if (!Array.isArray(data)) {
@@ -43,67 +47,84 @@ const Administrador: React.FC = () => {
     }
   };
 
-  const handleEliminarUsuario = async (id: number) => {
-    try {
-      Alert.alert(
-        "Confirmar eliminación",
-        "¿Estás seguro de que deseas eliminar este usuario?",
-        [
-          {
-            text: "Cancelar",
-            style: "cancel"
-          },
-          { 
-            text: "Eliminar", 
-            onPress: async () => {
-              const response = await fetch(`http://10.0.2.2:3001/eliminar-usuario/${id}`, {
-                method: 'DELETE'
-              });
-              
-              if (response.ok) {
-                obtenerUsuarios(); // Refrescar la lista
-                Alert.alert("Éxito", "Usuario eliminado correctamente");
-              } else {
-                throw new Error("Error al eliminar usuario");
-              }
+  const handleEliminarUsuario = async (usuario: Usuario) => {
+  const id = Number(usuario.ID_usuario || usuario.ID_usuario); // <-- Aquí está el cambio
+
+   console.log("🧪 Usuario recibido:", usuario);
+  console.log("🧪 ID convertido a número:", id);
+  
+  if (!id || isNaN(id)) {
+    console.error("❌ ID de usuario inválido o no numérico:", usuario);
+    Alert.alert('Error', 'ID de usuario no válido');
+    return;
+  }
+
+  try {
+    Alert.alert(
+      "Confirmar eliminación",
+      `¿Estás seguro de que deseas eliminar a ${usuario.nombre}?`,
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Eliminar",
+          onPress: async () => {
+            const response = await fetch(`http://10.0.2.2:3001/eliminar-usuario/${id}`, {
+              method: 'DELETE'
+            });
+
+            if (response.ok) {
+              await obtenerUsuarios();
+              Alert.alert("Éxito", "Usuario eliminado correctamente");
+            } else {
+              const errorText = await response.text();
+              throw new Error(errorText);
             }
           }
-        ]
-      );
-    } catch (error) {
-      console.error('Error al eliminar usuario:', error);
-      Alert.alert('Error', 'No se pudo eliminar el usuario');
-    }
-  };
+        }
+      ]
+    );
+  } catch (error) {
+    console.error('❌ Error al eliminar usuario:', error);
+    Alert.alert('Error', 'No se pudo eliminar el usuario');
+  }
+};
 
   useEffect(() => {
     obtenerUsuarios();
   }, []);
 
-  const renderItem = ({ item }: { item: Usuario }) => (
+  const renderItem = ({ item }: { item: Usuario }) => {
+  console.log(" Usuario:", item);  //  Esto imprime los datos reales
+
+  return (
     <View style={styles.card}>
       <View style={styles.info}>
         <Text style={styles.label}>ID: <Text style={styles.value}>{item.ID_usuario}</Text></Text>
         <Text style={styles.label}>Nombre: <Text style={styles.value}>{item.nombre}</Text></Text>
         <Text style={styles.label}>Correo: <Text style={styles.value}>{item.correo}</Text></Text>
         <Text style={styles.label}>Teléfono: <Text style={styles.value}>{item.telefono}</Text></Text>
-        
+
         <View style={styles.buttonsContainer}>
           <TouchableOpacity style={[styles.button, styles.blockButton]}>
             <Text style={styles.buttonText}>Bloquear</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             style={[styles.button, styles.deleteButton]}
-            onPress={() => handleEliminarUsuario(item.ID_usuario)}
+            onPress={() => handleEliminarUsuario(item)}
           >
             <Text style={styles.buttonText}>Eliminar</Text>
           </TouchableOpacity>
-
-          
+       <TouchableOpacity 
+        style={styles.adminPublicaciones} 
+        onPress={() => navigation.navigate('PublicacionesAdmin')}
+      >
+        <Text style={styles.buttonText}>Publicaciones</Text>
+      </TouchableOpacity>
         </View>
       </View>
     </View>
   );
+};
 
   return (
     <View style={styles.container}>
@@ -125,16 +146,11 @@ const Administrador: React.FC = () => {
         <Ionicons name="refresh" size={24} color="white" />
         <Text style={styles.refreshButtonText}>Actualizar lista</Text>
       </TouchableOpacity>
-       <TouchableOpacity 
-        style={styles.adminPublicaciones} 
-        onPress={() => navigation.navigate('PublicacionesAdmin')}
-      >
-        <Text style={styles.buttonText}>Publicaciones</Text>
-      </TouchableOpacity>
 
      
     </View>
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -207,7 +223,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingRight: '5%',
     paddingLeft: '5%',
-    marginBottom: '10%'
+   
 
    },
   buttonText: {

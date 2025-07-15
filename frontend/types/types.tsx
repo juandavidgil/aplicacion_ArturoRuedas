@@ -59,6 +59,7 @@ export interface Publicacion {
 }
 
 
+
 // Tipos para las rutas
 export type MTBScreenRouteProp = RouteProp<StackParamList, 'MTB'>;
 export type RutaScreenRouteProp = RouteProp<StackParamList, 'Ruta'>;

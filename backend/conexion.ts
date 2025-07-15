@@ -151,10 +151,37 @@ app.post('/iniciar-administrador', async (req: Request, res: Response) =>{
   }
 })
 
+// Ruta para eliminar usuario por ID
+app.delete('/eliminar-usuario/:id', async (req, res) => {
+  const id = Number(req.params.id);
+
+// ✅ Validación para evitar errores de PostgreSQL
+if (isNaN(id)) {
+  console.error("❌ ID recibido no es un número válido:", req.params.id);
+  return res.status(400).json({ error: 'ID inválido (no numérico)' });
+}
+
+console.log("🧪 ID recibido y convertido en backend:", id);
+    console.log(" Backend recibió ID:", id);
+
+
+  try {
+    const resultado = await pool.query('DELETE SELECT FROM usuarios WHERE ID_usuario = $1', [id]);
+
+    if (resultado.rowCount === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    res.json({ mensaje: 'Usuario eliminado correctamente' });
+  } catch (error) {
+    console.error('Error al eliminar usuario:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+});
 
 // 📧 Envío de código de recuperación
 const codigosReset = new Map<string, string>();
-app.post('/enviar-correo-reset', async (req, res) => {
+app.post('/enviar-correo-resetc', async (req, res) => {
   const { correo } = req.body;
   try {
     const result = await pool.query('SELECT * FROM usuario WHERE correo = $1', [correo]);
