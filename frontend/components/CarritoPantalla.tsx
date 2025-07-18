@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { 
   View, Text, FlatList, Image, 
   TouchableOpacity, StyleSheet, ActivityIndicator,
-  SafeAreaView, Alert 
+  SafeAreaView, Alert, Linking
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackParamList } from '../types/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
 
 interface Articulo {
   id: number;
@@ -19,6 +20,7 @@ interface Articulo {
   foto: string;
   nombre_vendedor: string;
   id_vendedor:number;
+  telefono: string;
 }
 
 
@@ -166,7 +168,21 @@ const obtenerCarrito = async () => {
   }
 };
 
+const enviarWhatsApp = (numero: string, mensaje: string) => {
+  const numeroFormateado = numero.replace(/\D/g, ''); // Elimina cualquier carácter que no sea número
+  const url = `https://wa.me/57${numeroFormateado}?text=${encodeURIComponent(mensaje)}`;
 
+  Linking.canOpenURL(url)
+    .then((soporta) => {
+      if (!soporta) {
+        Alert.alert('Error', 'Parece que WhatsApp no está instalado');
+      } else {
+        return Linking.openURL(url);
+      }
+    })
+    .catch((err) => console.error('❌ Error al abrir WhatsApp:', err));
+};
+ 
 
   useEffect(() => {
     obtenerCarrito();
@@ -197,6 +213,13 @@ const obtenerCarrito = async () => {
           <Text style={styles.textoEliminar}>Eliminar</Text>
         </TouchableOpacity>
         <TouchableOpacity 
+  onPress={() => enviarWhatsApp(item.telefono, `Hola ${item.nombre_vendedor}, estoy interesado en tu artículo: ${item.nombre_articulo}`)}
+  style={styles.botonMensajeAlVendedor}
+>
+  <Ionicons name="logo-whatsapp" size={20} color="#25D366" />
+  <Text style={styles.textoMensajeAlVendedor}>Chatear por WhatsApp</Text>
+</TouchableOpacity> 
+       {/*  <TouchableOpacity 
   onPress={() => navigation.navigate('ChatPrivado', { 
     chatId: null, 
     idOtroUsuario: item.id_vendedor,
@@ -206,7 +229,7 @@ const obtenerCarrito = async () => {
 >
   <Ionicons name="chatbubble-ellipses-outline" size={20} color="#51AFF7" />
   <Text style={styles.textoMensajeAlVendedor}>Mensaje al vendedor</Text>
-</TouchableOpacity>
+</TouchableOpacity>  */}
       </View>
     </View>
   </TouchableOpacity>

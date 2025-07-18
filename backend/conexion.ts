@@ -354,6 +354,7 @@ app.get('/carrito/:id_usuario', async (req: Request, res: Response) => {
         cv.precio,
         cv.tipo_bicicleta,
         u.nombre as nombre_vendedor,
+        u.telefono,
         cv.ID_usuario as id_vendedor
        FROM carrito c
        JOIN com_ventas cv ON c.ID_publicacion = cv.ID_publicacion 
