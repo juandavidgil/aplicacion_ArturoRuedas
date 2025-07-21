@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { StackParamList } from '../types/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {URL} from './UrlApi'
 
 interface Usuario {
   ID_usuario: number;
@@ -21,7 +22,7 @@ const Administrador: React.FC = () => {
   const obtenerUsuarios = async () => {     
     try {
       setRefreshing(true);
-      const response = await fetch('http://10.0.2.2:3001/obtener-usuarios');
+      const response = await fetch(`${URL}obtener-usuarios`);
 
     
       
@@ -68,7 +69,7 @@ const Administrador: React.FC = () => {
         {
           text: "Eliminar",
           onPress: async () => {
-            const response = await fetch(`http://10.0.2.2:3001/eliminar-usuario/${id}`, {
+            const response = await fetch(`${URL}eliminar-usuario/${id}`, {
               method: 'DELETE'
             });
 

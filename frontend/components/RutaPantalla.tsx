@@ -9,6 +9,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackParamList } from '../types/types';
+  import {URL} from './UrlApi'
 
 interface Articulo {
   ID_publicacion: number;
@@ -38,7 +39,7 @@ const RutaPantalla: React.FC = () => {
     setCargando(true);
     try {
       const response = await fetch(
-        `http://10.0.2.2:3001/buscar?nombre=${encodeURIComponent(busqueda)}&tipo=${tipoBicicleta}`
+        `${URL}buscar?nombre=${encodeURIComponent(busqueda)}&tipo=${tipoBicicleta}`
       );
       const data: Articulo[] = await response.json();
       
@@ -72,7 +73,7 @@ const RutaPantalla: React.FC = () => {
         return;
       }
 
-      const response = await fetch('http://10.0.2.2:3001/agregar-carrito', {
+      const response = await fetch(`${URL}agregar-carrito`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

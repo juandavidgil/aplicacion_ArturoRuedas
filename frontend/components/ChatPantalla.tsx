@@ -9,6 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { StackParamList } from '../types/types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {URL} from './UrlApi'
+
 
 interface Chat {
   ID_chats: number;
@@ -36,7 +38,7 @@ const ChatPantalla: React.FC = () => {
         const user = JSON.parse(userStr);
         setUserId(user.ID_usuario);
 
-        const response = await fetch(`http://10.0.2.2:3001/chats-usuario/${user.ID_usuario}`);
+        const response = await fetch(`${URL}chats-usuario/${user.ID_usuario}`);
         const data = await response.json();
         setChats(data);
       } catch (error) {

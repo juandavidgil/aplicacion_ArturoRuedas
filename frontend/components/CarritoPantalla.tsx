@@ -51,7 +51,7 @@ const obtenerCarrito = async () => {
     console.log(`🔄 Obteniendo carrito para usuario: ${ID_usuario}`);
     
     // 3. Hacer la petición al backend
-    const apiUrl = `http://10.0.2.2:3001/carrito/${ID_usuario}`;
+    const apiUrl = `http://192.168.101.85:3001/carrito/${ID_usuario}`;
     console.log(`🌐 URL de la solicitud: ${apiUrl}`);
     
     const response = await fetch(apiUrl, {
@@ -124,7 +124,7 @@ const obtenerCarrito = async () => {
     console.log(`🗑️ Intentando eliminar artículo ID: ${id} del usuario ID: ${ID_usuario}`);
     
     // 3. Configurar la solicitud
-    const apiUrl = 'http://10.0.2.2:3001/eliminar-carrito';
+    const apiUrl = 'http://192.168.101.85:3001/eliminar-carrito';
     const body = JSON.stringify({ 
       ID_usuario: ID_usuario, 
       ID_publicacion: id 

@@ -8,6 +8,8 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackParamList } from '../types/types';
+import {URL} from './UrlApi'
+
 
 type PropiedadesPantallaChat = RouteProp<StackParamList, 'ChatPrivado'>;
 
@@ -45,7 +47,7 @@ const ChatPrivadoPantalla: React.FC<Props> = ({ route }) => {
         const usuario = JSON.parse(usuarioAlmacenado);
         setIdUsuario(usuario.ID_usuario);
 
-        const respuesta = await fetch(`http://10.0.2.2:3001/mensajes-chat/${chatId}`);
+        const respuesta = await fetch(`${URL}mensajes-chat/${chatId}`);
         
         if (!respuesta.ok) {
           const textoError = await respuesta.text();
@@ -94,7 +96,7 @@ const ChatPrivadoPantalla: React.FC<Props> = ({ route }) => {
       }, 100);
 
       // Enviar al backend
-      const respuesta = await fetch('http://10.0.2.2:3001/enviar-mensaje', {
+      const respuesta = await fetch(`${URL}enviar-mensaje`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

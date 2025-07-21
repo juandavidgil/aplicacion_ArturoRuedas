@@ -6,7 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackParamList } from '../types/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import Administrador from "./Administrador";
+import {URL} from './UrlApi'
+
 
 interface Publicacion {
   ID_publicacion: number;
@@ -27,7 +28,7 @@ const PublicacionesAdmin : React.FC = () => {
        const obtenerPublicaciones = async () => {     
          try {
            setRefreshing(true);
-           const response = await fetch('http://10.0.2.2:3001/obtener-publicaciones');
+           const response = await fetch(`${URL}obtener-publicaciones`);
            
            if (!response.ok) {
              const errorText = await response.text();

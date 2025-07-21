@@ -5,6 +5,8 @@ import { StackParamList } from '../types/types';
 import {View,Text,TouchableOpacity, TextInput, StyleSheet, Alert, ActivityIndicator } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {URL} from './UrlApi'
+
 
 const FiltroAdminPantalla : React.FC = () =>{
      const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
@@ -20,7 +22,7 @@ const FiltroAdminPantalla : React.FC = () =>{
         }
         setCargando(true);
         try{
-            const response = await fetch('http://10.0.2.2:3001/iniciar-administrador',{
+            const response = await fetch(`${URL}iniciar-administrador`,{
                 method: 'POST',
                 headers:{
                     'Content-Type': 'application/json',

@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
+import {URL} from './UrlApi'
 
 const RestablecerContraseñaPantalla: React.FC = () => {
   const [correo, setCorreo] = useState('');
   const [codigo, setCodigo] = useState('');
   const [nuevaContraseña, setNuevaContraseña] = useState('');
   const [codigoEnviado, setCodigoEnviado] = useState(false);
-
   const enviarCodigo = async () => {
     try {
-      const response = await fetch('http://10.0.2.2:3001/enviar-correo-reset', {
+      const response = await fetch(`${URL}enviar-correo-reset`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo }),
@@ -29,7 +29,7 @@ const RestablecerContraseñaPantalla: React.FC = () => {
 
   const cambiarContraseña = async () => {
     try {
-      const response = await fetch('http://10.0.2.2:3001/restablecer-contrasena', {
+      const response = await fetch(`${URL}restablecer-contrasena`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo, codigo, nuevaContraseña }),

@@ -7,6 +7,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../types/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {URL} from './UrlApi'
+
 
 const InicioSesionPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
@@ -22,7 +24,7 @@ const InicioSesionPantalla: React.FC = () => {
 
     setCargando(true);
     try {
-      const response = await fetch('http://10.0.2.2:3001/iniciar-sesion', {
+      const response = await fetch(`${URL}iniciar-sesion`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

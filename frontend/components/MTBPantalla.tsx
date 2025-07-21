@@ -13,6 +13,8 @@ import { StackParamList } from '../types/types';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { Video, ResizeMode } from 'expo-av';
 import { constants } from 'buffer';
+import {URL} from './UrlApi'
+
 
 interface Articulo {
   id: number;
@@ -34,7 +36,7 @@ const MTBPantalla: React.FC = () => {
     if (busqueda.trim() === '') return;
     setCargando(true);
     try {
-      const response = await fetch(`http://10.0.2.2:3001/buscar?nombre=${encodeURIComponent(busqueda)}`);
+      const response = await fetch(`${URL}buscar?nombre=${encodeURIComponent(busqueda)}`);
       const data: Articulo[] = await response.json();
       setArticulos(data);
     } catch (error) {
@@ -66,7 +68,7 @@ const MTBPantalla: React.FC = () => {
       throw new Error('El artículo no tiene ID definido');
     }
 
-    const response = await fetch('http://10.0.2.2:3001/agregar-carrito', {
+    const response = await fetch(`${URL}agregar-carrito`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 

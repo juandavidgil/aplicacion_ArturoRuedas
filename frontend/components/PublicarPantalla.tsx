@@ -8,6 +8,7 @@ import { Picker } from '@react-native-picker/picker';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {URL} from './UrlApi'
 
 const PublicarPantalla: React.FC = () => {
   const [descripcion, setDescripcion] = useState('');
@@ -63,7 +64,7 @@ const PublicarPantalla: React.FC = () => {
         ID_usuario
       };
 
-      const response = await fetch('http://10.0.2.2:3001/publicar_articulo', {
+      const response = await fetch(`${URL}publicar_articulo`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

@@ -6,6 +6,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../types/types';
+import {URL} from './UrlApi'
+
 
 const RegistroPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
@@ -23,7 +25,7 @@ const RegistroPantalla: React.FC = () => {
 
     setCargando(true);
     try {
-      const response = await fetch('http://10.0.2.2:3001/registrar', {
+      const response = await fetch(`${URL}registrar`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
