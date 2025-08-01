@@ -336,8 +336,9 @@ console.log('ID_publicacion recibido:', ID_publicacion);
     res.status(500).json({ error: 'Error en el servidor' });
   }
 });
+
+
 // Endpoint para obtener los artículos del carrito de un usuario
-// En tu ruta /carrito/:id_usuario, verifica que el ID sea numérico
 app.get('/carrito/:id_usuario', async (req: Request, res: Response) => {
   try {
     const { id_usuario } = req.params;
@@ -424,7 +425,94 @@ app.delete('/eliminar-carrito', async (req: Request, res: Response) => {
 });
 
 
-///////////////////////////////////////////////////
+
+//obtener usuarios - administrador
+app.get('/obtener-usuarios', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT
+      ID_usuario,
+      nombre,
+      correo,
+      telefono
+      FROM usuario 
+      `);
+      console.log('Usuarios obtenidos:', result.rows.length);
+      res.status(200).json(result.rows); // ✔️ Devuelve JSON
+    } catch (error) {
+      console.error('Error al obtener usuarios:', error);
+    res.status(500).json({ error: 'Error en el servidor' }); // ✔️ Siempre devuelve JSON
+  }
+});
+
+//eliminar usuario - administrador
+app.delete('/eliminar-usuario/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query('DELETE FROM usuario WHERE ID_usuario = $1', [id]);
+    res.status(200).json({ message: "Usuario eliminado correctamente" });
+  } catch (error) {
+    console.error("Error al eliminar usuario:", error);
+    res.status(500).json({ error: "Error al eliminar usuario" });
+  }
+});
+
+
+//administrar publicaciones - administrador
+app.get('/obtener-publicaciones', async (req, res) => {
+  try {
+    const result = await pool.query(`
+     SELECT 
+  cv.Id_publicacion,
+  cv.nombre_Articulo,
+  cv.descripcion,
+  cv.precio,
+  cv.tipo_bicicleta,
+  cv.foto,
+  u.nombre AS nombre_vendedor
+  
+  FROM com_ventas cv
+  JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+  ORDER BY cv.ID_publicacion DESC;
+  `);
+  console.log('Publicaciones obtenidas:', result.rows.length);
+  res.status(200).json(result.rows); 
+} catch (error) {
+  console.error('Error al obtener publicaciones:', error);
+    res.status(500).json({ error: 'Error en el servidor' }); 
+  }
+});
+
+
+// Iniciar servidor con manejo de errores
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor escuchando en el puerto ${PORT}`);
+}).on('error', (err) => {
+  console.error('❌ Error al iniciar el servidor:', err.message);
+  process.exit(1);
+});
+
+
+// Manejo de cierre limpio
+process.on('SIGTERM', () => {
+  console.log('🛑 Recibida señal SIGTERM. Cerrando servidor...');
+  pool.end().then(() => {
+    console.log('✅ Conexión a PostgreSQL cerrada');
+    process.exit(0);
+  });
+});
+
+
+
+process.on('SIGINT', () => {
+  console.log('🛑 Recibida señal SIGINT. Cerrando servidor...');
+  pool.end().then(() => {
+    console.log('✅ Conexión a PostgreSQL cerrada');
+    process.exit(0);
+  });
+});
+
+/* ///////////////////////////////////////////////////
 // Middleware para validar acceso al chat
 const validateChatAccess = async (req: Request, res: Response, next: Function) => {
   const { id_chat } = req.params;
@@ -608,86 +696,4 @@ app.post('/iniciar-chat', async (req: Request, res: Response) => {
     console.error('Error al iniciar chat:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
-});
-
-//TRAER USUARIOS
-app.get('/obtener-usuarios', async (req, res) => {
-  try {
-    const result = await pool.query(`
-      SELECT
-        ID_usuario,
-        nombre,
-        correo,
-        telefono
-      FROM usuario 
-    `);
-    console.log('Usuarios obtenidos:', result.rows.length);
-    res.status(200).json(result.rows); // ✔️ Devuelve JSON
-  } catch (error) {
-    console.error('Error al obtener usuarios:', error);
-    res.status(500).json({ error: 'Error en el servidor' }); // ✔️ Siempre devuelve JSON
-  }
-});
-//eliminar usuario
-app.delete('/eliminar-usuario/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    await pool.query('DELETE FROM usuario WHERE ID_usuario = $1', [id]);
-    res.status(200).json({ message: "Usuario eliminado correctamente" });
-  } catch (error) {
-    console.error("Error al eliminar usuario:", error);
-    res.status(500).json({ error: "Error al eliminar usuario" });
-  }
-});
-
-// Iniciar servidor con manejo de errores
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor escuchando en el puerto ${PORT}`);
-}).on('error', (err) => {
-  console.error('❌ Error al iniciar el servidor:', err.message);
-  process.exit(1);
-});
-
-
-//administrar publicaciones npm 
-app.get('/obtener-publicaciones', async (req, res) => {
-  try {
-    const result = await pool.query(`
-     SELECT 
-  cv.ID_publicacion,
-  cv.nombre_Articulo,
-  cv.descripcion,
-  cv.precio,
-  cv.tipo_bicicleta,
-  cv.foto,
-  u.nombre AS nombre_vendedor
-
-FROM com_ventas cv
-JOIN usuario u ON cv.ID_usuario = u.ID_usuario
-ORDER BY cv.ID_publicacion DESC;
-    `);
-    console.log('Publicaciones obtenidas:', result.rows.length);
-    res.status(200).json(result.rows); // ✔️ Devuelve JSON
-  } catch (error) {
-    console.error('Error al obtener publicaciones:', error);
-    res.status(500).json({ error: 'Error en el servidor' }); // ✔️ Siempre devuelve JSON
-  }
-});
-// Manejo de cierre limpio
-process.on('SIGTERM', () => {
-  console.log('🛑 Recibida señal SIGTERM. Cerrando servidor...');
-  pool.end().then(() => {
-    console.log('✅ Conexión a PostgreSQL cerrada');
-    process.exit(0);
-  });
-});
-
-
-
-process.on('SIGINT', () => {
-  console.log('🛑 Recibida señal SIGINT. Cerrando servidor...');
-  pool.end().then(() => {
-    console.log('✅ Conexión a PostgreSQL cerrada');
-    process.exit(0);
-  });
-});
+}); */

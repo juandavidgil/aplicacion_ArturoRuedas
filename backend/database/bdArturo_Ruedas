@@ -199,3 +199,5 @@ SELECT
 FROM com_ventas cv
 JOIN usuario u ON cv.ID_usuario = u.ID_usuario
 ORDER BY cv.ID_publicacion DESC;
+
+SELECT * FROM com_ventas
