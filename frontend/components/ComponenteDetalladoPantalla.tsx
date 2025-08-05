@@ -1,13 +1,33 @@
 // Importamos lo necesario de React y React Native
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import { componentesData } from '../components/ComponentesData'; 
+import { StackParamList } from '../types/types';
+
 
 // Componente principal
 
 const ComponenteDetallePantalla = () => {
 
+  const route = useRoute();
+  const { componenteId } = route.params as { componenteId: keyof typeof componentesData };
+
+  const componente = componentesData[componenteId];
+
+
   //  Estado para controlar la pestaña activa
 const [tab, setTab] = useState<'colocar' | 'info' | 'tienda'>('colocar');
+
+
+ if (!componente) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Componente no encontrado</Text>
+      </View>
+    );
+  }
+
 
 return (
     <ScrollView contentContainerStyle={styles.container}>

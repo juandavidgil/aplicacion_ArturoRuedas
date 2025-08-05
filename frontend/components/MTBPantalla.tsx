@@ -172,8 +172,21 @@ const MTBPantalla: React.FC = () => {
             </>
           )}
           {/* barra informacion de componentes */}
-              <View style={styles.barraComponentes}>
-              <TouchableOpacity 
+            
+
+
+       {       <View style={styles.barraComponentes}>
+
+         <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
+                  <Text>Ver detalles de Ruedas</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'frenos' })}>
+                  <Text>Ver detalles de Frenos</Text>
+                </TouchableOpacity>
+
+
+          {/*     <TouchableOpacity 
               onPress={() => navigation.navigate('ComponenteDetalle')}>
                 <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER}   source={require('../iconos/rueda.jpeg')} />
               </TouchableOpacity>
@@ -188,8 +201,8 @@ const MTBPantalla: React.FC = () => {
             <TouchableOpacity
             onPress={() => navigation.navigate('ComponenteDetallePantalla4')}>
                   <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
-            </TouchableOpacity>
-              </View>
+            </TouchableOpacity> */}
+              </View> }
 
           {/* Barra de iconos */}
           <View style={styles.iconBar}>

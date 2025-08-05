@@ -1,5 +1,9 @@
 import { RouteProp } from '@react-navigation/native';
 
+
+export type ComponenteId = 'ruedas' | 'frenos' | 'marco' | 'sillin' | 'manubrio' | 'pedal';
+
+
 export type StackParamList = {
   Presentacion: undefined;
   Registro: undefined;
@@ -23,7 +27,7 @@ export type StackParamList = {
   Administrador: undefined;
   PublicacionesAdmin: undefined;
   FiltroAdmin: undefined;
-  ComponenteDetalle: undefined;
+  ComponenteDetalle: { componenteId: ComponenteId };
   ComponenteDetallePantalla2: undefined;
   ComponenteDetallePantalla3: undefined;
   ComponenteDetallePantalla4: undefined;
@@ -57,6 +61,8 @@ export interface Publicacion {
   nombre_vendedor: string;
 
 }
+
+
 
 
 
