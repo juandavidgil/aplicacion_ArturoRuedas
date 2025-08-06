@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackParamList } from '../types/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {URL} from '../config/UrlApi'
 
 
 interface Articulo {
@@ -51,7 +52,7 @@ const obtenerCarrito = async () => {
     console.log(`🔄 Obteniendo carrito para usuario: ${ID_usuario}`);
     
     // 3. Hacer la petición al backend
-    const apiUrl = `http://192.168.101.85:3001/carrito/${ID_usuario}`;
+    const apiUrl = `${URL}carrito/${ID_usuario}`;
     console.log(`🌐 URL de la solicitud: ${apiUrl}`);
     
     const response = await fetch(apiUrl, {
@@ -124,7 +125,7 @@ const obtenerCarrito = async () => {
     console.log(`🗑️ Intentando eliminar artículo ID: ${id} del usuario ID: ${ID_usuario}`);
     
     // 3. Configurar la solicitud
-    const apiUrl = 'http://192.168.101.85:3001/eliminar-carrito';
+    const apiUrl = `${URL}eliminar-carrito`;
     const body = JSON.stringify({ 
       ID_usuario: ID_usuario, 
       ID_publicacion: id 
@@ -189,7 +190,7 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
   }, []);
 
   const renderItem = ({ item }: { item: Articulo }) => (
-      <TouchableOpacity onPress={()=>navigation.navigate ('DetallePublicacion')}>
+      <TouchableOpacity onPress={()=>navigation.navigate('DetallePublicacion', { publicacion: item })}>
     <View style={styles.card}>
       <Image 
         source={{ uri: item.foto }} 

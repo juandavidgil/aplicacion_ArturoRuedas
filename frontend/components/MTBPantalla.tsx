@@ -13,7 +13,7 @@ import { StackParamList } from '../types/types';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { Video, ResizeMode } from 'expo-av';
 import { constants } from 'buffer';
-import {URL} from './UrlApi'
+import {URL} from '../config/UrlApi'
 
 
 interface Articulo {
@@ -119,7 +119,7 @@ const MTBPantalla: React.FC = () => {
                    keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
                   contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }} // Aquí agregamos el marginTop
                   renderItem={({ item }) => (
-                   <TouchableOpacity onPress={()=>navigation.navigate('DetallePublicacion')}>
+                   <TouchableOpacity onPress={()=>navigation.navigate('DetallePublicacion', { publicacion: item })}>
                     <View style={styles.cardMTB}>
                       <Image source={{ uri: item.foto }} style={styles.imagenMTB} resizeMode="cover" />
                       <View style={styles.infoMTB}>
@@ -215,9 +215,9 @@ const MTBPantalla: React.FC = () => {
             <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
               <Ionicons name='notifications-outline' size={28} color="#2c7a7b" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
+           {/*  <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
               <Ionicons name='chatbubbles-outline' size={26} color="#2c7a7b" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </SafeAreaView>

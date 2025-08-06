@@ -9,7 +9,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackParamList } from '../types/types';
-import {URL} from './UrlApi'
+import {URL} from '../config/UrlApi'
 
 
 interface Articulo {

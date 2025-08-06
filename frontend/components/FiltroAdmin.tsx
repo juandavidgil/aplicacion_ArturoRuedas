@@ -5,7 +5,7 @@ import { StackParamList } from '../types/types';
 import {View,Text,TouchableOpacity, TextInput, StyleSheet, Alert, ActivityIndicator } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {URL} from './UrlApi'
+import {URL} from '../config/UrlApi'
 
 
 const FiltroAdminPantalla : React.FC = () =>{

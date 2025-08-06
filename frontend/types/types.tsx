@@ -31,7 +31,7 @@ export type StackParamList = {
   ComponenteDetallePantalla2: undefined;
   ComponenteDetallePantalla3: undefined;
   ComponenteDetallePantalla4: undefined;
-  DetallePublicacion:undefined;
+    DetallePublicacion: { publicacion: Publicacion };
   
 };
 

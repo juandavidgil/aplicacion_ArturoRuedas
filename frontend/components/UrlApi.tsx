@@ -1,1 +1,0 @@
-export const URL = 'http://10.1.224.141:3001/'
