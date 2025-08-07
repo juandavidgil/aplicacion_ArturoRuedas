@@ -177,31 +177,24 @@ const MTBPantalla: React.FC = () => {
 
        {       <View style={styles.barraComponentes}>
 
-         <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
-                  <Text>Ver detalles de Ruedas</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
+                  <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER}   source={require('../iconos/rueda.jpeg')} />
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'frenos' })}>
-                  <Text>Ver detalles de Frenos</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio' })}>
+                  <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
                 </TouchableOpacity>
 
+                <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension' })}>
+                  <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
+                </TouchableOpacity>
 
-          {/*     <TouchableOpacity 
-              onPress={() => navigation.navigate('ComponenteDetalle')}>
-                <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER}   source={require('../iconos/rueda.jpeg')} />
-              </TouchableOpacity>
-            <TouchableOpacity
-            onPress={() => navigation.navigate('ComponenteDetallePantalla2')}>
-                <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
-            </TouchableOpacity>
-            <TouchableOpacity
-            onPress={() => navigation.navigate('ComponenteDetallePantalla3')}>
-                <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
-            </TouchableOpacity>
-            <TouchableOpacity
-            onPress={() => navigation.navigate('ComponenteDetallePantalla4')}>
+                <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal' })}>
                   <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
-            </TouchableOpacity> */}
+                </TouchableOpacity>
+
+
+               
               </View> }
 
           {/* Barra de iconos */}

@@ -3,6 +3,16 @@ import { RouteProp } from '@react-navigation/native';
 
 export type ComponenteId = 'ruedas' | 'frenos' | 'marco' | 'sillin' | 'manubrio' | 'pedal';
 
+export type ComponenteData = {
+  nombre: string;
+  imagen: any; // o ImageSourcePropType si usas React Native y quieres mayor control
+  comoColocar: string[];
+  informacion: {
+    utilidad: string;
+    mantenimiento: string;
+  };
+  herramientas: string[]; // ✅ importante para solucionar tu error
+};
 
 export type StackParamList = {
   Presentacion: undefined;
