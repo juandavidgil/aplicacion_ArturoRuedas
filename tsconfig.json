@@ -1,20 +1,15 @@
 {
+  
   "compilerOptions": {
     "target": "es2021",
     "module": "esnext",
-    "lib": [
-      "dom",
-      "es2021"
-    ],
+    "lib": ["dom", "es2021"],
     "moduleResolution": "node",
     "strict": true,
-    "noEmit": true,
-    "jsx": "react-native",
-    "allowJs": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": "./",
+     "baseUrl": "./",
     "paths": {
       "@backend/*": [
         "backend/*"
@@ -22,8 +17,8 @@
       "@frontend/*": [
         "frontend/*"
       ]
-    }
-  },
+  }
+},
   "include": [
     "**/*.ts",
     "**/*.tsx"
