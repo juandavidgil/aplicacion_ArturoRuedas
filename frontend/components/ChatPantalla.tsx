@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { StackParamList } from '../types/types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {URL} from './UrlApi'
+import {URL} from '../config/UrlApi'
 
 
 interface Chat {

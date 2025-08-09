@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackParamList } from '../types/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {URL} from './UrlApi'
+import {URL} from '../config/UrlApi'
 
 
 interface Publicacion {
@@ -53,16 +53,10 @@ const PublicacionesAdmin : React.FC = () => {
  useEffect(() => {
     obtenerPublicaciones();
   }, []);
-    const renderItem = ({ item }: { item: Publicacion }) => (
-      <TouchableOpacity onPress={async ()=>{
-        try{
-        await AsyncStorage.setItem('idPublicacionSeleccionada', item.ID_publicacion.toString())
-        console.error(AsyncStorage)
-          navigation.navigate('DetallePublicacion');
-        }catch (error){
-          console.error('Error guardando el ID', error)
-        }
-      }}>
+ const renderItem = ({ item }: { item: Publicacion }) => (
+  <TouchableOpacity onPress={() => {
+    navigation.navigate('DetallePublicacion', { publicacion: item });
+  }}>
     <View style={styles.card}>
       <Image 
         source={{ uri: item.foto }} 
@@ -72,25 +66,15 @@ const PublicacionesAdmin : React.FC = () => {
       />
 
       <View style={styles.info}>
-      
         <Text style={styles.nombre}>{item.nombre_articulo}</Text>
-        <Text style={styles.descripcion}>Descripcion: {item.descripcion}</Text>
-        <Text style={styles.precio}>Precio: {item.precio}</Text>
+        <Text style={styles.descripcion}>Descripción: {item.descripcion.substring(0, 50)}...</Text>
+        <Text style={styles.precio}>Precio: ${item.precio}</Text>
         <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
         <Text style={styles.tipo}>Vendedor: {item.nombre_vendedor}</Text>
-     
-         {/* <TouchableOpacity 
-          onPress={() => eliminarArticulo(item.id)}
-          style={styles.botonEliminar}
-          >
-          <Ionicons name="trash-outline" size={20} color="#e63946" />
-          <Text style={styles.textoEliminar}>Eliminar</Text>
-        </TouchableOpacity>  */}
-       
       </View>
     </View>
   </TouchableOpacity>
-  );
+);
 
     return(
       <View style={styles.container}>

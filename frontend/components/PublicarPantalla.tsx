@@ -8,7 +8,7 @@ import { Picker } from '@react-native-picker/picker';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL} from './UrlApi'
+import {URL} from '../config/UrlApi'
 
 const PublicarPantalla: React.FC = () => {
   const [descripcion, setDescripcion] = useState('');

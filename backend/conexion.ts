@@ -275,7 +275,7 @@ app.get('/buscar', async (req: Request, res: Response) => {
   try {
     const resultado = await pool.query(
       `SELECT 
-        cv.ID_publicacion as id,
+        cv.ID_publicacion,
         cv.nombre_Articulo, 
         cv.descripcion, 
         cv.precio, 
@@ -349,7 +349,7 @@ app.get('/carrito/:id_usuario', async (req: Request, res: Response) => {
 
     const result = await pool.query(
       `SELECT 
-        cv.ID_publicacion as id,
+        cv.ID_publicacion,
         cv.nombre_Articulo as nombre_articulo,
         cv.descripcion,
         cv.precio,

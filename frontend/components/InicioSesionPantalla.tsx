@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../types/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL} from './UrlApi'
+import {URL} from '../config/UrlApi'
 
 
 const InicioSesionPantalla: React.FC = () => {

@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { StackParamList } from '../types/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {URL} from './UrlApi'
+import {URL} from '../config/UrlApi'
 
 interface Usuario {
   ID_usuario: number;
@@ -106,6 +106,12 @@ const Administrador: React.FC = () => {
         <Text style={styles.label}>Teléfono: <Text style={styles.value}>{item.telefono}</Text></Text>
 
         <View style={styles.buttonsContainer}>
+       <TouchableOpacity 
+        style={styles.adminPublicaciones} 
+        onPress={() => navigation.navigate('PublicacionesAdmin')}
+      >
+        <Text style={styles.buttonText}>Publicaciones</Text>
+      </TouchableOpacity>
           <TouchableOpacity style={[styles.button, styles.blockButton]}>
             <Text style={styles.buttonText}>Bloquear</Text>
           </TouchableOpacity>
@@ -115,12 +121,6 @@ const Administrador: React.FC = () => {
           >
             <Text style={styles.buttonText}>Eliminar</Text>
           </TouchableOpacity>
-       <TouchableOpacity 
-        style={styles.adminPublicaciones} 
-        onPress={() => navigation.navigate('PublicacionesAdmin')}
-      >
-        <Text style={styles.buttonText}>Publicaciones</Text>
-      </TouchableOpacity>
         </View>
       </View>
     </View>

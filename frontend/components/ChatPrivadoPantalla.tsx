@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackParamList } from '../types/types';
-import {URL} from './UrlApi'
+import {URL} from '../config/UrlApi'
 
 
 type PropiedadesPantallaChat = RouteProp<StackParamList, 'ChatPrivado'>;

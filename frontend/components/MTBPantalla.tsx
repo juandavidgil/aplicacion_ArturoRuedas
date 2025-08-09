@@ -13,11 +13,11 @@ import { StackParamList } from '../types/types';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { Video, ResizeMode } from 'expo-av';
 import { constants } from 'buffer';
-import {URL} from './UrlApi'
+import {URL} from '../config/UrlApi'
 
 
 interface Articulo {
-  id: number;
+  ID_publicacion: number;
   nombre_articulo: string;
   descripcion: string;
   precio: string;
@@ -64,7 +64,7 @@ const MTBPantalla: React.FC = () => {
       throw new Error('No se pudo obtener el ID de usuario');
     }
 
-    if (!articulo.id) {
+    if (!articulo.ID_publicacion) {
       throw new Error('El artículo no tiene ID definido');
     }
 
@@ -73,7 +73,7 @@ const MTBPantalla: React.FC = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         ID_usuario: ID_usuario, 
-        ID_publicacion: articulo.id ,
+        ID_publicacion: articulo.ID_publicacion ,
       
       }),
     });
@@ -116,10 +116,10 @@ const MTBPantalla: React.FC = () => {
               {articulos.length > 0 && (
                 <FlatList
                   data={articulos}
-                   keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
+                   keyExtractor={(item, index) => item?.ID_publicacion?.toString() || index.toString()}
                   contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }} // Aquí agregamos el marginTop
                   renderItem={({ item }) => (
-                   <TouchableOpacity onPress={()=>navigation.navigate('DetallePublicacion')}>
+                   <TouchableOpacity onPress={()=>navigation.navigate('DetallePublicacion', { publicacion: item })}>
                     <View style={styles.cardMTB}>
                       <Image source={{ uri: item.foto }} style={styles.imagenMTB} resizeMode="cover" />
                       <View style={styles.infoMTB}>
@@ -177,31 +177,24 @@ const MTBPantalla: React.FC = () => {
 
        {       <View style={styles.barraComponentes}>
 
-         <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
-                  <Text>Ver detalles de Ruedas</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
+                  <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER}   source={require('../iconos/rueda.jpeg')} />
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'frenos' })}>
-                  <Text>Ver detalles de Frenos</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio' })}>
+                  <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
                 </TouchableOpacity>
 
+                <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension' })}>
+                  <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
+                </TouchableOpacity>
 
-          {/*     <TouchableOpacity 
-              onPress={() => navigation.navigate('ComponenteDetalle')}>
-                <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER}   source={require('../iconos/rueda.jpeg')} />
-              </TouchableOpacity>
-            <TouchableOpacity
-            onPress={() => navigation.navigate('ComponenteDetallePantalla2')}>
-                <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
-            </TouchableOpacity>
-            <TouchableOpacity
-            onPress={() => navigation.navigate('ComponenteDetallePantalla3')}>
-                <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
-            </TouchableOpacity>
-            <TouchableOpacity
-            onPress={() => navigation.navigate('ComponenteDetallePantalla4')}>
+                <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal' })}>
                   <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
-            </TouchableOpacity> */}
+                </TouchableOpacity>
+
+
+               
               </View> }
 
           {/* Barra de iconos */}
@@ -215,9 +208,9 @@ const MTBPantalla: React.FC = () => {
             <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
               <Ionicons name='notifications-outline' size={28} color="#2c7a7b" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
+           {/*  <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
               <Ionicons name='chatbubbles-outline' size={26} color="#2c7a7b" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </SafeAreaView>

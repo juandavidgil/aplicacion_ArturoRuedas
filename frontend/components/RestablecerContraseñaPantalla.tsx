@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
-import {URL} from './UrlApi'
+import {URL} from '../config/UrlApi'
 
 const RestablecerContraseñaPantalla: React.FC = () => {
   const [correo, setCorreo] = useState('');

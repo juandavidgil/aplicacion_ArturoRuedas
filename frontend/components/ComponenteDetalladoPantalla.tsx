@@ -6,6 +6,12 @@ import { componentesData } from '../components/ComponentesData';
 import { StackParamList } from '../types/types';
 
 
+type RouteParams = {
+  ComponenteDetalle: {
+    componenteId: keyof typeof componentesData;
+  };
+};
+
 // Componente principal
 
 const ComponenteDetallePantalla = () => {
@@ -33,14 +39,13 @@ return (
     <ScrollView contentContainerStyle={styles.container}>
   
     
-    <Text style={styles.title}>Ruedas</Text>
+    <Text style={styles.title}>{componente.nombre}</Text>
 
-     
-    <Image
-        source={require('../img/rueda.webp')}
-        style={styles.image}
-        resizeMode="contain"
-    /> 
+<Image
+  source={componente.imagen}
+  style={styles.image}
+  resizeMode="contain"
+/>
 
       {/*  Pestañas: Cómo colocar | Información | Tienda */}
     
@@ -60,34 +65,36 @@ return (
     <View style={styles.content}>
         {tab === 'colocar' && (
         <>
-            <Text style={styles.step}><Text style={styles.bold}>1.</Text> Retira la rueda antigua desenroscando el eje rápido</Text>
-            <Text style={styles.step}><Text style={styles.bold}>2.</Text> Limpia el área de montaje en el cuadro</Text>
-            <Text style={styles.step}><Text style={styles.bold}>3.</Text> Inserta la nueva rueda asegurándote de que esté centrada</Text>
-            <Text style={styles.step}><Text style={styles.bold}>4.</Text> Aprieta el eje rápido hasta que esté firme</Text>
-            <Text style={styles.step}><Text style={styles.bold}>5.</Text> Verifica que la rueda gire libremente sin rozar los frenos</Text>
+            {componente.comoColocar.map((paso, index) => (
+            <Text key={index} style={styles.step}>
+            <Text style={styles.bold}>{index + 1}.
+            </Text> {paso}</Text>
+))}
 
             {/*  Herramientas necesarias */}
             <View style={styles.toolsBox}>
             <Text style={styles.bold}>Herramientas necesarias:</Text>
-            <Text> Llave inglesa</Text>
-            <Text> Desmontador de neumáticos</Text>
-            <Text> Bomba de aire</Text>
-            </View>
+              {Array.isArray(componente.herramientas) ? (
+              componente.herramientas.map((herramienta, index) => (
+            <Text key={index}>• {herramienta}</Text>))) :
+            (<Text>No se especificaron herramientas.</Text>)
+            }
+</View>
         </>
         )}
 
-        {tab === 'info' && (
-        <>
+          {tab === 'info' && (
+    <>
             <View style={styles.infoBox}>
               <Text style={styles.bold}>¿Para qué sirve?</Text>
-              <Text>Las ruedas son fundamentales para el rendimiento de tu MTB. Afectan la tracción, velocidad y control.</Text>
+              <Text>{componente.informacion.utilidad}</Text>
             </View>
             <View style={styles.infoBox}>
               <Text style={styles.bold}>Mantenimiento</Text>
-              <Text>Mantén este componente limpio y lubricado. Revisa regularmente el desgaste y ajuste según sea necesario.</Text>
+              <Text>{componente.informacion.mantenimiento}</Text>
             </View>
-          </>
-        )}
+  </>
+)}
 
         {tab === 'tienda' && (
           <>
