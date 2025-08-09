@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 
 
-export type ComponenteId = 'ruedas' | 'frenos' | 'marco' | 'sillin' | 'manubrio' | 'pedal';
+export type ComponenteId = 'ruedas' | 'suspension' |'frenos' | 'marco' | 'sillin' | 'manubrio' | 'pedal';
 
 export type ComponenteData = {
   nombre: string;
@@ -38,10 +38,7 @@ export type StackParamList = {
   PublicacionesAdmin: undefined;
   FiltroAdmin: undefined;
   ComponenteDetalle: { componenteId: ComponenteId };
-  ComponenteDetallePantalla2: undefined;
-  ComponenteDetallePantalla3: undefined;
-  ComponenteDetallePantalla4: undefined;
-    DetallePublicacion: { publicacion: Publicacion };
+  DetallePublicacion: { publicacion: Publicacion };
   
 };
 
@@ -63,7 +60,7 @@ telefono: string
 
 export interface Publicacion {
   ID_publicacion: number;
-  nombre_Articulo: string;
+  nombre_articulo: string;
   descripcion: string;
   precio: string;
   tipo_bicicleta: string;
@@ -94,7 +91,4 @@ export type FiltroAdminScreenNavigationProp = RouteProp<StackParamList, 'FiltroA
 export type AdministradorScreenNavigationProp = RouteProp<StackParamList, 'Administrador'>;
 export type PublicacionesAdminScreenNavigationProp = RouteProp<StackParamList, 'PublicacionesAdmin'>;
 export type ComponenteDetalleScreenNavigationProp = RouteProp<StackParamList, 'ComponenteDetalle'>;
-export type ComponenteDetalle2ScreenNavigationProp = RouteProp<StackParamList, 'ComponenteDetallePantalla2'>;
-export type ComponenteDetalleS3creenNavigationProp = RouteProp<StackParamList, 'ComponenteDetallePantalla3'>;
-export type ComponenteDetalleS4creenNavigationProp = RouteProp<StackParamList, 'ComponenteDetallePantalla4'>;
 export type DetallePublicacioncreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacion'>;

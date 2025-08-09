@@ -21,7 +21,7 @@ const DetallePublicacion: React.FC<Props> = ({ route }) => {
       />
       
       <View style={styles.detalleContainer}>
-        <Text style={styles.tituloDetalle}>{publicacion.nombre_Articulo}</Text>
+        <Text style={styles.tituloDetalle}>{publicacion.nombre_articulo}</Text>
         
         <View style={styles.seccion}>
           <Text style={styles.subtitulo}>Descripción</Text>

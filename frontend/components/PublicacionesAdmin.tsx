@@ -70,6 +70,7 @@ const PublicacionesAdmin : React.FC = () => {
         <Text style={styles.descripcion}>Descripción: {item.descripcion.substring(0, 50)}...</Text>
         <Text style={styles.precio}>Precio: ${item.precio}</Text>
         <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
+        <Text style={styles.tipo}>Vendedor: {item.nombre_vendedor}</Text>
       </View>
     </View>
   </TouchableOpacity>
