@@ -286,7 +286,7 @@ app.get('/buscar', async (req: Request, res: Response) => {
         u.telefono
       FROM com_ventas cv 
       INNER JOIN usuario u ON cv.ID_usuario = u.ID_usuario 
-      WHERE cv.nombre_Articulo ILIKE $1`,
+      WHERE cv.nombre_Articulo ILIKE $1 AND tipo_bicicleta = :tipo;`,
       [`%${nombre}%`]
     );
 

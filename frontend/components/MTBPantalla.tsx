@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useRoute,useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackParamList } from '../types/types';
 import type { StackNavigationProp } from '@react-navigation/stack';
@@ -26,20 +26,28 @@ interface Articulo {
   nombre_vendedor: string;
   telefono: string;
 }
+type RouteParams = {
+  tipoBicicleta: string;
+};
+
 
 const MTBPantalla: React.FC = () => {
   const [busqueda, setBusqueda] = useState('');
   const [articulos, setArticulos] = useState<Articulo[]>([]);
   const [cargando, setCargando] = useState(false);
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
-
+  const route = useRoute();
+  const { tipoBicicleta } = route.params as RouteParams;
   const buscarArticulos = async () => {
     if (busqueda.trim() === '') return;
     setCargando(true);
     try {
-      const response = await fetch(`${URL}buscar?nombre=${encodeURIComponent(busqueda)}`);
+      const response = await fetch(`${URL}buscar?nombre=${encodeURIComponent(busqueda)}&tipo=${tipoBicicleta}`);
       const data: Articulo[] = await response.json();
-      setArticulos(data);
+      const articulosValidos = data.filter(articulo => 
+        articulo.id && articulo.tipo_bicicleta.toLowerCase() === tipoBicicleta.toLowerCase()
+      );
+       setArticulos(articulosValidos);
     } catch (error) {
       console.error('Error al buscar artículos:', error);
     } finally {
