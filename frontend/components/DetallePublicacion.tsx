@@ -1,14 +1,28 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, Linking, Alert, TouchableOpacity } from 'react-native';
 import { StackParamList } from '../types/types';
 import { RouteProp } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 type DetallePublicacionRouteProp = RouteProp<StackParamList, 'DetallePublicacion'>;
 
 interface Props {
   route: DetallePublicacionRouteProp;
 }
+const enviarWhatsApp = (numero: string, mensaje: string) => {
+  const numeroFormateado = numero.replace(/\D/g, ''); // Elimina cualquier carácter que no sea número
+  const url = `https://wa.me/57${numeroFormateado}?text=${encodeURIComponent(mensaje)}`;
 
+  Linking.canOpenURL(url)
+    .then((soporta) => {
+      if (!soporta) {
+        Alert.alert('Error', 'Parece que WhatsApp no está instalado');
+      } else {
+        return Linking.openURL(url);
+      }
+    })
+    .catch((err) => console.error('❌ Error al abrir WhatsApp:', err));
+};
 const DetallePublicacion: React.FC<Props> = ({ route }) => {
   const { publicacion } = route.params;
 
@@ -43,6 +57,13 @@ const DetallePublicacion: React.FC<Props> = ({ route }) => {
           <Text style={styles.texto}>{publicacion.nombre_vendedor}</Text>
           
         </View>
+        <TouchableOpacity 
+  onPress={() => enviarWhatsApp(publicacion.telefono, `Hola ${publicacion.nombre_vendedor}, estoy interesado en tu artículo: ${publicacion.nombre_articulo}`)}
+  style={styles.botonMensajeAlVendedor}
+>
+  <Ionicons name="logo-whatsapp" size={20} color="#25D366" />
+  <Text style={styles.textoMensajeAlVendedor}>Chatear por WhatsApp</Text>
+</TouchableOpacity> 
       </View>
     </ScrollView>
   );
@@ -84,6 +105,14 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: '#2c7a7b',
+  },
+  botonMensajeAlVendedor :{
+     flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  textoMensajeAlVendedor:{
+color:"#51AFF7"
   },
 });
 

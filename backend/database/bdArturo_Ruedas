@@ -201,3 +201,17 @@ JOIN usuario u ON cv.ID_usuario = u.ID_usuario
 ORDER BY cv.ID_publicacion DESC;
 
 SELECT * FROM com_ventas
+
+
+SELECT 
+        cv.ID_publicacion,
+        cv.nombre_Articulo, 
+        cv.descripcion, 
+        cv.precio, 
+        cv.tipo_bicicleta, 
+        cv.foto, 
+        cv.ID_usuario,
+        u.nombre as nombre_vendedor,
+        u.telefono
+      FROM com_ventas cv 
+      INNER JOIN usuario u ON cv.ID_usuario = u.ID_usuario

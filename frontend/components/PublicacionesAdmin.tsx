@@ -10,13 +10,14 @@ import {URL} from '../config/UrlApi'
 
 
 interface Publicacion {
-  ID_publicacion: number;
+  id: number;
   nombre_articulo: string;
   descripcion: string;
   precio: string;
   tipo_bicicleta: string;
   foto: string;
   nombre_vendedor: string;
+  telefono: string;
 
 }
 
@@ -82,7 +83,7 @@ const PublicacionesAdmin : React.FC = () => {
             
             <FlatList
               data={articulos}
-              keyExtractor={(item) => item.ID_publicacion ? item.ID_publicacion.toString() : Math.random().toString()}
+              keyExtractor={(item) => item.id ? item.id.toString() : Math.random().toString()}
               renderItem={renderItem}
               contentContainerStyle={styles.lista}
               refreshing={refreshing}

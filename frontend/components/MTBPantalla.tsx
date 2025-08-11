@@ -17,13 +17,14 @@ import {URL} from '../config/UrlApi'
 
 
 interface Articulo {
-  ID_publicacion: number;
+  id: number;
   nombre_articulo: string;
   descripcion: string;
   precio: string;
   tipo_bicicleta: string;
   foto: string;
   nombre_vendedor: string;
+  telefono: string;
 }
 
 const MTBPantalla: React.FC = () => {
@@ -64,7 +65,7 @@ const MTBPantalla: React.FC = () => {
       throw new Error('No se pudo obtener el ID de usuario');
     }
 
-    if (!articulo.ID_publicacion) {
+    if (!articulo.id) {
       throw new Error('El artículo no tiene ID definido');
     }
 
@@ -73,7 +74,7 @@ const MTBPantalla: React.FC = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         ID_usuario: ID_usuario, 
-        ID_publicacion: articulo.ID_publicacion ,
+        ID_publicacion: articulo.id,
       
       }),
     });
@@ -116,7 +117,7 @@ const MTBPantalla: React.FC = () => {
               {articulos.length > 0 && (
                 <FlatList
                   data={articulos}
-                   keyExtractor={(item, index) => item?.ID_publicacion?.toString() || index.toString()}
+                  keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
                   contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }} // Aquí agregamos el marginTop
                   renderItem={({ item }) => (
                    <TouchableOpacity onPress={()=>navigation.navigate('DetallePublicacion', { publicacion: item })}>

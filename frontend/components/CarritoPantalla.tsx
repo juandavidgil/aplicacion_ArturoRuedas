@@ -13,7 +13,7 @@ import {URL} from '../config/UrlApi'
 
 
 interface Articulo {
-  ID_publicacion: number;
+  id: number;
   nombre_articulo: string;
   descripcion: string;
   precio: string;
@@ -207,7 +207,7 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
         <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
         <Text style={styles.descripcion}>Vendedor: {item.nombre_vendedor}</Text>
         <TouchableOpacity 
-          onPress={() => eliminarArticulo(item.ID_publicacion)}
+          onPress={() => eliminarArticulo(item.id)}
           style={styles.botonEliminar}
           >
           <Ionicons name="trash-outline" size={20} color="#e63946" />
@@ -246,16 +246,16 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
         <Text style={styles.vacio}>Tu carrito está vacío</Text>
       ) : (
         <>
-       <FlatList
-  data={articulos}
-  keyExtractor={(item, index) => item?.ID_publicacion?.toString() ?? `item-${index}`}
-  renderItem={renderItem}
-  contentContainerStyle={styles.lista}
-/>
+   <FlatList
+            data={articulos}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderItem}
+            contentContainerStyle={styles.lista}
+          />
           
           <View style={styles.totalContainer}>
             <Text style={styles.totalTexto}>Total:</Text>
-            <Text style={styles.totalPrecio}>${total.toFixed(2)}</Text>
+            <Text style={styles.totalPrecio}>${total.toFixed(0)}</Text>
           </View>
           
           <TouchableOpacity 

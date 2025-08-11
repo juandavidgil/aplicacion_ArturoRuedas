@@ -27,11 +27,11 @@ export type StackParamList = {
   DetalleArticulo: { articulo: Articulo };
   Notificaciones: undefined;
    Chat: undefined;
- ChatPrivado: {
+/*  ChatPrivado: {
     chatId: number | null;
     idOtroUsuario: number;
     nombreOtroUsuario: string;
-  };
+  }; */
   RestablecerContraseña: undefined;
   MODELO3d: undefined
   Administrador: undefined;
@@ -43,8 +43,8 @@ export type StackParamList = {
 };
 
 export interface Articulo {
-  ID_publicacion: number;
-  nombre_Articulo: string;
+  id: number;
+  nombre_articulo: string;
   descripcion: string;
   precio: string;
   foto: string;
@@ -59,13 +59,14 @@ telefono: string
 }
 
 export interface Publicacion {
-  ID_publicacion: number;
+  id: number;
   nombre_articulo: string;
   descripcion: string;
   precio: string;
   tipo_bicicleta: string;
   foto: string;
   nombre_vendedor: string;
+  telefono: string
 
 }
 
@@ -84,7 +85,7 @@ export type CarruselScreenNavigationProp = RouteProp<StackParamList, 'Carrusel'>
 export type PublicarScreenNavigationProp = RouteProp<StackParamList, 'Publicar'>;
 export type NotificacionesScreenNavigationProp = RouteProp<StackParamList, 'Notificaciones'>;
 export type ChatScreenNavigationProp = RouteProp<StackParamList, 'Chat'>;
-export type ChatPrivadoScreenNavigationProp = RouteProp<StackParamList, 'ChatPrivado'>;
+/* export type ChatPrivadoScreenNavigationProp = RouteProp<StackParamList, 'ChatPrivado'>; */
 export type CarritoScreenNavigationProp = RouteProp<StackParamList, 'Carrito'>;
 export type ProductVideoCardScreenNavigationProp = RouteProp<StackParamList, 'MODELO3d'>;
 export type FiltroAdminScreenNavigationProp = RouteProp<StackParamList, 'FiltroAdmin'>

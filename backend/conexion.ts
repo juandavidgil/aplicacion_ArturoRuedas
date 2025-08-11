@@ -255,7 +255,7 @@ app.post('/publicar_articulo', async (req: Request, res: Response) => {
     
     res.status(201).json({ 
       mensaje: 'Artículo publicado con éxito',
-      id_publicacion: result.rows[0].ID_publicacion
+        ID_publicacion: result.rows[0].ID_publicacion
     });
   } catch (error) {
     console.error('Error al publicar artículo:', error);
@@ -275,14 +275,15 @@ app.get('/buscar', async (req: Request, res: Response) => {
   try {
     const resultado = await pool.query(
       `SELECT 
-        cv.ID_publicacion,
+        cv.ID_publicacion as id,
         cv.nombre_Articulo, 
         cv.descripcion, 
         cv.precio, 
         cv.tipo_bicicleta, 
         cv.foto, 
         cv.ID_usuario,
-        u.nombre as nombre_vendedor
+        u.nombre as nombre_vendedor,
+        u.telefono
       FROM com_ventas cv 
       INNER JOIN usuario u ON cv.ID_usuario = u.ID_usuario 
       WHERE cv.nombre_Articulo ILIKE $1`,
@@ -349,8 +350,8 @@ app.get('/carrito/:id_usuario', async (req: Request, res: Response) => {
 
     const result = await pool.query(
       `SELECT 
-        cv.ID_publicacion,
-        cv.nombre_Articulo as nombre_articulo,
+        cv.ID_publicacion as id,
+        cv.nombre_Articulo,
         cv.descripcion,
         cv.precio,
         cv.tipo_bicicleta,
