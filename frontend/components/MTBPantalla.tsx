@@ -1,20 +1,17 @@
- import React, { useState } from 'react';
+import React, { useState } from 'react';
 import {
   View, Text, TextInput, FlatList, Image,
   TouchableOpacity, StyleSheet, ActivityIndicator,
-  SafeAreaView, Alert, ScrollView,
-  Touchable
+  SafeAreaView, Alert, ScrollView
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { useRoute,useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackParamList } from '../types/types';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { Video, ResizeMode } from 'expo-av';
-import { constants } from 'buffer';
-import {URL} from '../config/UrlApi'
-
+import { URL } from '../config/UrlApi';
 
 interface Articulo {
   id: number;
@@ -26,10 +23,10 @@ interface Articulo {
   nombre_vendedor: string;
   telefono: string;
 }
+
 type RouteParams = {
   tipoBicicleta: string;
 };
-
 
 const MTBPantalla: React.FC = () => {
   const [busqueda, setBusqueda] = useState('');
@@ -38,67 +35,81 @@ const MTBPantalla: React.FC = () => {
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
   const route = useRoute();
   const { tipoBicicleta } = route.params as RouteParams;
+
   const buscarArticulos = async () => {
     if (busqueda.trim() === '') return;
     setCargando(true);
     try {
       const response = await fetch(`${URL}buscar?nombre=${encodeURIComponent(busqueda)}&tipo=${tipoBicicleta}`);
-      const data: Articulo[] = await response.json();
-      const articulosValidos = data.filter(articulo => 
-        articulo.id && articulo.tipo_bicicleta.toLowerCase() === tipoBicicleta.toLowerCase()
-      );
-       setArticulos(articulosValidos);
+      
+      // Verificar si la respuesta es exitosa
+      if (!response.ok) {
+        throw new Error(`Error HTTP: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Asegurarse de que data es un array antes de filtrar
+      const articulosValidos = Array.isArray(data) 
+        ? data.filter(articulo => 
+            articulo?.id && 
+            typeof articulo.tipo_bicicleta === 'string' &&
+            articulo.tipo_bicicleta.toLowerCase() === tipoBicicleta.toLowerCase()
+          )
+        : [];
+
+      setArticulos(articulosValidos);
     } catch (error) {
       console.error('Error al buscar artículos:', error);
+      Alert.alert("Error", "No se pudieron cargar los artículos");
+      setArticulos([]); // Limpiar los artículos en caso de error
     } finally {
       setCargando(false);
     }
   };
 
   const AgregarCarrito = async (articulo: Articulo) => {
-  try {
-    console.log('Artículo recibido:', articulo); // Verifica que el artículo tenga el ID
-    
-    const usuarioStr = await AsyncStorage.getItem('usuario');
-    if (!usuarioStr) {
-      Alert.alert('Error', 'Debes iniciar sesión primero');
-      navigation.navigate('InicioSesion');
-      return;
-    }
+    try {
+      const usuarioStr = await AsyncStorage.getItem('usuario');
+      if (!usuarioStr) {
+        Alert.alert('Error', 'Debes iniciar sesión primero');
+        navigation.navigate('InicioSesion');
+        return;
+      }
 
-    const usuario = JSON.parse(usuarioStr);
-    const ID_usuario = usuario.ID_usuario;
+      const usuario = JSON.parse(usuarioStr);
+      const ID_usuario = usuario.ID_usuario;
 
-    if (!ID_usuario) {
-      throw new Error('No se pudo obtener el ID de usuario');
-    }
+      if (!ID_usuario) {
+        throw new Error('No se pudo obtener el ID de usuario');
+      }
 
-    if (!articulo.id) {
-      throw new Error('El artículo no tiene ID definido');
-    }
+      if (!articulo.id) {
+        throw new Error('El artículo no tiene ID definido');
+      }
 
-    const response = await fetch(`${URL}agregar-carrito`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        ID_usuario: ID_usuario, 
-        ID_publicacion: articulo.id,
+      const response = await fetch(`${URL}agregar-carrito`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          ID_usuario: ID_usuario, 
+          ID_publicacion: articulo.id,
+        }),
+      });
+
+      const responseData = await response.json();
       
-      }),
-    });
+      if (!response.ok) {
+        throw new Error(responseData.error || 'Error al agregar al carrito');
+      }
 
-    const responseData = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(responseData.error || 'Error al agregar al carrito');
+      Alert.alert('Éxito', 'Artículo agregado al carrito');
+    } catch (error) {
+      console.error('Error completo en AgregarCarrito:', error);
+      Alert.alert('Error', 'Error al agregar al carrito');
     }
+  };
 
-    Alert.alert('Éxito', 'Artículo agregado al carrito');
-  } catch (error) {
-    console.error('Error completo en AgregarCarrito:', error);
-    Alert.alert('Error al agregar al carrito');
-  }
-};
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
@@ -121,41 +132,35 @@ const MTBPantalla: React.FC = () => {
             <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />
           ) : (
             <>
-              {/* Solo mostrar la lista si se han encontrado artículos */}
-              {articulos.length > 0 && (
+              {/* Mostrar lista si hay artículos */}
+              {articulos.length > 0 ? (
                 <FlatList
                   data={articulos}
                   keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
-                  contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }} // Aquí agregamos el marginTop
+                  contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }}
                   renderItem={({ item }) => (
-                   <TouchableOpacity onPress={()=>navigation.navigate('DetallePublicacion', { publicacion: item })}>
-                    <View style={styles.cardMTB}>
-                      <Image source={{ uri: item.foto }} style={styles.imagenMTB} resizeMode="cover" />
-                      <View style={styles.infoMTB}>
-                        <Text style={styles.nombreMTB}>{item.nombre_articulo}</Text>
-                        <Text style={styles.descripcionMTB}>{item.descripcion}</Text>
-                        <Text style={styles.precioMTB}>Precio: ${item.precio}</Text>
-                        <Text>Tipo: {item.tipo_bicicleta}</Text>
-                        <Text style={styles.descripcionMTB}>vendedor: {item.nombre_vendedor}</Text>
-                        
-                        <TouchableOpacity onPress={() => AgregarCarrito(item)}>
-                          <Ionicons name='cart-outline' size={25} />
-                        </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('DetallePublicacion', { publicacion: item })}>
+                      <View style={styles.cardMTB}>
+                        <Image source={{ uri: item.foto }} style={styles.imagenMTB} resizeMode="cover" />
+                        <View style={styles.infoMTB}>
+                          <Text style={styles.nombreMTB}>{item.nombre_articulo}</Text>
+                          <Text style={styles.descripcionMTB}>{item.descripcion}</Text>
+                          <Text style={styles.precioMTB}>Precio: ${item.precio}</Text>
+                          <Text>Tipo: {item.tipo_bicicleta}</Text>
+                          <Text style={styles.descripcionMTB}>vendedor: {item.nombre_vendedor}</Text>
+                          <TouchableOpacity onPress={() => AgregarCarrito(item)}>
+                            <Ionicons name='cart-outline' size={25} />
+                          </TouchableOpacity>
+                        </View>
                       </View>
-                    </View>
-                   </TouchableOpacity>
+                    </TouchableOpacity>
                   )}
-                  ListEmptyComponent={
-                    <Text style={{ marginTop: 20, textAlign: 'center' }}>
-                      No se encontraron artículos
-                    </Text>
-                  }
                 />
-              )}
-              
-
-              {/* Mostrar el video y descripción solo si no hay búsqueda activa */}
-              {busqueda.trim() === '' && (
+              ) : busqueda.trim() !== '' ? (
+                <Text style={{ marginTop: 20, textAlign: 'center' }}>
+                  No se encontraron artículos
+                </Text>
+              ) : (
                 <ScrollView style={{ marginTop: 20 }} contentContainerStyle={{ paddingBottom: 100 }}>
                   <Text style={styles.tituloMTB}>MTB (Mountain Bike)</Text>
                   <Text style={{ textAlign: 'center', marginBottom: 10 }}>
@@ -180,31 +185,25 @@ const MTBPantalla: React.FC = () => {
               )}
             </>
           )}
-          {/* barra informacion de componentes */}
-            
 
+          {/* Barra de componentes */}
+          <View style={styles.barraComponentes}>
+            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
+              <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/rueda.jpeg')} />
+            </TouchableOpacity>
 
-       {       <View style={styles.barraComponentes}>
+            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio' })}>
+              <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
+            </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
-                  <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER}   source={require('../iconos/rueda.jpeg')} />
-                </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension' })}>
+              <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
+            </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio' })}>
-                  <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension' })}>
-                  <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal' })}>
-                  <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
-                </TouchableOpacity>
-
-
-               
-              </View> }
+            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal' })}>
+              <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
+            </TouchableOpacity>
+          </View>
 
           {/* Barra de iconos */}
           <View style={styles.iconBar}>
@@ -217,9 +216,6 @@ const MTBPantalla: React.FC = () => {
             <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
               <Ionicons name='notifications-outline' size={28} color="#2c7a7b" />
             </TouchableOpacity>
-           {/*  <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
-              <Ionicons name='chatbubbles-outline' size={26} color="#2c7a7b" />
-            </TouchableOpacity> */}
           </View>
         </View>
       </SafeAreaView>
@@ -227,6 +223,7 @@ const MTBPantalla: React.FC = () => {
   );
 };
 
+// Estilos (se mantienen igual que en tu código original)
 const styles = StyleSheet.create({
   containerMTB: {
     flex: 1,
@@ -284,7 +281,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#1a202c',
     marginBottom: 5,
-    marginTop:50,
+    marginTop: 50,
     textAlign: 'center',
   },
   screen: {
@@ -305,9 +302,9 @@ const styles = StyleSheet.create({
     maxWidth: 350,
     aspectRatio: 10 / 12,
     overflow: 'hidden',
-    marginTop:30,
+    marginTop: 30,
   },
-  barraComponentes:{
+  barraComponentes: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 12,
@@ -319,10 +316,10 @@ const styles = StyleSheet.create({
     bottom: 120,
     left: 16,
     right: 16,
- },
-  iconoComponentes:{
-  width: 35,
-  height: 35
+  },
+  iconoComponentes: {
+    width: 35,
+    height: 35
   },
   video: {
     width: '100%',
@@ -344,4 +341,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MTBPantalla; 
+export default MTBPantalla;
