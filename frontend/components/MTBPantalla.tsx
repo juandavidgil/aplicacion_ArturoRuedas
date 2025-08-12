@@ -27,42 +27,23 @@ interface Articulo {
 type RouteParams = {
   tipoBicicleta: string;
 };
-
 const MTBPantalla: React.FC = () => {
   const [busqueda, setBusqueda] = useState('');
   const [articulos, setArticulos] = useState<Articulo[]>([]);
   const [cargando, setCargando] = useState(false);
+  const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false); // <-- Estado para mostrar u ocultar
+
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
-  const route = useRoute();
-  const { tipoBicicleta } = route.params as RouteParams;
 
   const buscarArticulos = async () => {
     if (busqueda.trim() === '') return;
     setCargando(true);
     try {
-      const response = await fetch(`${URL}buscar?nombre=${encodeURIComponent(busqueda)}&tipo=${tipoBicicleta}`);
-      
-      // Verificar si la respuesta es exitosa
-      if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status}`);
-      }
-
-      const data = await response.json();
-      
-      // Asegurarse de que data es un array antes de filtrar
-      const articulosValidos = Array.isArray(data) 
-        ? data.filter(articulo => 
-            articulo?.id && 
-            typeof articulo.tipo_bicicleta === 'string' &&
-            articulo.tipo_bicicleta.toLowerCase() === tipoBicicleta.toLowerCase()
-          )
-        : [];
-
-      setArticulos(articulosValidos);
+      const response = await fetch(`${URL}buscar?nombre=${encodeURIComponent(busqueda)}`);
+      const data: Articulo[] = await response.json();
+      setArticulos(data);
     } catch (error) {
       console.error('Error al buscar artículos:', error);
-      Alert.alert("Error", "No se pudieron cargar los artículos");
-      setArticulos([]); // Limpiar los artículos en caso de error
     } finally {
       setCargando(false);
     }
@@ -80,35 +61,29 @@ const MTBPantalla: React.FC = () => {
       const usuario = JSON.parse(usuarioStr);
       const ID_usuario = usuario.ID_usuario;
 
-      if (!ID_usuario) {
-        throw new Error('No se pudo obtener el ID de usuario');
-      }
-
-      if (!articulo.id) {
-        throw new Error('El artículo no tiene ID definido');
-      }
+      if (!ID_usuario) throw new Error('No se pudo obtener el ID de usuario');
+      if (!articulo.id) throw new Error('El artículo no tiene ID definido');
 
       const response = await fetch(`${URL}agregar-carrito`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           ID_usuario: ID_usuario, 
-          ID_publicacion: articulo.id,
+          ID_publicacion: articulo.id
         }),
       });
 
       const responseData = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(responseData.error || 'Error al agregar al carrito');
-      }
+      if (!response.ok) throw new Error(responseData.error || 'Error al agregar al carrito');
 
       Alert.alert('Éxito', 'Artículo agregado al carrito');
     } catch (error) {
       console.error('Error completo en AgregarCarrito:', error);
-      Alert.alert('Error', 'Error al agregar al carrito');
+      Alert.alert('Error al agregar al carrito');
     }
   };
+
+
 
   return (
     <SafeAreaProvider>
@@ -185,38 +160,47 @@ const MTBPantalla: React.FC = () => {
               )}
             </>
           )}
+        <View style={styles.iconBar}>
+  <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
+    <Ionicons name='storefront-outline' size={30} color="#2c7a7b" />
+  </TouchableOpacity>
 
-          {/* Barra de componentes */}
-          <View style={styles.barraComponentes}>
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
-              <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/rueda.jpeg')} />
-            </TouchableOpacity>
+  <TouchableOpacity onPress={() => navigation.navigate('Carrito')}>
+    <Ionicons name='cart-outline' size={26} color="#2c7a7b" />
+  </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio' })}>
-              <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
-            </TouchableOpacity>
+  <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
+    <Ionicons name='notifications-outline' size={28} color="#2c7a7b" />
+  </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension' })}>
-              <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
-            </TouchableOpacity>
+  {/* Botón para mostrar barra de componentes */}
+  <TouchableOpacity onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}>
+    <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#2c7a7b" />
+  </TouchableOpacity>
+</View>
 
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal' })}>
-              <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
-            </TouchableOpacity>
-          </View>
+{/* Barra de componentes visible solo si mostrarBarraComponentes es true */}
+{mostrarBarraComponentes && (
+  <View style={styles.barraComponentes}>
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/rueda.jpeg')} />
+    </TouchableOpacity>
 
-          {/* Barra de iconos */}
-          <View style={styles.iconBar}>
-            <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
-              <Ionicons name='storefront-outline' size={30} color="#2c7a7b" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Carrito')}>
-              <Ionicons name='cart-outline' size={26} color="#2c7a7b" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
-              <Ionicons name='notifications-outline' size={28} color="#2c7a7b" />
-            </TouchableOpacity>
-          </View>
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio' })}>
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension' })}>
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal' })}>
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
+    </TouchableOpacity>
+  </View>
+)}
+
+    
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -339,6 +323,10 @@ const styles = StyleSheet.create({
     left: 16,
     right: 16,
   },
+ 
+
+
 });
+
 
 export default MTBPantalla;
