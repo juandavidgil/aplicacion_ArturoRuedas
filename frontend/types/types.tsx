@@ -39,7 +39,7 @@ export type StackParamList = {
   FiltroAdmin: undefined;
   ComponenteDetalle: { componenteId: ComponenteId };
   DetallePublicacion: { publicacion: Publicacion };
-  
+  Perfil: undefined
 };
 
 export interface Articulo {

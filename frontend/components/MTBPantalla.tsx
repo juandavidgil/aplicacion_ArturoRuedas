@@ -162,24 +162,28 @@ const MTBPantalla: React.FC = () => {
           )}
         <View style={styles.iconBar}>
   <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
-    <Ionicons name='storefront-outline' size={30} color="#2c7a7b" />
+    <Ionicons name='storefront-outline' size={28} color="#2c7a7b" />
   </TouchableOpacity>
 
   <TouchableOpacity onPress={() => navigation.navigate('Carrito')}>
-    <Ionicons name='cart-outline' size={26} color="#2c7a7b" />
+    <Ionicons name='cart-outline' size={28} color="#2c7a7b" />
   </TouchableOpacity>
 
   <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
     <Ionicons name='notifications-outline' size={28} color="#2c7a7b" />
   </TouchableOpacity>
 
-  {/* Botón para mostrar barra de componentes */}
+  <TouchableOpacity onPress={()=> navigation.navigate('Perfil')}>
+          <Ionicons name="person-circle-outline" size={28} color="#2c7a7b"></Ionicons>
+  </TouchableOpacity>
+  
   <TouchableOpacity onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}>
     <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#2c7a7b" />
   </TouchableOpacity>
+
 </View>
 
-{/* Barra de componentes visible solo si mostrarBarraComponentes es true */}
+
 {mostrarBarraComponentes && (
   <View style={styles.barraComponentes}>
     <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>

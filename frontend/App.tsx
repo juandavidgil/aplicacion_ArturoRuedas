@@ -19,8 +19,8 @@ import ChatPrivadoPantalla from './components/ChatPrivadoPantalla';
 import Administrador from './components/Administrador';
 import PublicacionesAdmin from './components/PublicacionesAdmin';
 import ComponenteDetallePantalla from './components/ComponenteDetalladoPantalla';import FiltroAdminPantalla from './components/FiltroAdmin';
-
 import DetallePublicacion from './components/DetallePublicacion';
+import PerfilPantalla from './components/perfil';
 
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -46,7 +46,7 @@ const App = () => {
         <Stack.Screen name="Publicar" component={PublicarPantalla} />
         <Stack.Screen name="Carrito" component={CarritoPantalla} />
         <Stack.Screen name= "Chat" component={ChatPantalla}/>
-        <Stack.Screen name='ChatPrivado' component={ChatPrivadoPantalla}/>
+       {/*  <Stack.Screen name='ChatPrivado' component={ChatPrivadoPantalla}/> */}
         <Stack.Screen name= "Notificaciones" component={NotificacionesPantalla}/>
         <Stack.Screen name= "MODELO3d" component={ProductVideoCard}/>
         <Stack.Screen name="ComponenteDetalle" component={ComponenteDetallePantalla}/>
@@ -54,6 +54,7 @@ const App = () => {
         <Stack.Screen name='Administrador' component={Administrador}/>
         <Stack.Screen name='PublicacionesAdmin' component={PublicacionesAdmin}/>
         <Stack.Screen name='DetallePublicacion' component={DetallePublicacion}/>
+        <Stack.Screen name='Perfil' component={PerfilPantalla}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
