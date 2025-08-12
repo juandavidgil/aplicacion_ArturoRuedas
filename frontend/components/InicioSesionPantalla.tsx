@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-import { 
-  View, Text, TextInput, TouchableOpacity, 
-  StyleSheet, SafeAreaView, Alert, ActivityIndicator 
+import { View,Text,TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Alert, ActivityIndicator, Image
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../types/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL} from '../config/UrlApi'
-
+import { URL } from '../config/UrlApi';
 
 const InicioSesionPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
@@ -16,7 +13,7 @@ const InicioSesionPantalla: React.FC = () => {
   const [contraseña, setContraseña] = useState('');
   const [cargando, setCargando] = useState(false);
 
-   const handleLogin = async () => {
+  const handleLogin = async () => {
     if (!correo || !contraseña) {
       Alert.alert('Error', 'Por favor ingresa correo y contraseña');
       return;
@@ -26,26 +23,19 @@ const InicioSesionPantalla: React.FC = () => {
     try {
       const response = await fetch(`${URL}iniciar-sesion`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo, contraseña }),
       });
 
       const data = await response.json();
-      console.log('Respuesta del servidor:', data); // Log para depuración
-      
       if (response.ok) {
-        // Guardar TODOS los datos del usuario incluyendo el ID
         await AsyncStorage.setItem('usuario', JSON.stringify(data.usuario));
-        console.log('Usuario guardado:', data.usuario); // Log para depuración
         Alert.alert('Éxito', 'Inicio de sesión correcto');
         navigation.navigate('Carrusel');
       } else {
         Alert.alert('Error', data.error || 'Credenciales incorrectas');
       }
     } catch (error) {
-      console.error('Error completo al iniciar sesión:', error);
       Alert.alert('Error', 'No se pudo iniciar sesión');
     } finally {
       setCargando(false);
@@ -54,57 +44,68 @@ const InicioSesionPantalla: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Iniciar Sesión</Text>
-      
-      <TextInput
-        style={styles.input}
-        placeholder="Correo electrónico"
-        value={correo}
-        onChangeText={setCorreo}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      
-      <TextInput
-        style={styles.input}
-        placeholder="Contraseña"
-        value={contraseña}
-        onChangeText={setContraseña}
-        secureTextEntry
-      />
-      
-      <TouchableOpacity 
-        style={styles.button}
-        onPress={handleLogin}
-        disabled={cargando}
-      >
-        {cargando ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.buttonText}>Iniciar Sesión</Text>
-        )}
-      </TouchableOpacity>
-      
-      <TouchableOpacity 
-        style={styles.registerLink}
-        onPress={() => navigation.navigate('Registro')}
-      >
-        <Text style={styles.registerText}>
-          ¿No tienes cuenta? Regístrate aquí
-        </Text>
-      </TouchableOpacity>
-      
-      <TouchableOpacity 
-        style={styles.forgotPassword}
-        onPress={() => navigation.navigate('RestablecerContraseña')}
-      >
-        <Text style={styles.forgotText}>¿Olvidaste tu contraseña?</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.forgotPassword} onPress={()=>navigation.navigate('FiltroAdmin')}>
-        <Text>
-          Administrar
-        </Text>
-      </TouchableOpacity>
+      <View style={styles.card}>
+        <Image
+      source={require('../img/logo.png')} // o { uri: 'URL' }
+      style={styles.logo}
+    />
+        <Text style={styles.title}>Bienvenido</Text>
+        <Text style={styles.subtitle}>Inicia sesión para continuar</Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Correo electrónico"
+          value={correo}
+          onChangeText={setCorreo}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          placeholderTextColor="#aaa"
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Contraseña"
+          value={contraseña}
+          onChangeText={setContraseña}
+          secureTextEntry
+          placeholderTextColor="#aaa"
+        />
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleLogin}
+          disabled={cargando}
+        >
+          {cargando ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Iniciar Sesión</Text>
+          )}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.linkContainer}
+          onPress={() => navigation.navigate('Registro')}
+        >
+          <Text style={styles.linkText}>
+            ¿No tienes cuenta? <Text style={styles.linkBold}>Regístrate aquí</Text>
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.linkContainer}
+          onPress={() => navigation.navigate('RestablecerContraseña')}
+        >
+          <Text style={styles.linkText}>¿Olvidaste tu contraseña?</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.linkContainer}
+          onPress={() => navigation.navigate('FiltroAdmin')}
+        >
+          <Text style={styles.linkBold}>Administrar</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -112,53 +113,76 @@ const InicioSesionPantalla: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#ffffffff',
     justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  card: {
+    backgroundColor: '#fff',
+    width: '90%',
+    borderRadius: 20,
+    padding: 25,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 30,
+    fontWeight: 900,
+    color: '#da2d2dff',
     textAlign: 'center',
-    marginBottom: 30,
+    marginBottom: 5,
+  },
+  logo: {
+  width: 100,
+  height: 100,
+  alignSelf: 'center',
+  marginBottom: 15,
+   // si quieres redonda
+},
+
+  subtitle: {
+    fontWeight: 500,
+    fontSize: 20,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 20,
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: '#f4f4f4',
     padding: 15,
-    borderRadius: 8,
+    borderRadius: 12,
     marginBottom: 15,
     borderWidth: 1,
     borderColor: '#ddd',
   },
   button: {
-    backgroundColor: '#4d82bc',
-    padding: 15,
-    borderRadius: 8,
+    backgroundColor: '#eb3700ff',
+    paddingVertical: 15,
+    borderRadius: 12,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 5,
   },
   buttonText: {
     color: '#fff',
-    fontWeight: 'bold',
     fontSize: 16,
+    fontWeight: 'bold',
   },
-  registerLink: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  registerText: {
-    color: '#4d82bc',
-    fontWeight: '500',
-  },
-  forgotPassword: {
+  linkContainer: {
     marginTop: 15,
     alignItems: 'center',
   },
-  forgotText: {
+  linkText: {
     color: '#666',
+    fontSize: 14,
   },
- 
+  linkBold: {
+    color: '#c01e1eff',
+    fontWeight: 'bold',
+  },
 });
 
 export default InicioSesionPantalla;

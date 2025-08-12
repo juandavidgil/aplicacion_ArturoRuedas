@@ -51,15 +51,20 @@ const RegistroPantalla: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+       <View style={styles.card}>
       <Text style={styles.title}>Crear Cuenta</Text>
+      <Text style={styles.subtitle}>Completa tus datos para registrarte</Text>
+
+      
       
       <TextInput
         style={styles.input}
-        placeholder="Nombre completo"
+        placeholder="Nombre"
         value={nombre}
         onChangeText={setNombre}
+        placeholderTextColor="#aaa"
       />
-      
+
       <TextInput
         style={styles.input}
         placeholder="Correo electrónico"
@@ -67,24 +72,27 @@ const RegistroPantalla: React.FC = () => {
         onChangeText={setCorreo}
         keyboardType="email-address"
         autoCapitalize="none"
+        placeholderTextColor="#aaa"
       />
-      
+
       <TextInput
         style={styles.input}
         placeholder="Contraseña"
         value={contraseña}
         onChangeText={setContraseña}
+        placeholderTextColor="#aaa"
         secureTextEntry
       />
-      
+
       <TextInput
         style={styles.input}
         placeholder="Teléfono"
         value={telefono}
         onChangeText={setTelefono}
         keyboardType="phone-pad"
+        placeholderTextColor="#aaa"
       />
-      
+
       <TouchableOpacity 
         style={styles.button}
         onPress={handleRegistro}
@@ -96,7 +104,7 @@ const RegistroPantalla: React.FC = () => {
           <Text style={styles.buttonText}>Registrarse</Text>
         )}
       </TouchableOpacity>
-      
+
       <TouchableOpacity 
         style={styles.loginLink}
         onPress={() => navigation.navigate('InicioSesion')}
@@ -105,52 +113,81 @@ const RegistroPantalla: React.FC = () => {
           ¿Ya tienes una cuenta? Inicia sesión
         </Text>
       </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#f8f9fa',
+   flex: 1,
+    backgroundColor: '#ffffffff',
     justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  card: {
+    backgroundColor: '#fff',
+    width: '90%',
+    borderRadius: 20,
+    padding: 25,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 30,
+    fontWeight: 900,
+    color: '#da2d2dff',
     textAlign: 'center',
-    marginBottom: 30,
+    marginBottom: 5,
+  },
+  subtitle: {
+    fontWeight: 500,
+    fontSize: 20,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 20,
   },
   input: {
-    backgroundColor: '#fff',
-    padding: 15,
-    borderRadius: 8,
+    backgroundColor: '#f9f9f9',
+    paddingVertical: 14,
+    paddingHorizontal: 15,
+    borderRadius: 12,
     marginBottom: 15,
     borderWidth: 1,
     borderColor: '#ddd',
+    width: '100%',
+    fontSize: 15,
+    color: '#333',
   },
   button: {
-    backgroundColor: '#4d82bc',
-    padding: 15,
-    borderRadius: 8,
+    backgroundColor: '#fd0000ff',
+    paddingVertical: 15,
+    borderRadius: 12,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 5,
+    width: '100%',
+    elevation: 3,
   },
   buttonText: {
     color: '#fff',
-    fontWeight: 'bold',
     fontSize: 16,
+    fontWeight: 'bold',
   },
   loginLink: {
-    marginTop: 20,
-    alignItems: 'center',
+    marginTop: 18,
+    paddingVertical: 6,
   },
   loginText: {
-    color: '#4d82bc',
-    fontWeight: '500',
+    color: '#fff',
+    fontSize: 14,
+    textDecorationLine: 'underline',
   },
 });
+
+
 
 export default RegistroPantalla;
