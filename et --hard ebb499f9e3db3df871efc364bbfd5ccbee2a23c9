@@ -1,0 +1,274 @@
+[33mcommit 24c899bdc6f33740b2887e34015f34a7841f8cfa[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: alpaulaarias <paulaandreaarias307@gmail.com>
+Date:   Mon Aug 11 16:21:04 2025 -0500
+
+    se sube diseño en inicio de sesion y boton en barra mtb
+
+[33mcommit c96bc442e3160f03152fc2c848b78462a8172523[m
+Merge: 89ce578 ebb499f
+Author: alpaulaarias <paulaandreaarias307@gmail.com>
+Date:   Sat Aug 9 17:15:25 2025 -0500
+
+    Eliminar UrlApi.tsx para coincidir con remoto
+
+[33mcommit ebb499f9e3db3df871efc364bbfd5ccbee2a23c9[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Sat Aug 9 16:59:09 2025 -0600
+
+    errores solucionados detalles y componentes
+
+[33mcommit 89ce578619449d507920822622f12b4b4d342455[m
+Author: alpaulaarias <paulaandreaarias307@gmail.com>
+Date:   Sat Aug 9 17:12:04 2025 -0500
+
+    tqm
+
+[33mcommit 7f8801f3a3d4e5d83ea2f0f4d7dc0e71f459513a[m
+Author: Richard <ricardostiven9@gmail.com>
+Date:   Wed Aug 6 20:54:19 2025 -0500
+
+    quitar multipantalla ComponenteDetalladoPantalla.tsx
+
+[33mcommit 7f0ce9a6fd3d9da8f1ee1f9da52db159e814749b[m
+Author: Danel <danelsaavedra@gmail.com>
+Date:   Tue Aug 5 19:34:37 2025 -0500
+
+    ya muestra detalles de publicacion (aun con errores en las pantallas)
+
+[33mcommit a99deb8ad5e575c28d18f6f57faf43c8faa15430[m
+Author: Richard <ricardostiven9@gmail.com>
+Date:   Mon Aug 4 21:08:29 2025 -0500
+
+    funcion componente
+
+[33mcommit 9d331620d9dd25bc7077b431ec6b91d94d570f4a[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Fri Aug 1 15:54:22 2025 -0600
+
+    commit con verificaciones de funcionalidad para empezarr
+
+[33mcommit d84c358efbd4a51b852b167fb277d6ee36a35735[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Mon Jul 21 14:55:58 2025 -0600
+
+    emular en celulares
+
+[33mcommit 80b7b91c25d53c2cd8c4856f7b6c9feb52e01bed[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Fri Jul 18 13:27:57 2025 -0600
+
+    enviar mensajes a whatsapp listo
+
+[33mcommit 0c7ba1f8c18daa00c8478fc4b84a8a8bdf1ffae5[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Tue Jul 15 14:52:16 2025 -0600
+
+    15/07
+
+[33mcommit cce7f55faf2e2f1bfc34f6d19af023839d3a0692[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Mon Jul 14 15:54:06 2025 -0600
+
+    proceso guardar id de publicacion para mostrar detalles
+
+[33mcommit 855823988ec40f04452ebb859ba0c51f28e3c46f[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Fri Jul 11 19:39:43 2025 -0600
+
+    muestra publicaciones en admin
+
+[33mcommit 00966baa216add58eefc145ec5a4e252bd9bcba3[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Fri Jul 11 16:24:34 2025 -0600
+
+    sprint 11/07
+
+[33mcommit f7ed85722ed5e15c48263aa8d4432aebe0cdf405[m
+Author: Santiagob21 <santibaquero10p@gmail.com>
+Date:   Fri Jul 11 13:18:05 2025 -0500
+
+    cambiosdetalles
+
+[33mcommit 48342b719e31ec006a7a7f6d742890a87e2f4551[m
+Author: Majokairuz <mherrerakairuz@gmail.com>
+Date:   Tue Jul 8 19:07:34 2025 -0500
+
+    nombre
+
+[33mcommit 0e2c522e6e76b18b35287738a888c8eba7503a6a[m
+Merge: 34a96be 2f6a74d
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Sat Jun 21 14:31:13 2025 -0600
+
+    filtro administrador terminado
+
+[33mcommit 34a96be0473e53102d26345c7b48f9dd74f215a4[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Sat Jun 21 14:29:58 2025 -0600
+
+    filtro admin terminado
+
+[33mcommit 2f6a74d7743a1254bad4c43c3c8adbc82116c644[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Mon Jun 16 20:54:05 2025 -0500
+
+    sprint completo
+
+[33mcommit dba80f543ec103b5e3ccbbedc17f45a5957eb1a2[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Fri Jun 13 15:34:23 2025 -0600
+
+    renderizar usuarios en administrador
+
+[33mcommit 4dd9f8394dbaaf3ad745a13b3158412397892f84[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Tue Jun 10 19:11:14 2025 -0500
+
+    pantalla_componente
+
+[33mcommit 4057e55d371cf4a7e1a7d86228d79be82c0f8c28[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Tue Jun 10 15:22:29 2025 -0600
+
+    avances administrador
+
+[33mcommit d958f5a50d8736ae0ce1398a06a3e4b3db52a604[m
+Merge: db305f6 bc22b90
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Tue Jun 10 12:32:41 2025 -0600
+
+    prueba de commits
+
+[33mcommit db305f6415ec795a9028781724d7b27a11bc9865[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Tue Jun 10 12:27:54 2025 -0600
+
+    aun en mensajes
+
+[33mcommit bc22b90313af521f3f8495776ff1cca2361eadaf[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Fri Jun 6 20:31:17 2025 -0500
+
+    PANTALLA ADMINISTRADOR
+
+[33mcommit 579e179b2869e455aa39e0d71230651bac7af1f5[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Fri May 30 23:23:37 2025 -0600
+
+    cambios chat
+
+[33mcommit 56b3c285cd2a28d2d0d91b7a1fc227b41feb96a8[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Thu May 29 14:10:36 2025 -0600
+
+    sirve, publicar con id, guardar en carrito con id vendedor y mostrar nombres
+
+[33mcommit 0ccbc0d2f97ae9b998b09e9e4a12afd9792d7c0d[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Wed May 28 23:07:43 2025 -0600
+
+    publica con id y guarda en carrito
+
+[33mcommit 12271d7aa4afbaabf06f77ca9442e182e6743491[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Tue May 27 21:09:44 2025 -0500
+
+    ya casi esta el ajuste del id
+
+[33mcommit c93b5e0c308969d52e90c5a7ab2fc65cc2d7213f[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Mon May 26 21:03:20 2025 -0500
+
+    arreglando id's
+
+[33mcommit 69bd5dd85a087a6e5713c02cd3fb95f6d284fdad[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Wed May 21 15:32:20 2025 -0600
+
+    establecido nuevamente
+
+[33mcommit 69a349a9e8c39ee233d4b0bf5c4697a9ebcf5284[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Thu May 15 21:17:52 2025 -0500
+
+    barra componentes
+
+[33mcommit 00dc61d763ccb76346b8b5451ccbbe826a6c6a6f[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Tue May 13 16:54:20 2025 -0600
+
+    sprint para exposicion
+
+[33mcommit d74ce5abce4d926528d870583d17226e6bd228ef[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Mon May 12 21:22:50 2025 -0500
+
+    restablecimiento de contraseña
+
+[33mcommit e27f241f4a462ac44704c908b123642e4d3e65da[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Mon May 12 16:52:37 2025 -0600
+
+    ajustamdo errores
+
+[33mcommit d951cb0fb9f42383e1082ff787ae5bd570efc218[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Thu May 8 16:32:40 2025 -0600
+
+    carrito de compras
+
+[33mcommit 51464d5223167a9dbca5681ea3e18b50a3864d0c[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Tue May 6 16:22:04 2025 -0600
+
+    algunas correcciones
+
+[33mcommit 211df3a8b444f705be7c3817ae719bf9391ef6e7[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Mon May 5 21:14:20 2025 -0500
+
+    opcion agregar carrito proceso
+
+[33mcommit fc37957230bbd751f7564564069bc56ea8ab7007[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Mon May 5 16:48:42 2025 -0600
+
+    barra de busqueda
+
+[33mcommit 868f852bd1de9c72e4aed5d53508c51641a90a95[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Sat May 3 22:46:33 2025 -0600
+
+    tarea publicar realizada, mtb en proceso
+
+[33mcommit 9df8ffd311eb73a7275796ed3be483533c2bfbfa[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Fri May 2 20:56:57 2025 -0500
+
+    pantalla carrito
+
+[33mcommit c82c53566deac1cfc944c003d18bc4c4a8e9156e[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Tue Apr 29 21:07:33 2025 -0500
+
+    back publicar articulo
+
+[33mcommit 0a46a034e6e9f231d0e7a3f8b772f5a71cc36edb[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Mon Apr 28 16:09:19 2025 -0600
+
+    ya abre la camara
+
+[33mcommit 29150f6d383116f01829ec1003337a1a47efca11[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Fri Apr 25 15:43:11 2025 -0600
+
+    botones publicacion
+
+[33mcommit c87797b1d3240f50220ab39f65c1fc3afb3d7197[m
+Author: juandavidgil <juandavidgil0911@gmail.com>
+Date:   Wed Apr 23 13:42:36 2025 -0600
+
+    publicar articulo proceso
+
+[33mcommit 6740f473bd957d54ed34d09f339ac4d70cbf

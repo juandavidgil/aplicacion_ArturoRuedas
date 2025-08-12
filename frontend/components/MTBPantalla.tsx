@@ -32,7 +32,6 @@ const MTBPantalla: React.FC = () => {
   const [articulos, setArticulos] = useState<Articulo[]>([]);
   const [cargando, setCargando] = useState(false);
   const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false); // <-- Estado para mostrar u ocultar
-
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
 
   const buscarArticulos = async () => {
@@ -87,18 +86,23 @@ const MTBPantalla: React.FC = () => {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#9ba3a8' }}>
+
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>MTB (Mountain Bike)</Text>  
+      </View>
+
         <View style={styles.containerMTB}>
           {/* Buscador */}
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={styles.searchContainer}>
             <TextInput
-              style={[styles.inputMTB, { flex: 1 }]}
+              style={styles.searchInput}
               placeholder="Buscar artículos..."
               value={busqueda}
               onChangeText={setBusqueda}
             />
-            <TouchableOpacity onPress={buscarArticulos} style={{ marginTop: 50, marginLeft: 10 }}>
-              <Ionicons name="search-outline" size={28} />
+            <TouchableOpacity onPress={buscarArticulos} style={styles.searchButton}>
+              <Ionicons name="search-outline" size={22} color="#fff" />
             </TouchableOpacity>
           </View>
 
@@ -137,9 +141,9 @@ const MTBPantalla: React.FC = () => {
                 </Text>
               ) : (
                 <ScrollView style={{ marginTop: 20 }} contentContainerStyle={{ paddingBottom: 100 }}>
-                  <Text style={styles.tituloMTB}>MTB (Mountain Bike)</Text>
-                  <Text style={{ textAlign: 'center', marginBottom: 10 }}>
-                    Una bicicleta MTB es ideal para terrenos difíciles como montaña o tierra.
+                  <Text style={styles.tituloMTB}>MONTAÑERA</Text>
+                  <Text style={{ textAlign: 'center',marginBottom: 12, fontSize: 16, lineHeight: 22,color: '#333', fontWeight: '500',   paddingHorizontal: 16  }}>
+                    es un tipo de bicicleta diseñada para ser utilizada en terrenos accidentados y sin pavimentar, como senderos, caminos de tierra, colinas y montañas
                   </Text>
 
                   <View style={styles.screen}>
@@ -176,13 +180,15 @@ const MTBPantalla: React.FC = () => {
   <TouchableOpacity onPress={()=> navigation.navigate('Perfil')}>
           <Ionicons name="person-circle-outline" size={28} color="#2c7a7b"></Ionicons>
   </TouchableOpacity>
+  {/* Botón de componentes */}
   
   <TouchableOpacity onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}>
-    <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#2c7a7b" />
+    <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#ffffffff" />
   </TouchableOpacity>
-
 </View>
 
+
+   {/* Barra de componentes */}
 
 {mostrarBarraComponentes && (
   <View style={styles.barraComponentes}>
@@ -217,7 +223,38 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#f0f4f7',
+    marginTop:0,
   },
+
+  header: {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  backgroundColor: '#f80000ff',
+  paddingVertical: 15,
+  alignItems: 'center',
+  elevation: 5,
+  justifyContent: 'center',
+  zIndex: 100,
+  borderBottomLeftRadius: 15,  
+  borderBottomRightRadius: 15,
+  overflow: 'hidden', 
+},
+
+   headerTitle: {
+    marginTop: 20,
+    marginLeft:5,
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+   item: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+
   inputMTB: {
     padding: 12,
     borderWidth: 1,
@@ -230,7 +267,7 @@ const styles = StyleSheet.create({
   cardMTB: {
     flexDirection: 'row',
     marginBottom: 20,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#9ba3a8',
     padding: 12,
     borderRadius: 12,
     shadowColor: '#000',
@@ -292,29 +329,39 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginTop: 30,
   },
-  barraComponentes: {
+
+  
+   iconBar:{
+    color:'#b82424ff',
     flexDirection: 'row',
     justifyContent: 'space-around',
+    alignItems: 'center',
     paddingVertical: 12,
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ccc',
+    paddingHorizontal: 12,
+    backgroundColor: '#f80000ff',
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
     borderRadius: 30,
     position: 'absolute',
-    bottom: 120,
-    left: 16,
-    right: 16,
-  },
-  iconoComponentes: {
-    width: 35,
-    height: 35
+    bottom: 5,
+    left: 5,
+    right: 5,
+    elevation: 5, // sombra en Android
+  shadowColor: '#000', // sombra en iOS
+  shadowOffset: { width: 0, height: -2 },
+  shadowOpacity: 0.1,
+  shadowRadius: 4,
+ },
+  iconoComponentes:{
+  width: 35,
+  height: 35
   },
   video: {
     width: '100%',
     height: '100%',
     backgroundColor: '#000',
   },
-  iconBar: {
+   barraComponentes: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 12,
@@ -327,6 +374,36 @@ const styles = StyleSheet.create({
     left: 16,
     right: 16,
   },
+  
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginHorizontal: 10,
+    marginTop: 50,
+    elevation: 3, // Sombra en Android
+    shadowColor: '#000', // Sombra en iOS
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
+  },
+  searchInput: {
+    flex: 1,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    color: '#333',
+  },
+  searchButton: {
+    backgroundColor: '#f80000ff',
+    borderRadius: 20,
+    padding: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+ 
  
 
 
