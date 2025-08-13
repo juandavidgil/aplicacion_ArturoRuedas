@@ -6,17 +6,19 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {URL} from '../config/UrlApi'
 
-interface Usuario {
+export interface Usuario {
   ID_usuario: number;
   nombre: string;
   correo: string;
   telefono: string;
 }
 
+
 const Administrador: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  
 
 
   const obtenerUsuarios = async () => {     
@@ -49,7 +51,7 @@ const Administrador: React.FC = () => {
   };
 
   const handleEliminarUsuario = async (usuario: Usuario) => {
-  const id = Number(usuario.ID_usuario || usuario.ID_usuario); // <-- Aquí está el cambio
+  const id = Number(usuario.ID_usuario || usuario.ID_usuario); 
 
    console.log("🧪 Usuario recibido:", usuario);
   console.log("🧪 ID convertido a número:", id);
@@ -108,7 +110,10 @@ const Administrador: React.FC = () => {
         <View style={styles.buttonsContainer}>
        <TouchableOpacity 
         style={styles.adminPublicaciones} 
-        onPress={() => navigation.navigate('PublicacionesAdmin')}
+        onPress={
+          () => navigation.navigate('PublicacionesAdmin', { userId : item.ID_usuario}) 
+        }
+        
       >
         <Text style={styles.buttonText}>Publicaciones</Text>
       </TouchableOpacity>

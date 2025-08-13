@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackParamList } from '../types/types';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp,useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {URL} from '../config/UrlApi'
 
@@ -21,15 +21,20 @@ interface Publicacion {
 
 }
 
-const PublicacionesAdmin : React.FC = () => {
-     const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-      const [articulos, setPublicaciones] = useState<Publicacion[]>([]);
-      const [refreshing, setRefreshing] = useState(false);
+type PublicacionesAdminRouteProp = RouteProp<StackParamList, 'PublicacionesAdmin'>;
+interface Props {
+  route: PublicacionesAdminRouteProp;
+}
+const PublicacionesAdmin : React.FC<Props> = ({route}) => {
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+  const [articulos, setPublicaciones] = useState<Publicacion[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const {userId} = route.params
 
        const obtenerPublicaciones = async () => {     
          try {
            setRefreshing(true);
-           const response = await fetch(`${URL}obtener-publicaciones`);
+           const response = await fetch(`${URL}obtener-publicaciones/${userId}`);
            
            if (!response.ok) {
              const errorText = await response.text();
@@ -46,7 +51,7 @@ const PublicacionesAdmin : React.FC = () => {
            setPublicaciones(data);
          } catch (error) {
            console.error('Error al obtener publicaciones:', error);
-           Alert.alert('Error', 'No se pudieron cargar los usuarios. Verifica la conexión al servidor.');
+           Alert.alert('Error', 'No se pudieron cargar las publicaciones de este usuario. Verifica la conexión al servidor.');
          } finally {
            setRefreshing(false);
          }

@@ -1,6 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 
 
+
 export type ComponenteId = 'ruedas' | 'suspension' |'frenos' | 'marco' | 'sillin' | 'manubrio' | 'pedal';
 
 export type ComponenteData = {
@@ -13,6 +14,7 @@ export type ComponenteData = {
   };
   herramientas: string[]; // ✅ importante para solucionar tu error
 };
+
 
 export type StackParamList = {
   Presentacion: undefined;
@@ -35,7 +37,7 @@ export type StackParamList = {
   RestablecerContraseña: undefined;
   MODELO3d: undefined
   Administrador: undefined;
-  PublicacionesAdmin: undefined;
+  PublicacionesAdmin: {userId : number};
   FiltroAdmin: undefined;
   ComponenteDetalle: { componenteId: ComponenteId };
   DetallePublicacion: { publicacion: Publicacion };

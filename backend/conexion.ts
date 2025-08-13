@@ -460,27 +460,31 @@ app.delete('/eliminar-usuario/:id', async (req, res) => {
 
 
 //administrar publicaciones - administrador
-app.get('/obtener-publicaciones', async (req, res) => {
+app.get('/obtener-publicaciones/:userId', async (req, res) => {
   try {
+    const { userId } = req.params;
+
     const result = await pool.query(`
-     SELECT 
-  cv.Id_publicacion,
-  cv.nombre_Articulo,
-  cv.descripcion,
-  cv.precio,
-  cv.tipo_bicicleta,
-  cv.foto,
-  u.nombre AS nombre_vendedor
-  
-  FROM com_ventas cv
-  JOIN usuario u ON cv.ID_usuario = u.ID_usuario
-  ORDER BY cv.ID_publicacion DESC;
-  `);
-  console.log('Publicaciones obtenidas:', result.rows.length);
-  res.status(200).json(result.rows); 
-} catch (error) {
-  console.error('Error al obtener publicaciones:', error);
-    res.status(500).json({ error: 'Error en el servidor' }); 
+      SELECT 
+        cv.ID_publicacion,
+        cv.nombre_Articulo,
+        cv.descripcion,
+        cv.precio,
+        cv.tipo_bicicleta,
+        cv.foto,
+        u.nombre AS nombre_vendedor
+      FROM com_ventas cv
+      JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+      WHERE cv.ID_usuario = $1
+      ORDER BY cv.ID_publicacion DESC;
+    `, [userId]);
+
+    console.log('Publicaciones obtenidas:', result.rows.length);
+    res.status(200).json(result.rows);
+
+  } catch (error) {
+    console.error('Error al obtener publicaciones:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
   }
 });
 
