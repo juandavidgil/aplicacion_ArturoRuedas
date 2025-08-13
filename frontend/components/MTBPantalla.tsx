@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   View, Text, TextInput, FlatList, Image,
   TouchableOpacity, StyleSheet, ActivityIndicator,
-  SafeAreaView, Alert, ScrollView
+  SafeAreaView, Alert, ScrollView,  Dimensions
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -12,6 +12,8 @@ import { StackParamList } from '../types/types';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { Video, ResizeMode } from 'expo-av';
 import { URL } from '../config/UrlApi';
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 interface Articulo {
   id: number;
@@ -27,6 +29,7 @@ interface Articulo {
 type RouteParams = {
   tipoBicicleta: string;
 };
+const { width, height } = Dimensions.get('window');
 const MTBPantalla: React.FC = () => {
   const [busqueda, setBusqueda] = useState('');
   const [articulos, setArticulos] = useState<Articulo[]>([]);
@@ -85,27 +88,38 @@ const MTBPantalla: React.FC = () => {
 
 
   return (
+    <LinearGradient
+  colors={['#0c2b2aff', '#000000']} // azul petróleo → negro
+  start={{ x: 0, y: 0 }}
+  end={{ x: 0, y: 1 }}
+  style={{ flex: 1 }}
+>
     <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#9ba3a8' }}>
+       <View style={styles.headerWrapper}>
+  {/* Header */}
+  <View style={styles.header}>
+    <Text style={styles.headerTitle}>MTB (Mountain Bike)</Text>
+  </View>
 
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>MTB (Mountain Bike)</Text>  
-      </View>
+  {/* Buscador */}
+  <View style={styles.searchContainer}>
+    <TextInput
+      style={styles.searchInput}
+      placeholder="Buscar artículos..."
+      value={busqueda}
+      onChangeText={setBusqueda}
+    />
+    <TouchableOpacity onPress={buscarArticulos} style={styles.searchButton}>
+      <Ionicons name="search-outline" size={22} color="#fff" />
+    </TouchableOpacity>
+  </View>
+</View>
+      <SafeAreaView style={{ flex: 1 }}>
+       
 
-        <View style={styles.containerMTB}>
-          {/* Buscador */}
-          <View style={styles.searchContainer}>
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Buscar artículos..."
-              value={busqueda}
-              onChangeText={setBusqueda}
-            />
-            <TouchableOpacity onPress={buscarArticulos} style={styles.searchButton}>
-              <Ionicons name="search-outline" size={22} color="#fff" />
-            </TouchableOpacity>
-          </View>
-
+     <View style={styles.containerMTB}>
+      
+      
           {/* Cargando */}
           {cargando ? (
             <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />
@@ -142,7 +156,7 @@ const MTBPantalla: React.FC = () => {
               ) : (
                 <ScrollView style={{ marginTop: 20 }} contentContainerStyle={{ paddingBottom: 100 }}>
                   <Text style={styles.tituloMTB}>MONTAÑERA</Text>
-                  <Text style={{ textAlign: 'center',marginBottom: 12, fontSize: 16, lineHeight: 22,color: '#333', fontWeight: '500',   paddingHorizontal: 16  }}>
+                  <Text style={{ textAlign: 'center',marginBottom: 12, fontSize: 16, lineHeight: 22,color: '#ffffffff', fontWeight: '500',   paddingHorizontal: 16  }}>
                     es un tipo de bicicleta diseñada para ser utilizada en terrenos accidentados y sin pavimentar, como senderos, caminos de tierra, colinas y montañas
                   </Text>
 
@@ -166,19 +180,19 @@ const MTBPantalla: React.FC = () => {
           )}
         <View style={styles.iconBar}>
   <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
-    <Ionicons name='storefront-outline' size={28} color="#2c7a7b" />
+    <Ionicons name='storefront-outline' size={28} color="#ffffffff" />
   </TouchableOpacity>
 
   <TouchableOpacity onPress={() => navigation.navigate('Carrito')}>
-    <Ionicons name='cart-outline' size={28} color="#2c7a7b" />
+    <Ionicons name='cart-outline' size={28} color="#ffffffff" />
   </TouchableOpacity>
 
   <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
-    <Ionicons name='notifications-outline' size={28} color="#2c7a7b" />
+    <Ionicons name='notifications-outline' size={28} color="#ffffffff" />
   </TouchableOpacity>
 
   <TouchableOpacity onPress={()=> navigation.navigate('Perfil')}>
-          <Ionicons name="person-circle-outline" size={28} color="#2c7a7b"></Ionicons>
+          <Ionicons name="person-circle-outline" size={28} color="#f3ffffff"></Ionicons>
   </TouchableOpacity>
   {/* Botón de componentes */}
   
@@ -214,6 +228,7 @@ const MTBPantalla: React.FC = () => {
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
+    </LinearGradient>
   );
 };
 
@@ -222,52 +237,92 @@ const styles = StyleSheet.create({
   containerMTB: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f0f4f7',
+    
     marginTop:0,
   },
-
-  header: {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  backgroundColor: '#f80000ff',
-  paddingVertical: 15,
-  alignItems: 'center',
-  elevation: 5,
-  justifyContent: 'center',
-  zIndex: 100,
-  borderBottomLeftRadius: 15,  
-  borderBottomRightRadius: 15,
-  overflow: 'hidden', 
+  // Estilos
+headerWrapper: {
+  width: '100%', // ocupa todo el ancho
+  
+  paddingBottom: 20,
+   // margen interno a los lados
+  
 },
 
-   headerTitle: {
-    marginTop: 20,
-    marginLeft:5,
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
+header: {
+  backgroundColor: '#004f4d',
+  paddingVertical: height * 0.03,
+  paddingHorizontal: width * 0.2,
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: 10,
+  marginBottom: height * 0.02, // separa del buscador
+},
+
+headerTitle: {
+  fontSize: width * 0.06,
+  fontWeight: 'bold',
+  color: '#ffffffff',
+},
+
+searchContainer: {
+   flexDirection: 'row',
+  alignItems: 'center',
+  backgroundColor: '#fff', // Fondo claro para que el buscador resalte
+  borderRadius: width * 0.08, // radio un poco más pequeño para look moderno
+  paddingHorizontal: width * 0.06,
+  paddingVertical: height * 0.015,
+  elevation: 3,
+  shadowColor: '#000',
+  shadowOpacity: 0.15,
+  shadowOffset: { width: 0, height: 0 },
+  shadowRadius: 6,
+  width: '90%',
+  alignSelf: 'center',
+
+  
+   // ocupa todo el ancho disponible en el wrapper
+},
+
+searchInput: {
+  flex: 1,
+  paddingHorizontal: 16,
+  fontSize: 16,
+  color: '#333',
+   paddingVertical: 0,
+},
+
+searchButton: {
+  backgroundColor: '#f80000ff',
+  borderRadius: 20,
+  padding: 8,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+
+
+
+
    item: {
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: '#ffff',
   },
 
   inputMTB: {
-    padding: 12,
+    paddingVertical: height * 0.012,
+    paddingHorizontal: '3%',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#c46565ff',
     borderRadius: 10,
-    backgroundColor: '#fff',
-    fontSize: 16,
-    marginTop: 40,
+    backgroundColor: '#a74646ff',
+    fontSize: width * 0.04,
+    marginTop: '20%',
   },
   cardMTB: {
     flexDirection: 'row',
     marginBottom: 20,
-    backgroundColor: '#9ba3a8',
+    backgroundColor: '#7e3333ff',
     padding: 12,
     borderRadius: 12,
     shadowColor: '#000',
@@ -304,7 +359,7 @@ const styles = StyleSheet.create({
   tituloMTB: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1a202c',
+    color: '#ffffffff',
     marginBottom: 5,
     marginTop: 50,
     textAlign: 'center',
@@ -316,7 +371,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#584141ff',
     borderRadius: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
@@ -331,27 +386,26 @@ const styles = StyleSheet.create({
   },
 
   
-   iconBar:{
-    color:'#b82424ff',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    backgroundColor: '#f80000ff',
-    borderTopWidth: 1,
-    borderTopColor: '#ccc',
-    borderRadius: 30,
-    position: 'absolute',
-    bottom: 5,
-    left: 5,
-    right: 5,
-    elevation: 5, // sombra en Android
+iconBar: {
+  flexDirection: 'row',
+  justifyContent: 'space-around',
+  paddingVertical: height * 0.015, // mejor en pixeles relativos
+  backgroundColor: '#004f4d',
+  borderTopLeftRadius: 10,
+  borderTopRightRadius: 10,
+  position: 'absolute',
+  bottom: 0, // pegado al borde inferior
+  left: 0,
+  right: 0,
+  borderTopWidth: 1,
+  borderColor: '#ccc',
+  elevation: 8, // sombra en Android
   shadowColor: '#000', // sombra en iOS
-  shadowOffset: { width: 0, height: -2 },
   shadowOpacity: 0.1,
-  shadowRadius: 4,
- },
+  shadowOffset: { width: 0, height: -2 },
+  shadowRadius: 6,
+},
+
   iconoComponentes:{
   width: 35,
   height: 35
@@ -375,34 +429,7 @@ const styles = StyleSheet.create({
     right: 16,
   },
   
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 25,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    marginHorizontal: 10,
-    marginTop: 50,
-    elevation: 3, // Sombra en Android
-    shadowColor: '#000', // Sombra en iOS
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
-  },
-  searchInput: {
-    flex: 1,
-    paddingHorizontal: 10,
-    fontSize: 16,
-    color: '#333',
-  },
-  searchButton: {
-    backgroundColor: '#f80000ff',
-    borderRadius: 20,
-    padding: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  
  
  
 
@@ -410,4 +437,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default MTBPantalla;
+export default MTBPantalla; 

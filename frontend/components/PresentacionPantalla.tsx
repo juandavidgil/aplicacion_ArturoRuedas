@@ -10,11 +10,15 @@ import { StackParamList } from '../types/types';
 
 const PresentacionPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const image = require('../img/presentacionarturo.jpg');
+  const image = require('../img/principal.png');
 
   return (
     <SafeAreaView style={styles.container}>
-      <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+      <ImageBackground 
+        source={image} 
+        resizeMode="cover" 
+        style={styles.image}
+      >
         <LinearGradient
           colors={['transparent', 'rgba(0,0,0,0.8)']}
           style={styles.gradient}
@@ -48,12 +52,16 @@ const PresentacionPantalla: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#000', // Fondo por si la imagen no carga
   },
   image: {
     flex: 1,
-    justifyContent: 'flex-end',
+    width: '100%',
+    height: '100%',
   },
   gradient: {
+    flex: 1,
+    justifyContent: 'flex-end',
     padding: 20,
   },
   content: {
@@ -81,6 +89,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: 'center',
     marginBottom: 15,
+    borderColor: "#006D77",
+    borderWidth: 2,
   },
   buttonText: {
     fontSize: 16,
@@ -90,7 +100,7 @@ const styles = StyleSheet.create({
   registerButton: {
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: '#fff',
+    borderColor: "#006D77",
   },
   registerButtonText: {
     color: '#fff',
