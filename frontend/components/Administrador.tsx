@@ -7,7 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {URL} from '../config/UrlApi'
 
 export interface Usuario {
-  ID_usuario: number;
+  id_usuario: number;
   nombre: string;
   correo: string;
   telefono: string;
@@ -51,7 +51,7 @@ const Administrador: React.FC = () => {
   };
 
   const handleEliminarUsuario = async (usuario: Usuario) => {
-  const id = Number(usuario.ID_usuario || usuario.ID_usuario); 
+  const id = Number(usuario.id_usuario || usuario.id_usuario); 
 
    console.log("🧪 Usuario recibido:", usuario);
   console.log("🧪 ID convertido a número:", id);
@@ -97,12 +97,14 @@ const Administrador: React.FC = () => {
   }, []);
 
   const renderItem = ({ item }: { item: Usuario }) => {
-  console.log(" Usuario:", item);  //  Esto imprime los datos reales
+  console.log(" Usuario:", item);  
+
+  const hola = console.log(" ID_usuario:", item.id_usuario);
 
   return (
     <View style={styles.card}>
       <View style={styles.info}>
-        <Text style={styles.label}>ID: <Text style={styles.value}>{item.ID_usuario}</Text></Text>
+        <Text style={styles.label}>ID: <Text style={styles.value}>{item.id_usuario}</Text></Text>
         <Text style={styles.label}>Nombre: <Text style={styles.value}>{item.nombre}</Text></Text>
         <Text style={styles.label}>Correo: <Text style={styles.value}>{item.correo}</Text></Text>
         <Text style={styles.label}>Teléfono: <Text style={styles.value}>{item.telefono}</Text></Text>
@@ -111,7 +113,8 @@ const Administrador: React.FC = () => {
        <TouchableOpacity 
         style={styles.adminPublicaciones} 
         onPress={
-          () => navigation.navigate('PublicacionesAdmin', { userId : item.ID_usuario}) 
+          (hola) => navigation.navigate('PublicacionesAdmin', { ID_usuario : item.id_usuario} ) 
+        
         }
         
       >
@@ -138,7 +141,7 @@ const Administrador: React.FC = () => {
       
       <FlatList
         data={usuarios}
-        keyExtractor={(item) => item.ID_usuario?.toString() || Math.random().toString()}
+        keyExtractor={(item) => item.id_usuario?.toString() || Math.random().toString()}
         renderItem={renderItem}
         contentContainerStyle={styles.lista}
         refreshing={refreshing}

@@ -215,3 +215,19 @@ SELECT
         u.telefono
       FROM com_ventas cv 
       INNER JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+
+
+
+ SELECT 
+        cv.ID_publicacion,
+        cv.nombre_Articulo,
+        cv.descripcion,
+        cv.precio,
+        cv.tipo_bicicleta,
+        cv.foto,
+        u.nombre AS nombre_vendedor,
+        u.telefono
+      FROM com_ventas cv
+      JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+      WHERE cv.ID_usuario = 3
+      ORDER BY cv.ID_publicacion DESC;

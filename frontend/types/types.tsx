@@ -37,7 +37,7 @@ export type StackParamList = {
   RestablecerContraseña: undefined;
   MODELO3d: undefined
   Administrador: undefined;
-  PublicacionesAdmin: {userId : number};
+  PublicacionesAdmin: {ID_usuario : number};
   FiltroAdmin: undefined;
   ComponenteDetalle: { componenteId: ComponenteId };
   DetallePublicacion: { publicacion: Publicacion };

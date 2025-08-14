@@ -432,7 +432,7 @@ app.get('/obtener-usuarios', async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT
-      ID_usuario,
+      ID_usuario as id_usuario,
       nombre,
       correo,
       telefono
@@ -460,9 +460,9 @@ app.delete('/eliminar-usuario/:id', async (req, res) => {
 
 
 //administrar publicaciones - administrador
-app.get('/obtener-publicaciones/:userId', async (req, res) => {
+app.get('/obtener-publicaciones/:ID_usuario', async (req, res) => {
   try {
-    const { userId } = req.params;
+    const { ID_usuario } = req.params;
 
     const result = await pool.query(`
       SELECT 
@@ -477,7 +477,7 @@ app.get('/obtener-publicaciones/:userId', async (req, res) => {
       JOIN usuario u ON cv.ID_usuario = u.ID_usuario
       WHERE cv.ID_usuario = $1
       ORDER BY cv.ID_publicacion DESC;
-    `, [userId]);
+    `, [ID_usuario]);
 
     console.log('Publicaciones obtenidas:', result.rows.length);
     res.status(200).json(result.rows);

@@ -29,12 +29,13 @@ const PublicacionesAdmin : React.FC<Props> = ({route}) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [articulos, setPublicaciones] = useState<Publicacion[]>([]);
   const [refreshing, setRefreshing] = useState(false);
-  const {userId} = route.params
+  const {ID_usuario} = route.params
 
        const obtenerPublicaciones = async () => {     
          try {
            setRefreshing(true);
-           const response = await fetch(`${URL}obtener-publicaciones/${userId}`);
+           console.log('userId recibido en backend:', ID_usuario);
+           const response = await fetch(`${URL}obtener-publicaciones/${ID_usuario}`);
            
            if (!response.ok) {
              const errorText = await response.text();
