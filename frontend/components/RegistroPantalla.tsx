@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  View, Text, TextInput, TouchableOpacity, 
+  ImageBackground, Image, View, Text, TextInput, TouchableOpacity, 
   StyleSheet, SafeAreaView, Alert, ActivityIndicator 
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -11,6 +11,7 @@ import {URL} from '../config/UrlApi'
 
 const RegistroPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+    const image = require('../img/fondo1.png');
   const [nombre, setNombre] = useState('');
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
@@ -50,7 +51,21 @@ const RegistroPantalla: React.FC = () => {
   };
 
   return (
+    
     <SafeAreaView style={styles.container}>
+      <ImageBackground 
+                    source={image} 
+                    resizeMode="cover" 
+                    style={styles.image}
+                  >
+            <View style={styles.holi}>
+              <Image
+            source={require('../img/logo1.png')} // o { uri: 'URL' }
+            style={styles.logo}/>
+              
+            </View>
+      
+
        <View style={styles.card}>
       <Text style={styles.title}>Crear Cuenta</Text>
       <Text style={styles.subtitle}>Completa tus datos para registrarte</Text>
@@ -114,20 +129,25 @@ const RegistroPantalla: React.FC = () => {
         </Text>
       </TouchableOpacity>
       </View>
+       </ImageBackground> 
     </SafeAreaView>
+    
   );
 };
 
 const styles = StyleSheet.create({
   container: {
    flex: 1,
-    backgroundColor: '#ffffffff',
-    justifyContent: 'center',
+  },
+  image: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    paddingHorizontal: 20,
   },
   card: {
-    backgroundColor: '#fff',
+    marginBottom: 30, 
     width: '90%',
     borderRadius: 20,
     padding: 25,
@@ -136,41 +156,61 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
+    borderBlockColor:"#ffff",
+  },
+holi: {
+  width: '100%',          
+  alignSelf: 'center',    
+  alignItems: 'center',   
+  padding: 10,            
+  paddingVertical: 5,    
+  borderBottomLeftRadius: 50,  
+  borderBottomRightRadius:50,     
+  position: 'absolute',   
+  top: 0,                 
+  shadowColor: '#000',    
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.2,
+  shadowRadius: 8,
+  elevation: 5,        
+  zIndex: 10,            
+},
+logo: {
+    
+    width: 250,
+    height: 250,
+    alignSelf: 'auto',
+    justifyContent: 'flex-end',
   },
   title: {
     fontSize: 30,
     fontWeight: 900,
-    color: '#da2d2dff',
+    color: '#20eb4ca4',
     textAlign: 'center',
     marginBottom: 5,
   },
   subtitle: {
     fontWeight: 500,
     fontSize: 20,
-    color: '#666',
+    color: '#ffff',
     textAlign: 'center',
     marginBottom: 20,
   },
   input: {
-    backgroundColor: '#f9f9f9',
-    paddingVertical: 14,
-    paddingHorizontal: 15,
+     backgroundColor: '#ffffffff',
+    padding: 15,
     borderRadius: 12,
     marginBottom: 15,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    width: '100%',
-    fontSize: 15,
-    color: '#333',
+    borderWidth: 2,
+    borderColor: '#006D77',
   },
   button: {
-    backgroundColor: '#fd0000ff',
-    paddingVertical: 15,
+   paddingVertical: 15,
     borderRadius: 12,
     alignItems: 'center',
     marginTop: 5,
-    width: '100%',
-    elevation: 3,
+     borderWidth: 2,
+    borderColor: '#006D77',
   },
   buttonText: {
     color: '#fff',
@@ -180,6 +220,7 @@ const styles = StyleSheet.create({
   loginLink: {
     marginTop: 18,
     paddingVertical: 6,
+     alignItems: 'center',
   },
   loginText: {
     color: '#fff',

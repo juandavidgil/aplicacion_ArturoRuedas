@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View,Text,TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Alert, ActivityIndicator, Image
+import {ImageBackground, View,Text,TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Alert, ActivityIndicator, Image
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -9,6 +9,7 @@ import { URL } from '../config/UrlApi';
 
 const InicioSesionPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+  const image = require('../img/fondo1.png');
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
   const [cargando, setCargando] = useState(false);
@@ -44,14 +45,21 @@ const InicioSesionPantalla: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.card}>
+       <ImageBackground 
+              source={image} 
+              resizeMode="cover" 
+              style={styles.image}
+            >
+      <View style={styles.holi}>
         <Image
-      source={require('../img/logo.png')} // o { uri: 'URL' }
-      style={styles.logo}
-    />
-        <Text style={styles.title}>Bienvenido</Text>
-        <Text style={styles.subtitle}>Inicia sesión para continuar</Text>
+      source={require('../img/logo1.png')} // o { uri: 'URL' }
+      style={styles.logo}/>
+        
+      </View>
 
+        <View style={styles.card}>
+      <Text style={styles.title}>Bienvenido</Text>
+        <Text style={styles.subtitle}>Inicia sesión para continuar</Text>
         <TextInput
           style={styles.input}
           placeholder="Correo electrónico"
@@ -105,66 +113,94 @@ const InicioSesionPantalla: React.FC = () => {
         >
           <Text style={styles.linkBold}>Administrar</Text>
         </TouchableOpacity>
+       
       </View>
+     </ImageBackground>  
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+
+   // si quieres redonda
+container: {
     flex: 1,
-    backgroundColor: '#ffffffff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
   },
+  image: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+holi: {
+  width: '100%',          
+  alignSelf: 'center',    
+  alignItems: 'center',   
+  padding: 10,            
+  paddingVertical: 5,    
+  borderBottomLeftRadius: 50,  
+  borderBottomRightRadius:50,     
+  position: 'absolute',   
+  top: 0,                 
+  shadowColor: '#000',    
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.2,
+  shadowRadius: 8,
+  elevation: 5,           
+  zIndex: 10,             
+},
+
+
   card: {
-    backgroundColor: '#fff',
     width: '90%',
     borderRadius: 20,
     padding: 25,
-    elevation: 5,
-    shadowColor: '#000',
+    marginBottom: 30, 
+    shadowColor: '#1c1b25c9',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
   },
+  logo: {
+    
+    width: 250,
+    height: 250,
+    alignSelf: 'auto',
+    justifyContent: 'flex-end',
+  },
+
   title: {
     fontSize: 30,
-    fontWeight: 900,
-    color: '#da2d2dff',
+    fontWeight: '900',
+    color: '#20eb4ca4',
     textAlign: 'center',
     marginBottom: 5,
   },
-  logo: {
-  width: 100,
-  height: 100,
-  alignSelf: 'center',
-  marginBottom: 15,
-   // si quieres redonda
-},
-
   subtitle: {
-    fontWeight: 500,
+    fontWeight: '500',
     fontSize: 20,
-    color: '#666',
+    color: '#ffffffff',
     textAlign: 'center',
     marginBottom: 20,
   },
+
   input: {
-    backgroundColor: '#f4f4f4',
+    backgroundColor: '#ffffffff',
     padding: 15,
     borderRadius: 12,
     marginBottom: 15,
-    borderWidth: 1,
-    borderColor: '#ddd',
+    borderWidth: 2,
+    borderColor: '#006D77',
   },
   button: {
-    backgroundColor: '#eb3700ff',
+    
     paddingVertical: 15,
     borderRadius: 12,
     alignItems: 'center',
     marginTop: 5,
+     borderWidth: 2,
+    borderColor: '#006D77',
   },
   buttonText: {
     color: '#fff',
@@ -176,11 +212,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   linkText: {
-    color: '#666',
+    color: '#b4b0b0ff',
     fontSize: 14,
   },
   linkBold: {
-    color: '#c01e1eff',
+    color: '#006D77',
     fontWeight: 'bold',
   },
 });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, ImageBackground } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StackParamList } from '../types/types';
 import { useNavigation } from '@react-navigation/native';
@@ -15,9 +15,11 @@ export interface Usuario {
 
 
 const Administrador: React.FC = () => {
+  const image = require('../img/fondo1.png');
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  
   
 
 
@@ -137,6 +139,11 @@ const Administrador: React.FC = () => {
 
   return (
     <View style={styles.container}>
+       <ImageBackground 
+              source={image} 
+              resizeMode="cover" 
+              style={styles.image}
+            >
       <Text style={styles.titulo}>ADMINISTRAR USUARIOS</Text>
       
       <FlatList
@@ -156,7 +163,7 @@ const Administrador: React.FC = () => {
         <Text style={styles.refreshButtonText}>Actualizar lista</Text>
       </TouchableOpacity>
 
-     
+     </ImageBackground>
     </View>
   );
   
@@ -165,9 +172,14 @@ const Administrador: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    
     paddingHorizontal: 16,
     paddingTop: 20,
+  },
+  image: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
   titulo: {
     fontSize: 24,
