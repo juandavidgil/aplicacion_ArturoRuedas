@@ -110,7 +110,7 @@ const MTBPantalla: React.FC = () => {
       onChangeText={setBusqueda}
     />
     <TouchableOpacity onPress={buscarArticulos} style={styles.searchButton}>
-      <Ionicons name="search-outline" size={22} color="#fff" />
+      <Ionicons name="search-outline" size={22} color="#000000ff" />
     </TouchableOpacity>
   </View>
 </View>
@@ -175,9 +175,12 @@ const MTBPantalla: React.FC = () => {
                     </View>
                   </View>
                 </ScrollView>
+                
               )}
             </>
           )}
+           </View>
+      </SafeAreaView>
         <View style={styles.iconBar}>
   <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
     <Ionicons name='storefront-outline' size={28} color="#ffffffff" />
@@ -225,8 +228,7 @@ const MTBPantalla: React.FC = () => {
 )}
 
     
-        </View>
-      </SafeAreaView>
+       
     </SafeAreaProvider>
     </LinearGradient>
   );
@@ -268,8 +270,8 @@ headerTitle: {
 searchContainer: {
    flexDirection: 'row',
   alignItems: 'center',
-  backgroundColor: '#fff', // Fondo claro para que el buscador resalte
-  borderRadius: width * 0.08, // radio un poco más pequeño para look moderno
+  backgroundColor: '#fff', 
+  borderRadius: width * 0.08,
   paddingHorizontal: width * 0.06,
   paddingVertical: height * 0.015,
   elevation: 3,
@@ -279,9 +281,6 @@ searchContainer: {
   shadowRadius: 6,
   width: '90%',
   alignSelf: 'center',
-
-  
-   // ocupa todo el ancho disponible en el wrapper
 },
 
 searchInput: {
@@ -293,7 +292,7 @@ searchInput: {
 },
 
 searchButton: {
-  backgroundColor: '#f80000ff',
+  backgroundColor: '#20eb4ca4',
   borderRadius: 20,
   padding: 8,
   justifyContent: 'center',
@@ -315,14 +314,14 @@ searchButton: {
     borderWidth: 1,
     borderColor: '#c46565ff',
     borderRadius: 10,
-    backgroundColor: '#a74646ff',
+    backgroundColor: '#ffffffff',
     fontSize: width * 0.04,
     marginTop: '20%',
   },
   cardMTB: {
     flexDirection: 'row',
     marginBottom: 20,
-    backgroundColor: '#7e3333ff',
+    backgroundColor: '#ffffffff',
     padding: 12,
     borderRadius: 12,
     shadowColor: '#000',
@@ -365,7 +364,7 @@ searchButton: {
     textAlign: 'center',
   },
   screen: {
-    backgroundColor: '#f1f3f5',
+    
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
@@ -389,21 +388,22 @@ searchButton: {
 iconBar: {
   flexDirection: 'row',
   justifyContent: 'space-around',
-  paddingVertical: height * 0.015, // mejor en pixeles relativos
+  paddingVertical: height * 0.015, 
   backgroundColor: '#004f4d',
   borderTopLeftRadius: 10,
   borderTopRightRadius: 10,
   position: 'absolute',
-  bottom: 0, // pegado al borde inferior
+  bottom: 0, 
   left: 0,
   right: 0,
   borderTopWidth: 1,
-  borderColor: '#ccc',
+  borderColor:  '#20eb4ca4',
   elevation: 8, // sombra en Android
   shadowColor: '#000', // sombra en iOS
   shadowOpacity: 0.1,
   shadowOffset: { width: 0, height: -2 },
   shadowRadius: 6,
+  paddingBottom:"7%",
 },
 
   iconoComponentes:{

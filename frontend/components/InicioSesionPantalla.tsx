@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
    // si quieres redonda
 container: {
     flex: 1,
+    backgroundColor: '#000',
   },
   image: {
     flex: 1,

@@ -26,9 +26,9 @@ type ImagenItem = {
 };
 
 const imagenes: ImagenItem[] = [
-  { id: 1, url: require('../img/carruselMTB.jpg'), titulo: 'MTB', destino: 'MTB', tipoBicicleta: 'Mtb' },
-  { id: 2, url: require('../img/carruselRuta.jpg'), titulo: 'Ruta', destino: 'Ruta', tipoBicicleta: 'Ruta' },
-  { id: 3, url: require('../img/carruselFIJA.jpg'), titulo: 'Fija', destino: 'Fija', tipoBicicleta: 'Fija' },
+  { id: 1, url: require('../img/carruselMTB.png'), titulo: 'MTB', destino: 'MTB', tipoBicicleta: 'Mtb' },
+  { id: 2, url: require('../img/carruselRUTA.png'), titulo: 'Ruta', destino: 'Ruta', tipoBicicleta: 'Ruta' },
+  { id: 3, url: require('../img/carruselFIJA.png'), titulo: 'Fija', destino: 'Fija', tipoBicicleta: 'Fija' },
 ];
 
 const BackDrop: React.FC<{ scrollX: Animated.Value }> = ({ scrollX }) => {
@@ -89,7 +89,7 @@ const CarruselPantalla: React.FC = () => {
                   marginHorizontal: ESPACIO,
                   padding: 5,
                   borderRadius: 50,
-                  backgroundColor: "white",
+                  backgroundColor: "#006D77",
                   alignItems: "center",
                   transform: [{ translateY }],
                   shadowColor: "#000",
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     marginTop: 100,
     marginBottom: 10,
-    color: '#333',
+    color: '#ffffffff',
   },
   posterImage: {
     width: ANCHO_CONTENEDOR * 0.9,

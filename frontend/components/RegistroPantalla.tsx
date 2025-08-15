@@ -58,6 +58,7 @@ const RegistroPantalla: React.FC = () => {
                     resizeMode="cover" 
                     style={styles.image}
                   >
+                  
             <View style={styles.holi}>
               <Image
             source={require('../img/logo1.png')} // o { uri: 'URL' }
@@ -138,6 +139,7 @@ const RegistroPantalla: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
    flex: 1,
+   backgroundColor: '#000',
   },
   image: {
     flex: 1,
@@ -151,12 +153,6 @@ const styles = StyleSheet.create({
     width: '90%',
     borderRadius: 20,
     padding: 25,
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    borderBlockColor:"#ffff",
   },
 holi: {
   width: '100%',          
@@ -168,11 +164,6 @@ holi: {
   borderBottomRightRadius:50,     
   position: 'absolute',   
   top: 0,                 
-  shadowColor: '#000',    
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.2,
-  shadowRadius: 8,
-  elevation: 5,        
   zIndex: 10,            
 },
 logo: {
