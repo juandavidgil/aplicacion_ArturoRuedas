@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   View, Text, TextInput, FlatList, Image,
   TouchableOpacity, StyleSheet, ActivityIndicator,
-  SafeAreaView, Alert, ScrollView
+  SafeAreaView, Alert, ScrollView,  Dimensions
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -12,6 +12,8 @@ import { StackParamList } from '../types/types';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { Video, ResizeMode } from 'expo-av';
 import { URL } from '../config/UrlApi';
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 interface Articulo {
   id: number;
@@ -27,42 +29,23 @@ interface Articulo {
 type RouteParams = {
   tipoBicicleta: string;
 };
-
-const MTBPantalla: React.FC = () => {
+const { width, height } = Dimensions.get('window');
+const RutaPantalla: React.FC = () => {
   const [busqueda, setBusqueda] = useState('');
   const [articulos, setArticulos] = useState<Articulo[]>([]);
   const [cargando, setCargando] = useState(false);
+  const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false); // <-- Estado para mostrar u ocultar
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
-  const route = useRoute();
-  const { tipoBicicleta } = route.params as RouteParams;
 
   const buscarArticulos = async () => {
     if (busqueda.trim() === '') return;
     setCargando(true);
     try {
-      const response = await fetch(`${URL}buscar?nombre=${encodeURIComponent(busqueda)}&tipo=${tipoBicicleta}`);
-      
-      // Verificar si la respuesta es exitosa
-      if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status}`);
-      }
-
-      const data = await response.json();
-      
-      // Asegurarse de que data es un array antes de filtrar
-      const articulosValidos = Array.isArray(data) 
-        ? data.filter(articulo => 
-            articulo?.id && 
-            typeof articulo.tipo_bicicleta === 'string' &&
-            articulo.tipo_bicicleta.toLowerCase() === tipoBicicleta.toLowerCase()
-          )
-        : [];
-
-      setArticulos(articulosValidos);
+      const response = await fetch(`${URL}buscar?nombre=${encodeURIComponent(busqueda)}`);
+      const data: Articulo[] = await response.json();
+      setArticulos(data);
     } catch (error) {
       console.error('Error al buscar artículos:', error);
-      Alert.alert("Error", "No se pudieron cargar los artículos");
-      setArticulos([]); // Limpiar los artículos en caso de error
     } finally {
       setCargando(false);
     }
@@ -80,53 +63,63 @@ const MTBPantalla: React.FC = () => {
       const usuario = JSON.parse(usuarioStr);
       const ID_usuario = usuario.ID_usuario;
 
-      if (!ID_usuario) {
-        throw new Error('No se pudo obtener el ID de usuario');
-      }
-
-      if (!articulo.id) {
-        throw new Error('El artículo no tiene ID definido');
-      }
+      if (!ID_usuario) throw new Error('No se pudo obtener el ID de usuario');
+      if (!articulo.id) throw new Error('El artículo no tiene ID definido');
 
       const response = await fetch(`${URL}agregar-carrito`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           ID_usuario: ID_usuario, 
-          ID_publicacion: articulo.id,
+          ID_publicacion: articulo.id
         }),
       });
 
       const responseData = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(responseData.error || 'Error al agregar al carrito');
-      }
+      if (!response.ok) throw new Error(responseData.error || 'Error al agregar al carrito');
 
       Alert.alert('Éxito', 'Artículo agregado al carrito');
     } catch (error) {
       console.error('Error completo en AgregarCarrito:', error);
-      Alert.alert('Error', 'Error al agregar al carrito');
+      Alert.alert('Error al agregar al carrito');
     }
   };
 
-  return (
-    <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 }}>
-        <View style={styles.containerMTB}>
-          {/* Buscador */}
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TextInput
-              style={[styles.inputMTB, { flex: 1 }]}
-              placeholder="Buscar artículos..."
-              value={busqueda}
-              onChangeText={setBusqueda}
-            />
-            <TouchableOpacity onPress={buscarArticulos} style={{ marginTop: 50, marginLeft: 10 }}>
-              <Ionicons name="search-outline" size={28} />
-            </TouchableOpacity>
-          </View>
 
+
+  return (
+    <LinearGradient
+  colors={['#0c2b2aff', '#000000']} // azul petróleo → negro
+  start={{ x: 0, y: 0 }}
+  end={{ x: 0, y: 1 }}
+  style={{ flex: 1 }}
+>
+    <SafeAreaProvider>
+       <View style={styles.headerWrapper}>
+  {/* Header */}
+  <View style={styles.header}>
+    <Text style={styles.headerTitle}>Fixie (Fixed gear)</Text>
+  </View>
+
+  {/* Buscador */}
+  <View style={styles.searchContainer}>
+    <TextInput
+      style={styles.searchInput}
+      placeholder="Buscar artículos..."
+      value={busqueda}
+      onChangeText={setBusqueda}
+    />
+    <TouchableOpacity onPress={buscarArticulos} style={styles.searchButton}>
+      <Ionicons name="search-outline" size={22} color="#000000ff" />
+    </TouchableOpacity>
+  </View>
+</View>
+      <SafeAreaView style={{ flex: 1 }}>
+       
+
+     <View style={styles.containerRuta}>
+      
+      
           {/* Cargando */}
           {cargando ? (
             <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />
@@ -140,14 +133,14 @@ const MTBPantalla: React.FC = () => {
                   contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }}
                   renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => navigation.navigate('DetallePublicacion', { publicacion: item })}>
-                      <View style={styles.cardMTB}>
-                        <Image source={{ uri: item.foto }} style={styles.imagenMTB} resizeMode="cover" />
-                        <View style={styles.infoMTB}>
-                          <Text style={styles.nombreMTB}>{item.nombre_articulo}</Text>
-                          <Text style={styles.descripcionMTB}>{item.descripcion}</Text>
-                          <Text style={styles.precioMTB}>Precio: ${item.precio}</Text>
+                      <View style={styles.cardRuta}>
+                        <Image source={{ uri: item.foto }} style={styles.imagenRuta} resizeMode="cover" />
+                        <View style={styles.infoRuta}>
+                          <Text style={styles.nombreRuta}>{item.nombre_articulo}</Text>
+                          <Text style={styles.descripcionRuta}>{item.descripcion}</Text>
+                          <Text style={styles.precioRuta}>Precio: ${item.precio}</Text>
                           <Text>Tipo: {item.tipo_bicicleta}</Text>
-                          <Text style={styles.descripcionMTB}>vendedor: {item.nombre_vendedor}</Text>
+                          <Text style={styles.descripcionRuta}>vendedor: {item.nombre_vendedor}</Text>
                           <TouchableOpacity onPress={() => AgregarCarrito(item)}>
                             <Ionicons name='cart-outline' size={25} />
                           </TouchableOpacity>
@@ -162,15 +155,15 @@ const MTBPantalla: React.FC = () => {
                 </Text>
               ) : (
                 <ScrollView style={{ marginTop: 20 }} contentContainerStyle={{ paddingBottom: 100 }}>
-                  <Text style={styles.tituloMTB}>MTB (Mountain Bike)</Text>
-                  <Text style={{ textAlign: 'center', marginBottom: 10 }}>
-                    Una bicicleta MTB es ideal para terrenos difíciles como montaña o tierra.
+                  
+                  <Text style={{ textAlign: 'center',marginBottom: 12, fontSize: 16, lineHeight: 22,color: '#ffffffff', fontWeight: '500',   paddingHorizontal: 16  }}>
+                    Este tipo de bici es eficaz en subidas y es muy liviana, con ayuda de los cambio puede avanzar largos trayectos en muy poco tiempo.
                   </Text>
 
                   <View style={styles.screen}>
                     <View style={styles.card}>
                       <Video
-                        source={require('../videos/mtbp.mp4')}
+                        source={require('../videos/mtb.mp4')}
                         rate={1.0}
                         volume={1.0}
                         isMuted={false}
@@ -182,67 +175,153 @@ const MTBPantalla: React.FC = () => {
                     </View>
                   </View>
                 </ScrollView>
+                
               )}
             </>
           )}
-
-          {/* Barra de componentes */}
-          <View style={styles.barraComponentes}>
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
-              <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/rueda.jpeg')} />
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio' })}>
-              <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension' })}>
-              <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal' })}>
-              <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
-            </TouchableOpacity>
-          </View>
-
-          {/* Barra de iconos */}
-          <View style={styles.iconBar}>
-            <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
-              <Ionicons name='storefront-outline' size={30} color="#2c7a7b" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Carrito')}>
-              <Ionicons name='cart-outline' size={26} color="#2c7a7b" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
-              <Ionicons name='notifications-outline' size={28} color="#2c7a7b" />
-            </TouchableOpacity>
-          </View>
-        </View>
+           </View>
       </SafeAreaView>
+        <View style={styles.iconBar}>
+  <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
+    <Ionicons name='storefront-outline' size={28} color="#ffffffff" />
+  </TouchableOpacity>
+
+  <TouchableOpacity onPress={() => navigation.navigate('Carrito')}>
+    <Ionicons name='cart-outline' size={28} color="#ffffffff" />
+  </TouchableOpacity>
+
+  <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
+    <Ionicons name='notifications-outline' size={28} color="#ffffffff" />
+  </TouchableOpacity>
+
+  <TouchableOpacity onPress={()=> navigation.navigate('Perfil')}>
+          <Ionicons name="person-circle-outline" size={28} color="#f3ffffff"></Ionicons>
+  </TouchableOpacity>
+  {/* Botón de componentes */}
+  
+  <TouchableOpacity onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}>
+    <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#ffffffff" />
+  </TouchableOpacity>
+</View>
+
+
+   {/* Barra de componentes */}
+
+{mostrarBarraComponentes && (
+  <View style={styles.barraComponentes}>
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/rueda.jpeg')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio' })}>
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension' })}>
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal' })}>
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
+    </TouchableOpacity>
+  </View>
+)}
+
+    
+       
     </SafeAreaProvider>
+    </LinearGradient>
   );
 };
 
 // Estilos (se mantienen igual que en tu código original)
 const styles = StyleSheet.create({
-  containerMTB: {
+  containerRuta: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f0f4f7',
+    
+    marginTop:0,
   },
-  inputMTB: {
-    padding: 12,
+  // Estilos
+headerWrapper: {
+  width: '100%', // ocupa todo el ancho
+  
+  paddingBottom: 20,
+   // margen interno a los lados
+  
+},
+
+header: {
+  backgroundColor: '#004f4d',
+  paddingVertical: height * 0.03,
+  paddingHorizontal: width * 0.2,
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: 10,
+  marginBottom: height * 0.02, // separa del buscador
+},
+
+headerTitle: {
+  fontSize: width * 0.06,
+  fontWeight: 'bold',
+  color: '#ffffffff',
+},
+
+searchContainer: {
+   flexDirection: 'row',
+  alignItems: 'center',
+  backgroundColor: '#fff', 
+  borderRadius: width * 0.08,
+  paddingHorizontal: width * 0.06,
+  paddingVertical: height * 0.015,
+  elevation: 3,
+  shadowColor: '#000',
+  shadowOpacity: 0.15,
+  shadowOffset: { width: 0, height: 0 },
+  shadowRadius: 6,
+  width: '90%',
+  alignSelf: 'center',
+},
+
+searchInput: {
+  flex: 1,
+  paddingHorizontal: 16,
+  fontSize: 16,
+  color: '#333',
+   paddingVertical: 0,
+},
+
+searchButton: {
+  backgroundColor: '#20eb4ca4',
+  borderRadius: 20,
+  padding: 8,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+
+
+
+
+   item: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ffff',
+  },
+
+  inputRuta: {
+    paddingVertical: height * 0.012,
+    paddingHorizontal: '3%',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#c46565ff',
     borderRadius: 10,
-    backgroundColor: '#fff',
-    fontSize: 16,
-    marginTop: 40,
+    backgroundColor: '#ffffffff',
+    fontSize: width * 0.04,
+    marginTop: '20%',
   },
-  cardMTB: {
+  cardRuta: {
     flexDirection: 'row',
     marginBottom: 20,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#ffffffff',
     padding: 12,
     borderRadius: 12,
     shadowColor: '#000',
@@ -251,47 +330,47 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 4,
   },
-  imagenMTB: {
+  imagenRuta: {
     width: 110,
     height: 110,
     borderRadius: 10,
     backgroundColor: '#e0e0e0',
   },
-  infoMTB: {
+  infoRuta: {
     flex: 1,
     marginLeft: 15,
     justifyContent: 'space-around',
   },
-  nombreMTB: {
+  nombreRuta: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
   },
-  descripcionMTB: {
+  descripcionRuta: {
     fontSize: 14,
     color: '#666',
   },
-  precioMTB: {
+  precioRuta: {
     fontSize: 16,
     fontWeight: '600',
     color: '#2c7a7b',
   },
-  tituloMTB: {
+  tituloRuta: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1a202c',
+    color: '#ffffffff',
     marginBottom: 5,
     marginTop: 50,
     textAlign: 'center',
   },
   screen: {
-    backgroundColor: '#f1f3f5',
+    
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
   },
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#584141ff',
     borderRadius: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
@@ -304,29 +383,39 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginTop: 30,
   },
-  barraComponentes: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 12,
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 30,
-    position: 'absolute',
-    bottom: 120,
-    left: 16,
-    right: 16,
-  },
-  iconoComponentes: {
-    width: 35,
-    height: 35
+
+  
+iconBar: {
+  flexDirection: 'row',
+  justifyContent: 'space-around',
+  paddingVertical: height * 0.015, 
+  backgroundColor: '#004f4d',
+  borderTopLeftRadius: 10,
+  borderTopRightRadius: 10,
+  position: 'absolute',
+  bottom: 0, 
+  left: 0,
+  right: 0,
+  borderTopWidth: 1,
+  borderColor:  '#20eb4ca4',
+  elevation: 8, // sombra en Android
+  shadowColor: '#000', // sombra en iOS
+  shadowOpacity: 0.1,
+  shadowOffset: { width: 0, height: -2 },
+  shadowRadius: 6,
+  paddingBottom:"7%",
+},
+
+  iconoComponentes:{
+  width: 35,
+  height: 35
   },
   video: {
     width: '100%',
     height: '100%',
     backgroundColor: '#000',
   },
-  iconBar: {
+   barraComponentes: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 12,
@@ -339,6 +428,13 @@ const styles = StyleSheet.create({
     left: 16,
     right: 16,
   },
+  
+  
+ 
+ 
+
+
 });
 
-export default MTBPantalla;
+
+export default RutaPantalla;

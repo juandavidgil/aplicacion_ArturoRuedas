@@ -1,57 +1,51 @@
 import React, { useState } from 'react';
-import { 
-  View, Text, TextInput, FlatList, Image, 
+import {
+  View, Text, TextInput, FlatList, Image,
   TouchableOpacity, StyleSheet, ActivityIndicator,
-  SafeAreaView, Alert 
+  SafeAreaView, Alert, ScrollView,  Dimensions
 } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackParamList } from '../types/types';
-import {URL} from '../config/UrlApi'
+import type { StackNavigationProp } from '@react-navigation/stack';
+import { Video, ResizeMode } from 'expo-av';
+import { URL } from '../config/UrlApi';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 interface Articulo {
-  ID_publicacion: number;
-  nombre_Articulo: string;
+  id: number;
+  nombre_articulo: string;
   descripcion: string;
   precio: string;
-  foto: string;
   tipo_bicicleta: string;
+  foto: string;
+  nombre_vendedor: string;
+  telefono: string;
 }
 
 type RouteParams = {
   tipoBicicleta: string;
 };
-
+const { width, height } = Dimensions.get('window');
 const FijaPantalla: React.FC = () => {
-  const route = useRoute();
-  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const { tipoBicicleta } = route.params as RouteParams;
-  
   const [busqueda, setBusqueda] = useState('');
   const [articulos, setArticulos] = useState<Articulo[]>([]);
   const [cargando, setCargando] = useState(false);
+  const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false); // <-- Estado para mostrar u ocultar
+  const navigation = useNavigation<StackNavigationProp<StackParamList>>();
 
   const buscarArticulos = async () => {
     if (busqueda.trim() === '') return;
-
     setCargando(true);
     try {
-      const response = await fetch(
-        `${URL}buscar?nombre=${encodeURIComponent(busqueda)}&tipo=${tipoBicicleta}`
-      );
+      const response = await fetch(`${URL}buscar?nombre=${encodeURIComponent(busqueda)}`);
       const data: Articulo[] = await response.json();
-      
-      const articulosValidos = data.filter(articulo => 
-        articulo.ID_publicacion && articulo.tipo_bicicleta === tipoBicicleta
-      );
-      
-      setArticulos(articulosValidos);
+      setArticulos(data);
     } catch (error) {
       console.error('Error al buscar artículos:', error);
-      Alert.alert('Error', 'No se pudieron cargar los artículos');
     } finally {
       setCargando(false);
     }
@@ -69,212 +63,378 @@ const FijaPantalla: React.FC = () => {
       const usuario = JSON.parse(usuarioStr);
       const ID_usuario = usuario.ID_usuario;
 
-      if (!ID_usuario || !articulo.ID_publicacion) {
-        Alert.alert('Error', 'Datos incompletos');
-        return;
-      }
+      if (!ID_usuario) throw new Error('No se pudo obtener el ID de usuario');
+      if (!articulo.id) throw new Error('El artículo no tiene ID definido');
 
       const response = await fetch(`${URL}agregar-carrito`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          ID_usuario, 
-          ID_publicacion: articulo.ID_publicacion 
+          ID_usuario: ID_usuario, 
+          ID_publicacion: articulo.id
         }),
       });
 
-      const data = await response.json();
-      
-      if (response.ok) {
-        Alert.alert('Éxito', 'Artículo agregado al carrito');
-      } else {
-        Alert.alert('Error', data.mensaje || 'Error al agregar al carrito');
-      }
+      const responseData = await response.json();
+      if (!response.ok) throw new Error(responseData.error || 'Error al agregar al carrito');
+
+      Alert.alert('Éxito', 'Artículo agregado al carrito');
     } catch (error) {
-      console.error('Error al agregar al carrito:', error);
-      Alert.alert('Error', 'No se pudo agregar al carrito');
+      console.error('Error completo en AgregarCarrito:', error);
+      Alert.alert('Error al agregar al carrito');
     }
   };
 
+
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder={`Buscar artículos de ${tipoBicicleta}...`}
-          value={busqueda}
-          onChangeText={setBusqueda}
-          onSubmitEditing={buscarArticulos}
-        />
-        <TouchableOpacity onPress={buscarArticulos} style={styles.searchButton}>
-          <Ionicons name="search-outline" size={24} color="#fff" />
-        </TouchableOpacity>
-      </View>
+    <LinearGradient
+  colors={['#0c2b2aff', '#000000']} // azul petróleo → negro
+  start={{ x: 0, y: 0 }}
+  end={{ x: 0, y: 1 }}
+  style={{ flex: 1 }}
+>
+    <SafeAreaProvider>
+       <View style={styles.headerWrapper}>
+  {/* Header */}
+  <View style={styles.header}>
+    <Text style={styles.headerTitle}>Fixie (Fixed gear)</Text>
+  </View>
 
-      {cargando ? (
-        <ActivityIndicator size="large" color="#4d82bc" style={styles.loader} />
-      ) : articulos.length === 0 ? (
-        <Text style={styles.noResults}>
-          {busqueda.trim() ? 'No se encontraron artículos' : 'Busca artículos para tu bicicleta'}
-        </Text>
-      ) : (
-        <FlatList
-          data={articulos}
-          keyExtractor={(item) => item.ID_publicacion.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.card}>
-              <Image source={{ uri: item.foto }} style={styles.image} />
-              <View style={styles.infoContainer}>
-                <Text style={styles.title}>{item.nombre_Articulo}</Text>
-                <Text style={styles.description}>{item.descripcion}</Text>
-                <Text style={styles.price}>${item.precio}</Text>
-                <Text style={styles.type}>Tipo: {item.tipo_bicicleta}</Text>
-                <TouchableOpacity 
-                  style={styles.addButton}
-                  onPress={() => AgregarCarrito(item)}
-                >
-                  <Ionicons name="cart-outline" size={18} color="#fff" />
-                  <Text style={styles.addButtonText}>Agregar</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+  {/* Buscador */}
+  <View style={styles.searchContainer}>
+    <TextInput
+      style={styles.searchInput}
+      placeholder="Buscar artículos..."
+      value={busqueda}
+      onChangeText={setBusqueda}
+    />
+    <TouchableOpacity onPress={buscarArticulos} style={styles.searchButton}>
+      <Ionicons name="search-outline" size={22} color="#000000ff" />
+    </TouchableOpacity>
+  </View>
+</View>
+      <SafeAreaView style={{ flex: 1 }}>
+       
+
+     <View style={styles.containerFija}>
+      
+      
+          {/* Cargando */}
+          {cargando ? (
+            <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />
+          ) : (
+            <>
+              {/* Mostrar lista si hay artículos */}
+              {articulos.length > 0 ? (
+                <FlatList
+                  data={articulos}
+                  keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
+                  contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity onPress={() => navigation.navigate('DetallePublicacion', { publicacion: item })}>
+                      <View style={styles.cardFija}>
+                        <Image source={{ uri: item.foto }} style={styles.imagenFija} resizeMode="cover" />
+                        <View style={styles.infoFija}>
+                          <Text style={styles.nombreFija}>{item.nombre_articulo}</Text>
+                          <Text style={styles.descripcionFija}>{item.descripcion}</Text>
+                          <Text style={styles.precioFija}>Precio: ${item.precio}</Text>
+                          <Text>Tipo: {item.tipo_bicicleta}</Text>
+                          <Text style={styles.descripcionFija}>vendedor: {item.nombre_vendedor}</Text>
+                          <TouchableOpacity onPress={() => AgregarCarrito(item)}>
+                            <Ionicons name='cart-outline' size={25} />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                />
+              ) : busqueda.trim() !== '' ? (
+                <Text style={{ marginTop: 20, textAlign: 'center' }}>
+                  No se encontraron artículos
+                </Text>
+              ) : (
+                <ScrollView style={{ marginTop: 20 }} contentContainerStyle={{ paddingBottom: 100 }}>
+                 
+                  <Text style={{ textAlign: 'center',marginBottom: 12, fontSize: 16, lineHeight: 22,color: '#ffffffff', fontWeight: '500',   paddingHorizontal: 16  }}>
+                    es un tipo de bicicleta diseñada para ser utilizada en terrenos planos y een pista, es una bicicleta que tiene una gran aerodinamica y eso la hace veloz.
+                  </Text>
+
+                  <View style={styles.screen}>
+                    <View style={styles.card}>
+                      <Video
+                        source={require('../videos/fija.mp4')}
+                        rate={1.0}
+                        volume={1.0}
+                        isMuted={false}
+                        resizeMode={ResizeMode.COVER}
+                        shouldPlay
+                        isLooping
+                        style={styles.video}
+                      />
+                    </View>
+                  </View>
+                </ScrollView>
+                
+              )}
+            </>
           )}
-          contentContainerStyle={styles.listContent}
-        />
-      )}
+           </View>
+      </SafeAreaView>
+        <View style={styles.iconBar}>
+  <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
+    <Ionicons name='storefront-outline' size={28} color="#ffffffff" />
+  </TouchableOpacity>
 
-      <View style={styles.navBar}>
-        <TouchableOpacity 
-          style={styles.navButton}
-          onPress={() => navigation.navigate('Publicar')}
-        >
-          <Ionicons name="add-circle-outline" size={28} color="#4d82bc" />
-          <Text style={styles.navText}>Publicar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={styles.navButton}
-          onPress={() => navigation.navigate('Carrito')}
-        >
-          <Ionicons name="cart-outline" size={28} color="#4d82bc" />
-          <Text style={styles.navText}>Carrito</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+  <TouchableOpacity onPress={() => navigation.navigate('Carrito')}>
+    <Ionicons name='cart-outline' size={28} color="#ffffffff" />
+  </TouchableOpacity>
+
+  <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
+    <Ionicons name='notifications-outline' size={28} color="#ffffffff" />
+  </TouchableOpacity>
+
+  <TouchableOpacity onPress={()=> navigation.navigate('Perfil')}>
+          <Ionicons name="person-circle-outline" size={28} color="#f3ffffff"></Ionicons>
+  </TouchableOpacity>
+  {/* Botón de componentes */}
+  
+  <TouchableOpacity onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}>
+    <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#ffffffff" />
+  </TouchableOpacity>
+</View>
+
+
+   {/* Barra de componentes */}
+
+{mostrarBarraComponentes && (
+  <View style={styles.barraComponentes}>
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/rueda.jpeg')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio' })}>
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension' })}>
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal' })}>
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
+    </TouchableOpacity>
+  </View>
+)}
+
+    
+       
+    </SafeAreaProvider>
+    </LinearGradient>
   );
 };
 
-// Los estilos se mantienen igual que en tu código original
+// Estilos (se mantienen igual que en tu código original)
 const styles = StyleSheet.create({
-  container: {
+  containerFija: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    padding: 16,
+    
+    marginTop:0,
   },
-  searchContainer: {
-    flexDirection: 'row',
-    padding: 15,
-    backgroundColor: '#fff',
-    marginTop: 60,
+  // Estilos
+headerWrapper: {
+  width: '100%', // ocupa todo el ancho
+  
+  paddingBottom: 20,
+   // margen interno a los lados
+  
+},
+
+header: {
+  backgroundColor: '#004f4d',
+  paddingVertical: height * 0.03,
+  paddingHorizontal: width * 0.2,
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: 10,
+  marginBottom: height * 0.02, // separa del buscador
+},
+
+headerTitle: {
+  fontSize: width * 0.06,
+  fontWeight: 'bold',
+  color: '#ffffffff',
+},
+
+searchContainer: {
+   flexDirection: 'row',
+  alignItems: 'center',
+  backgroundColor: '#fff', 
+  borderRadius: width * 0.08,
+  paddingHorizontal: width * 0.06,
+  paddingVertical: height * 0.015,
+  elevation: 3,
+  shadowColor: '#000',
+  shadowOpacity: 0.15,
+  shadowOffset: { width: 0, height: 0 },
+  shadowRadius: 6,
+  width: '90%',
+  alignSelf: 'center',
+},
+
+searchInput: {
+  flex: 1,
+  paddingHorizontal: 16,
+  fontSize: 16,
+  color: '#333',
+   paddingVertical: 0,
+},
+
+searchButton: {
+  backgroundColor: '#20eb4ca4',
+  borderRadius: 20,
+  padding: 8,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+
+
+
+
+   item: {
+    padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: '#ffff',
   },
-  input: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: '#f1f3f4',
-    borderRadius: 8,
-    marginRight: 10,
-  },
-  searchButton: {
-    backgroundColor: '#4d82bc',
-    borderRadius: 8,
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loader: {
-    marginTop: 50,
-  },
-  noResults: {
-    textAlign: 'center',
-    marginTop: 30,
-    fontSize: 16,
-    color: '#666',
-  },
-  listContent: {
-    padding: 15,
-  },
-  card: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
+
+  inputFija: {
+    paddingVertical: height * 0.012,
+    paddingHorizontal: '3%',
+    borderWidth: 1,
+    borderColor: '#c46565ff',
     borderRadius: 10,
-    marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    backgroundColor: '#ffffffff',
+    fontSize: width * 0.04,
+    marginTop: '20%',
   },
-  image: {
-    width: 120,
-    height: 120,
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
-  },
-  infoContainer: {
-    flex: 1,
+  cardFija: {
+    flexDirection: 'row',
+    marginBottom: 20,
+    backgroundColor: '#ffffffff',
     padding: 12,
-    justifyContent: 'space-between',
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4,
   },
-  title: {
-    fontSize: 16,
+  imagenFija: {
+    width: 110,
+    height: 110,
+    borderRadius: 10,
+    backgroundColor: '#e0e0e0',
+  },
+  infoFija: {
+    flex: 1,
+    marginLeft: 15,
+    justifyContent: 'space-around',
+  },
+  nombreFija: {
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
   },
-  description: {
+  descripcionFija: {
     fontSize: 14,
     color: '#666',
-    marginVertical: 5,
   },
-  price: {
+  precioFija: {
     fontSize: 16,
+    fontWeight: '600',
+    color: '#2c7a7b',
+  },
+  tituloFija: {
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#e63946',
+    color: '#ffffffff',
+    marginBottom: 5,
+    marginTop: 50,
+    textAlign: 'center',
   },
-  type: {
-    fontSize: 12,
-    color: '#4d82bc',
-    marginTop: 3,
-  },
-  addButton: {
-    flexDirection: 'row',
-    backgroundColor: '#4d82bc',
-    padding: 8,
-    borderRadius: 5,
-    alignItems: 'center',
+  screen: {
+    
     justifyContent: 'center',
-    marginTop: 8,
+    alignItems: 'center',
+    padding: 16,
   },
-  addButtonText: {
-    color: '#fff',
-    marginLeft: 5,
-    fontWeight: 'bold',
+  card: {
+    backgroundColor: '#584141ff',
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4,
+    width: '100%',
+    maxWidth: 350,
+    aspectRatio: 10 / 12,
+    overflow: 'hidden',
+    marginTop: 30,
   },
-  navBar: {
+
+  
+iconBar: {
+  flexDirection: 'row',
+  justifyContent: 'space-around',
+  paddingVertical: height * 0.015, 
+  backgroundColor: '#004f4d',
+  borderTopLeftRadius: 10,
+  borderTopRightRadius: 10,
+  position: 'absolute',
+  bottom: 0, 
+  left: 0,
+  right: 0,
+  borderTopWidth: 1,
+  borderColor:  '#20eb4ca4',
+  elevation: 8, // sombra en Android
+  shadowColor: '#000', // sombra en iOS
+  shadowOpacity: 0.1,
+  shadowOffset: { width: 0, height: -2 },
+  shadowRadius: 6,
+  paddingBottom:"7%",
+},
+
+  iconoComponentes:{
+  width: 35,
+  height: 35
+  },
+  video: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#000',
+  },
+   barraComponentes: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 12,
     backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 30,
+    position: 'absolute',
+    bottom: 60,
+    left: 16,
+    right: 16,
   },
-  navButton: {
-    alignItems: 'center',
-  },
-  navText: {
-    fontSize: 12,
-    color: '#4d82bc',
-    marginTop: 3,
-  },
+  
+  
+ 
+ 
+
+
 });
+
 
 export default FijaPantalla;
