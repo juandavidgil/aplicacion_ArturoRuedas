@@ -42,6 +42,7 @@ export type StackParamList = {
   ComponenteDetalle: { componenteId: ComponenteId };
   DetallePublicacion: { publicacion: Publicacion };
   Perfil: undefined
+  PublicacionesUsuarioLogueado: undefined;
 };
 
 export interface Articulo {
@@ -95,3 +96,5 @@ export type AdministradorScreenNavigationProp = RouteProp<StackParamList, 'Admin
 export type PublicacionesAdminScreenNavigationProp = RouteProp<StackParamList, 'PublicacionesAdmin'>;
 export type ComponenteDetalleScreenNavigationProp = RouteProp<StackParamList, 'ComponenteDetalle'>;
 export type DetallePublicacioncreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacion'>;
+export type PerfilScreenNavigationProp = RouteProp<StackParamList, 'Perfil'>;
+export type PublicacionesUsuarioLogueadoScreenNavigationProp = RouteProp<StackParamList, 'PublicacionesUsuarioLogueado'>;

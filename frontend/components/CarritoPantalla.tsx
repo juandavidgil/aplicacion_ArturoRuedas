@@ -10,6 +10,7 @@ import { StackParamList } from '../types/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {URL} from '../config/UrlApi'
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 interface Articulo {
@@ -238,6 +239,12 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
 
   return (
     <SafeAreaView style={styles.container}>
+       <LinearGradient
+                          colors={['#0c2b2aff', '#000000']} // azul petróleo → negro
+                          start={{ x: 0, y: 0 }}
+                          end={{ x: 0, y: 1 }}
+                          style={{ flex: 1 }}
+                        >
       <Text style={styles.titulo}>Tu Carrito de Compras</Text>
       
       {cargando ? (
@@ -267,6 +274,7 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
           </TouchableOpacity>
         </>
       )}
+      </LinearGradient>
     </SafeAreaView>
   );
 };
@@ -275,13 +283,13 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+   
     backgroundColor: '#f0f4f7',
   },
   titulo: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1a202c',
+    color: '#ffffffff',
     marginBottom: 20,
     marginTop: 40,
     textAlign: 'center',
@@ -298,6 +306,7 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     marginBottom: 20,
+    margin:10,
     backgroundColor: '#ffffff',
     padding: 12,
     borderRadius: 12,

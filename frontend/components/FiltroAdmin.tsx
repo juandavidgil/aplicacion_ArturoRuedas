@@ -90,6 +90,7 @@ const FiltroAdminPantalla : React.FC = () =>{
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#000000ff'
   },
   image: {
     flex: 1,
@@ -112,7 +113,7 @@ holi: {
   shadowOffset: { width: 0, height: 2 },
   shadowOpacity: 0.2,
   shadowRadius: 8,
-  elevation: 5,           
+            
   zIndex: 10,             
 },
 
@@ -121,7 +122,7 @@ holi: {
     width: '90%',
     borderRadius: 20,
     padding: 25,
-    marginBottom: 50, 
+    marginBottom: 130, 
     shadowColor: '#1c1b25c9',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },

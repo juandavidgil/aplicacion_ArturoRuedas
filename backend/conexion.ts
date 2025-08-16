@@ -488,6 +488,33 @@ app.get('/obtener-publicaciones/:ID_usuario', async (req, res) => {
   }
 });
 
+//publicaciones del usuario logueado
+app.get('/obtener-publicaciones-usuario-logueado/:ID_usuario', async (req, res) => {
+  try {
+    const { ID_usuario } = req.params;
+
+    const result = await pool.query(`
+      SELECT 
+        cv.ID_publicacion,
+        cv.nombre_Articulo,
+        cv.descripcion,
+        cv.precio,
+        cv.tipo_bicicleta,
+        cv.foto
+      FROM com_ventas cv
+      JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+      WHERE cv.ID_usuario = $1
+      ORDER BY cv.ID_publicacion DESC;
+    `, [ID_usuario]);
+
+    console.log('Publicaciones obtenidas:', result.rows.length);
+    res.status(200).json(result.rows);
+
+  } catch (error) {
+    console.error('Error al obtener publicaciones:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+});
 
 // Iniciar servidor con manejo de errores
 app.listen(PORT, () => {

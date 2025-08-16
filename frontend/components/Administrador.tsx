@@ -5,7 +5,7 @@ import { StackParamList } from '../types/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {URL} from '../config/UrlApi'
-
+import { LinearGradient } from 'expo-linear-gradient';
 export interface Usuario {
   id_usuario: number;
   nombre: string;
@@ -104,6 +104,7 @@ const Administrador: React.FC = () => {
   const hola = console.log(" ID_usuario:", item.id_usuario);
 
   return (
+    
     <View style={styles.card}>
       <View style={styles.info}>
         <Text style={styles.label}>ID: <Text style={styles.value}>{item.id_usuario}</Text></Text>
@@ -138,12 +139,14 @@ const Administrador: React.FC = () => {
 };
 
   return (
+      <LinearGradient
+            colors={['#0c2b2aff', '#000000']} // azul petróleo → negro
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            style={{ flex: 1 }}
+          >
     <View style={styles.container}>
-       <ImageBackground 
-              source={image} 
-              resizeMode="cover" 
-              style={styles.image}
-            >
+       
       <Text style={styles.titulo}>ADMINISTRAR USUARIOS</Text>
       
       <FlatList
@@ -155,6 +158,7 @@ const Administrador: React.FC = () => {
         onRefresh={obtenerUsuarios}
       />
 
+
       <TouchableOpacity 
         style={styles.refreshButton}
         onPress={obtenerUsuarios}
@@ -162,9 +166,10 @@ const Administrador: React.FC = () => {
         <Ionicons name="refresh" size={24} color="white" />
         <Text style={styles.refreshButtonText}>Actualizar lista</Text>
       </TouchableOpacity>
-
-     </ImageBackground>
+     
     </View>
+
+  </LinearGradient>
   );
   
 };
@@ -173,8 +178,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     
-    paddingHorizontal: 16,
-    paddingTop: 20,
+    
+   
   },
   image: {
     flex: 1,
@@ -185,9 +190,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
-     marginTop: 22,
+     marginTop: 50,
     marginBottom: 20,
-    color: '#333',
+    color: '#ffffffff',
   },
   lista: {
     paddingBottom: 20,
@@ -196,6 +201,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     padding: 16,
     borderRadius: 12,
+    margin:12,
     marginBottom: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },

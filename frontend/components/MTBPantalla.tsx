@@ -155,7 +155,7 @@ const MTBPantalla: React.FC = () => {
                 </Text>
               ) : (
                 <ScrollView style={{ marginTop: 20 }} contentContainerStyle={{ paddingBottom: 100 }}>
-                  <Text style={styles.tituloMTB}>MONTAÑERA</Text>
+                  
                   <Text style={{ textAlign: 'center',marginBottom: 12, fontSize: 16, lineHeight: 22,color: '#ffffffff', fontWeight: '500',   paddingHorizontal: 16  }}>
                     es un tipo de bicicleta diseñada para ser utilizada en terrenos accidentados y sin pavimentar, como senderos, caminos de tierra, colinas y montañas
                   </Text>

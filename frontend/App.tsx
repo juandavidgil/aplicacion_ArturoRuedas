@@ -18,10 +18,11 @@ import ProductVideoCard from './components/MODELO3d';
 import ChatPrivadoPantalla from './components/ChatPrivadoPantalla';
 import Administrador from './components/Administrador';
 import PublicacionesAdmin from './components/PublicacionesAdmin';
-import ComponenteDetallePantalla from './components/ComponenteDetalladoPantalla';import FiltroAdminPantalla from './components/FiltroAdmin';
+import ComponenteDetallePantalla from './components/ComponenteDetalladoPantalla';
+import FiltroAdminPantalla from './components/FiltroAdmin';
 import DetallePublicacion from './components/DetallePublicacion';
 import PerfilPantalla from './components/perfil';
-
+import PublicacionesUsuarioLogueado from './components/PublicacionesUsuarioLogueadoPantalla';
 
 const Stack = createNativeStackNavigator<StackParamList>();
 
@@ -55,6 +56,7 @@ const App = () => {
         <Stack.Screen name='PublicacionesAdmin' component={PublicacionesAdmin}/>
         <Stack.Screen name='DetallePublicacion' component={DetallePublicacion}/>
         <Stack.Screen name='Perfil' component={PerfilPantalla}/>
+        <Stack.Screen name='PublicacionesUsuarioLogueado' component={PublicacionesUsuarioLogueado}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,5 +1,5 @@
 import React,{ useState, useEffect}  from "react";
-import { View,Text,FlatList,TouchableOpacity,TextInput,Alert, StyleSheet, Image, ActivityIndicator} from "react-native";
+import { View,Text,FlatList,TouchableOpacity,TextInput,Alert, StyleSheet, Image, ActivityIndicator,Dimensions} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,6 +7,7 @@ import { StackParamList } from '../types/types';
 import { RouteProp,useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {URL} from '../config/UrlApi'
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 interface Publicacion {
@@ -25,6 +26,7 @@ type PublicacionesAdminRouteProp = RouteProp<StackParamList, 'PublicacionesAdmin
 interface Props {
   route: PublicacionesAdminRouteProp;
 }
+const { width, height } = Dimensions.get('window');
 const PublicacionesAdmin : React.FC<Props> = ({route}) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [articulos, setPublicaciones] = useState<Publicacion[]>([]);
@@ -34,7 +36,6 @@ const PublicacionesAdmin : React.FC<Props> = ({route}) => {
        const obtenerPublicaciones = async () => {     
          try {
            setRefreshing(true);
-           console.log('userId recibido en backend:', ID_usuario);
            const response = await fetch(`${URL}obtener-publicaciones/${ID_usuario}`);
            
            if (!response.ok) {
@@ -84,6 +85,12 @@ const PublicacionesAdmin : React.FC<Props> = ({route}) => {
 );
 
     return(
+      <LinearGradient
+        colors={['#0c2b2aff', '#000000']} // azul petróleo → negro
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={{ flex: 1 }}
+      >
       <View style={styles.container}>
             <Text style={styles.titulo}>ADMINISTRAR PUBLICACIONES</Text>
             
@@ -106,6 +113,7 @@ const PublicacionesAdmin : React.FC<Props> = ({route}) => {
       
            
           </View>
+          </LinearGradient>
         
     )
 
@@ -115,12 +123,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f0f4f7',
+    
   },
   titulo: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1a202c',
+    color: '#ffffffff',
     marginBottom: 20,
     marginTop: 40,
     textAlign: 'center',

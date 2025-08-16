@@ -6,8 +6,11 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {URL} from '../config/UrlApi'
 
-const PerfilPantalla: React.FC = () =>  {
 
+
+
+const PerfilPantalla: React.FC = () =>  {
+const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
     return(
         <View style={styles.container}>
             <Text style={styles.title}>Mi perfil</Text>
@@ -17,7 +20,7 @@ const PerfilPantalla: React.FC = () =>  {
                     Editar mi información
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('PublicacionesUsuarioLogueado')}>
                 <Text>ver mis publicaciones</Text>
             </TouchableOpacity>
         </View>

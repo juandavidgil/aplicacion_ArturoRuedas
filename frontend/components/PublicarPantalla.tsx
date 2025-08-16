@@ -118,7 +118,12 @@ const PublicarPantalla: React.FC = () => {
   };
 
   return (
-    <LinearGradient colors={['#f8f9fa', '#f8f9fa']} style={styles.gradient}>
+     <LinearGradient
+                    colors={['#0c2b2aff', '#000000']} // azul petróleo → negro
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 0, y: 1 }}
+                    style={{ flex: 1 }}
+                  >
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.container}>
           <Text style={styles.title}>Publicar un artículo</Text>
@@ -210,7 +215,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginVertical: 20,
     textAlign: 'center',
-    color: '#333'
+    color: '#ffffffff'
   },
   input: {
     backgroundColor: 'white',

@@ -138,7 +138,7 @@ holi: {
   width: '100%',          
   alignSelf: 'center',    
   alignItems: 'center',   
-  padding: 10,            
+  padding: 5,            
   paddingVertical: 5,    
   borderBottomLeftRadius: 50,  
   borderBottomRightRadius:50,     
@@ -148,7 +148,7 @@ holi: {
   shadowOffset: { width: 0, height: 2 },
   shadowOpacity: 0.2,
   shadowRadius: 8,
-  elevation: 5,           
+         
   zIndex: 10,             
 },
 
@@ -157,7 +157,7 @@ holi: {
     width: '90%',
     borderRadius: 20,
     padding: 25,
-    marginBottom: 30, 
+    marginBottom: 150, 
     shadowColor: '#1c1b25c9',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },

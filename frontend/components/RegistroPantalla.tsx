@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   card: {
-    marginBottom: 30, 
+    marginBottom: 50, 
     width: '90%',
     borderRadius: 20,
     padding: 25,
