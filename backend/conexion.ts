@@ -238,7 +238,7 @@ app.post('/restablecer-contrasena', async (req, res) => {
 
 //Publicar articulo
 app.post('/publicar_articulo', async (req: Request, res: Response) => {
-  const { nombre_Articulo, descripcion, precio, tipo_bicicleta, foto, ID_usuario } = req.body;
+  const { nombre_Articulo, descripcion, precio, tipo_bicicleta,tipo_componente , foto, ID_usuario } = req.body;
 
   if (!ID_usuario) {
     return res.status(400).json({ error: 'ID de usuario es requerido' });
@@ -247,10 +247,10 @@ app.post('/publicar_articulo', async (req: Request, res: Response) => {
   try {
     const result = await pool.query(
       `INSERT INTO com_ventas 
-       (nombre_Articulo, descripcion, precio, tipo_bicicleta, foto, ID_usuario) 
-       VALUES ($1, $2, $3, $4, $5, $6) 
+       (nombre_Articulo, descripcion, precio, tipo_bicicleta,tipo_componente , foto, ID_usuario) 
+       VALUES ($1, $2, $3, $4, $5, $6 ,$7) 
        RETURNING ID_publicacion`,
-      [nombre_Articulo, descripcion, precio, tipo_bicicleta, foto, ID_usuario]
+      [nombre_Articulo, descripcion, precio, tipo_bicicleta, tipo_componente , foto, ID_usuario]
     );
     
     res.status(201).json({ 

@@ -75,6 +75,7 @@ CREATE TABLE com_ventas (
     precio VARCHAR(25) NOT NULL,
     descripcion VARCHAR(500) NOT NULL,
     tipo_bicicleta VARCHAR(5),
+    tipo_componente VARCHAR(15),
     foto VARCHAR(1000) NOT NULL,
     ID_usuario INTEGER,
     CONSTRAINT fk_usuario_ventas FOREIGN KEY (ID_usuario) REFERENCES usuario(ID_usuario)

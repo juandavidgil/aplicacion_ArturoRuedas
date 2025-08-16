@@ -16,6 +16,7 @@ const PublicarPantalla: React.FC = () => {
   const [precio, setPrecio] = useState('');
   const [foto, setFoto] = useState<string | null>(null);
   const [tipoBicicleta, setTipoBicicleta] = useState('MTB');
+   const [tipoComponente, setTipoComponente] = useState('Llantas');
   const [modalVisible, setModalVisible] = useState(false);
   const [ID_usuario, setID_usuario] = useState<number | null>(null);
 
@@ -41,6 +42,7 @@ const PublicarPantalla: React.FC = () => {
     setPrecio('');
     setFoto(null);
     setTipoBicicleta('MTB');
+    setTipoComponente('Llantas')
   };
 
   const PublicarBoton = async () => {
@@ -60,6 +62,7 @@ const PublicarPantalla: React.FC = () => {
         descripcion,
         precio: parseFloat(precio),
         tipo_bicicleta: tipoBicicleta,
+        tipo_componente: tipoComponente,
         foto,
         ID_usuario
       };
@@ -152,7 +155,7 @@ const PublicarPantalla: React.FC = () => {
           />
 
           <View style={styles.pickerContainer}>
-            <Text style={styles.pickerLabel}>Tipo de bicicleta</Text>
+            <Text style={styles.pickerLabel}>Tipo Bicicleta</Text>
             <Picker
               selectedValue={tipoBicicleta}
               onValueChange={setTipoBicicleta}
@@ -163,7 +166,18 @@ const PublicarPantalla: React.FC = () => {
               <Picker.Item label="Fija" value="Fija" />
             </Picker>
           </View>
-
+          <View style={styles.pickerContainer}>
+            <Text style={styles.pickerLabel}>Tipo de Componente </Text>
+            <Picker
+              selectedValue={tipoComponente}
+              onValueChange={setTipoComponente}
+              style={styles.picker}
+            >
+              <Picker.Item label="Llantas" value="Llantas" />
+              <Picker.Item label="Marco" value="Marco" />
+              <Picker.Item label="Pedales" value="Pedales" />
+            </Picker>
+          </View>
           {foto && (
             <Image source={{ uri: foto }} style={styles.image} />
           )}
