@@ -34,16 +34,23 @@ const MTBPantalla: React.FC = () => {
   const [busqueda, setBusqueda] = useState('');
   const [articulos, setArticulos] = useState<Articulo[]>([]);
   const [cargando, setCargando] = useState(false);
-  const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false); // <-- Estado para mostrar u ocultar
+  const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false); 
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
+
+  const route = useRoute();
+  const { tipoBicicleta } = route.params as RouteParams;
 
   const buscarArticulos = async () => {
     if (busqueda.trim() === '') return;
     setCargando(true);
     try {
-      const response = await fetch(`${URL}buscar?nombre=${encodeURIComponent(busqueda)}`);
+      const response = await fetch(`${URL}buscar?nombre=${encodeURIComponent(busqueda)}&tipo=${tipoBicicleta}`);
       const data: Articulo[] = await response.json();
       setArticulos(data);
+         const articulosValidos = data.filter(articulo => 
+        articulo.id && articulo.tipo_bicicleta.toLowerCase() === tipoBicicleta.toLowerCase()
+      );
+       setArticulos(articulosValidos);
     } catch (error) {
       console.error('Error al buscar artículos:', error);
     } finally {
