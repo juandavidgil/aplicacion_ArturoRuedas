@@ -18,7 +18,7 @@ type GLTFResult = {
 };
 export function Model(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials } = useGLTF(
-    require('../components/modelos3d/fixie.glb '),
+    require('../modelos3d/fixie.glb'),
 ) as GLTFResult;/* acomodar la ruta  */
   return (
     <group {...props} dispose={null}>

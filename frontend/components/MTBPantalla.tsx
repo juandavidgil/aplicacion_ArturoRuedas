@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import {
   View, Text, TextInput, FlatList, Image,
   TouchableOpacity, StyleSheet, ActivityIndicator,
@@ -13,6 +13,10 @@ import type { StackNavigationProp } from '@react-navigation/stack';
 import { Video, ResizeMode } from 'expo-av';
 import { URL } from '../config/UrlApi';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Canvas } from '@react-three/fiber';
+import Model from './model';
+import useControls from 'r3f-native-orbitcontrols';
+import { OrbitControls } from '@react-three/drei';
 
 
 interface Articulo {
@@ -93,6 +97,7 @@ const MTBPantalla: React.FC = () => {
   };
 
 
+  const [OrbitControls, events ] = useControls()
 
   return (
     <LinearGradient
@@ -161,27 +166,30 @@ const MTBPantalla: React.FC = () => {
                   No se encontraron artículos
                 </Text>
               ) : (
-                <ScrollView style={{ marginTop: 20 }} contentContainerStyle={{ paddingBottom: 100 }}>
+                /* descomentar el content container style y cambiar ese view a ScrollView*/
+                <View style={{ marginTop: 20 }} /* contentContainerStyle={{ paddingBottom: 100 }} */>
                   
                   <Text style={{ textAlign: 'center',marginBottom: 12, fontSize: 16, lineHeight: 22,color: '#ffffffff', fontWeight: '500',   paddingHorizontal: 16  }}>
                     es un tipo de bicicleta diseñada para ser utilizada en terrenos accidentados y sin pavimentar, como senderos, caminos de tierra, colinas y montañas
                   </Text>
 
                   <View style={styles.screen}>
-                    <View style={styles.card}>
-                      <Video
-                        source={require('../videos/mtbp.mp4')}
-                        rate={1.0}
-                        volume={1.0}
-                        isMuted={false}
-                        resizeMode={ResizeMode.COVER}
-                        shouldPlay
-                        isLooping
-                        style={styles.video}
-                      />
+                    <View style={styles.card} {...events}>
+                      <Canvas>
+                        <OrbitControls enablePan={false}/>
+                        <directionalLight position={[1,0,0]} args={['white', 5]} />
+                        <directionalLight position={[-1,0,0]} args={['white', 5]} />
+                        <directionalLight position={[0,1,0]} args={['white', 5]} />
+                        <directionalLight position={[0,-1,0]} args={['white', 5]} />
+                        <directionalLight position={[0,0,1]} args={['white', 5]} />
+                        <directionalLight position={[0,0,-1]} args={['white', 5]} />
+                        <Suspense fallback={null}>
+                            <Model />
+                        </Suspense>
+                      </Canvas>
                     </View>
                   </View>
-                </ScrollView>
+                </View>
                 
               )}
             </>
@@ -208,7 +216,7 @@ const MTBPantalla: React.FC = () => {
   
   <TouchableOpacity onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}>
     <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#ffffffff" />
-  </TouchableOpacity>
+  </TouchableOpacity> 
 </View>
 
 
@@ -233,7 +241,7 @@ const MTBPantalla: React.FC = () => {
     </TouchableOpacity>
   </View>
 )}
-
+ 
     
        
     </SafeAreaProvider>
@@ -377,7 +385,7 @@ searchButton: {
     padding: 16,
   },
   card: {
-    backgroundColor: '#584141ff',
+    backgroundColor: '#ffffffff',
     borderRadius: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
