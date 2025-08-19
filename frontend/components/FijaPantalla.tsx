@@ -167,7 +167,7 @@ const FijaPantalla: React.FC = () => {
                 </Text>
               ) : (
                 /* descomentar el content container style y cambiar ese view a ScrollView*/
-                <ScrollView style={{ marginTop: 20 }} contentContainerStyle={{ paddingBottom: 100 }}>
+                <View style={{ marginTop: 20 }} /* contentContainerStyle={{ paddingBottom: 100 }} */>
                   
                   <Text style={{ textAlign: 'center',marginBottom: 12, fontSize: 16, lineHeight: 22,color: '#ffffffff', fontWeight: '500',   paddingHorizontal: 16  }}>
                    La bicicleta de piñón fijo, también conocida como fixie, es una bicicleta sencilla y ligera que no tiene piñón libre, por lo que el pedaleo es continuo mientras la rueda trasera esté en movimiento. Su diseño minimalista y directo la hace ideal para la ciudad, ofreciendo una conexión más pura entre ciclista y bicicleta
@@ -189,7 +189,7 @@ const FijaPantalla: React.FC = () => {
                       </Canvas>
                     </View>
                   </View>
-                </ScrollView>
+                </View>
                 
               )}
             </>

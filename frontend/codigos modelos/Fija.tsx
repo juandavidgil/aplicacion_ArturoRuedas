@@ -20,7 +20,7 @@ interface GLTFResult {
 }
 export default function FixieBike(props: GroupProps) {
   const model = Asset.fromModule(
-    require('../../assets/modelos/fixie.glb')
+    require('../../assets/modelos/fija.glb')
   ).uri
 
   const { nodes, materials } = useGLTF(model) as unknown as GLTFResult
@@ -51,18 +51,9 @@ export default function FixieBike(props: GroupProps) {
             material={materials['Material.002']} 
           />
         </group>
-
-        {/* Aquí puedes agregar más partes de la bicicleta siguiendo el mismo patrón */}
-        {/* Por ejemplo: */}
-        {/* 
-        <group position={[...]} rotation={[...]} scale={...}>
-          <mesh geometry={nodes.Frame_Material_0.geometry} material={materials.Material} />
-          ...
-        </group>
-        */}
       </group>
     </group>
   )
 }
 
-useGLTF.preload('../../assets/modelos/fixie.glb')
+useGLTF.preload('../../assets/modelos/fija.glb')
