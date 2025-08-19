@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import {
   View, Text, TextInput, FlatList, Image,
   TouchableOpacity, StyleSheet, ActivityIndicator,
@@ -13,6 +13,10 @@ import type { StackNavigationProp } from '@react-navigation/stack';
 import { Video, ResizeMode } from 'expo-av';
 import { URL } from '../config/UrlApi';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Canvas } from '@react-three/fiber';
+import Model from '../codigos modelos/Fija';
+import useControls from 'r3f-native-orbitcontrols';
+import { OrbitControls } from '@react-three/drei';
 
 
 interface Articulo {
@@ -34,16 +38,23 @@ const FijaPantalla: React.FC = () => {
   const [busqueda, setBusqueda] = useState('');
   const [articulos, setArticulos] = useState<Articulo[]>([]);
   const [cargando, setCargando] = useState(false);
-  const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false); // <-- Estado para mostrar u ocultar
+  const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false); 
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
+
+  const route = useRoute();
+  const { tipoBicicleta } = route.params as RouteParams;
 
   const buscarArticulos = async () => {
     if (busqueda.trim() === '') return;
     setCargando(true);
     try {
-      const response = await fetch(`${URL}buscar?nombre=${encodeURIComponent(busqueda)}`);
+      const response = await fetch(`${URL}buscar?nombre=${encodeURIComponent(busqueda)}&tipo=${tipoBicicleta}`);
       const data: Articulo[] = await response.json();
       setArticulos(data);
+         const articulosValidos = data.filter(articulo => 
+        articulo.id && articulo.tipo_bicicleta.toLowerCase() === tipoBicicleta.toLowerCase()
+      );
+       setArticulos(articulosValidos);
     } catch (error) {
       console.error('Error al buscar artículos:', error);
     } finally {
@@ -86,6 +97,7 @@ const FijaPantalla: React.FC = () => {
   };
 
 
+  const [OrbitControls, events ] = useControls()
 
   return (
     <LinearGradient
@@ -98,7 +110,7 @@ const FijaPantalla: React.FC = () => {
        <View style={styles.headerWrapper}>
   {/* Header */}
   <View style={styles.header}>
-    <Text style={styles.headerTitle}>Fixie (Fixed gear)</Text>
+    <Text style={styles.headerTitle}>Fixie (Piñon Fijo)</Text>
   </View>
 
   {/* Buscador */}
@@ -117,7 +129,7 @@ const FijaPantalla: React.FC = () => {
       <SafeAreaView style={{ flex: 1 }}>
        
 
-     <View style={styles.containerFija}>
+     <View style={styles.containerMTB}>
       
       
           {/* Cargando */}
@@ -133,14 +145,14 @@ const FijaPantalla: React.FC = () => {
                   contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }}
                   renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => navigation.navigate('DetallePublicacion', { publicacion: item })}>
-                      <View style={styles.cardFija}>
-                        <Image source={{ uri: item.foto }} style={styles.imagenFija} resizeMode="cover" />
-                        <View style={styles.infoFija}>
-                          <Text style={styles.nombreFija}>{item.nombre_articulo}</Text>
-                          <Text style={styles.descripcionFija}>{item.descripcion}</Text>
-                          <Text style={styles.precioFija}>Precio: ${item.precio}</Text>
+                      <View style={styles.cardMTB}>
+                        <Image source={{ uri: item.foto }} style={styles.imagenMTB} resizeMode="cover" />
+                        <View style={styles.infoMTB}>
+                          <Text style={styles.nombreMTB}>{item.nombre_articulo}</Text>
+                          <Text style={styles.descripcionMTB}>{item.descripcion}</Text>
+                          <Text style={styles.precioMTB}>Precio: ${item.precio}</Text>
                           <Text>Tipo: {item.tipo_bicicleta}</Text>
-                          <Text style={styles.descripcionFija}>vendedor: {item.nombre_vendedor}</Text>
+                          <Text style={styles.descripcionMTB}>vendedor: {item.nombre_vendedor}</Text>
                           <TouchableOpacity onPress={() => AgregarCarrito(item)}>
                             <Ionicons name='cart-outline' size={25} />
                           </TouchableOpacity>
@@ -154,24 +166,27 @@ const FijaPantalla: React.FC = () => {
                   No se encontraron artículos
                 </Text>
               ) : (
+                /* descomentar el content container style y cambiar ese view a ScrollView*/
                 <ScrollView style={{ marginTop: 20 }} contentContainerStyle={{ paddingBottom: 100 }}>
-                 
+                  
                   <Text style={{ textAlign: 'center',marginBottom: 12, fontSize: 16, lineHeight: 22,color: '#ffffffff', fontWeight: '500',   paddingHorizontal: 16  }}>
-                    es un tipo de bicicleta diseñada para ser utilizada en terrenos planos y een pista, es una bicicleta que tiene una gran aerodinamica y eso la hace veloz.
+                   La bicicleta de piñón fijo, también conocida como fixie, es una bicicleta sencilla y ligera que no tiene piñón libre, por lo que el pedaleo es continuo mientras la rueda trasera esté en movimiento. Su diseño minimalista y directo la hace ideal para la ciudad, ofreciendo una conexión más pura entre ciclista y bicicleta
                   </Text>
 
                   <View style={styles.screen}>
-                    <View style={styles.card}>
-                      <Video
-                        source={require('../videos/fija.mp4')}
-                        rate={1.0}
-                        volume={1.0}
-                        isMuted={false}
-                        resizeMode={ResizeMode.COVER}
-                        shouldPlay
-                        isLooping
-                        style={styles.video}
-                      />
+                    <View style={styles.card} {...events}>
+                      <Canvas>
+                        <OrbitControls enablePan={false}/>
+                        <directionalLight position={[1,0,0]} args={['white', 5]} />
+                        <directionalLight position={[-1,0,0]} args={['white', 5]} />
+                        <directionalLight position={[0,1,0]} args={['white', 5]} />
+                        <directionalLight position={[0,-1,0]} args={['white', 5]} />
+                        <directionalLight position={[0,0,1]} args={['white', 5]} />
+                        <directionalLight position={[0,0,-1]} args={['white', 5]} />
+                        <Suspense fallback={null}>
+                            <Model />
+                        </Suspense>
+                      </Canvas>
                     </View>
                   </View>
                 </ScrollView>
@@ -201,7 +216,7 @@ const FijaPantalla: React.FC = () => {
   
   <TouchableOpacity onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}>
     <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#ffffffff" />
-  </TouchableOpacity>
+  </TouchableOpacity> 
 </View>
 
 
@@ -226,7 +241,7 @@ const FijaPantalla: React.FC = () => {
     </TouchableOpacity>
   </View>
 )}
-
+ 
     
        
     </SafeAreaProvider>
@@ -236,7 +251,7 @@ const FijaPantalla: React.FC = () => {
 
 // Estilos (se mantienen igual que en tu código original)
 const styles = StyleSheet.create({
-  containerFija: {
+  containerMTB: {
     flex: 1,
     padding: 16,
     
@@ -308,7 +323,7 @@ searchButton: {
     borderBottomColor: '#ffff',
   },
 
-  inputFija: {
+  inputMTB: {
     paddingVertical: height * 0.012,
     paddingHorizontal: '3%',
     borderWidth: 1,
@@ -318,7 +333,7 @@ searchButton: {
     fontSize: width * 0.04,
     marginTop: '20%',
   },
-  cardFija: {
+  cardMTB: {
     flexDirection: 'row',
     marginBottom: 20,
     backgroundColor: '#ffffffff',
@@ -330,32 +345,32 @@ searchButton: {
     shadowRadius: 6,
     elevation: 4,
   },
-  imagenFija: {
+  imagenMTB: {
     width: 110,
     height: 110,
     borderRadius: 10,
     backgroundColor: '#e0e0e0',
   },
-  infoFija: {
+  infoMTB: {
     flex: 1,
     marginLeft: 15,
     justifyContent: 'space-around',
   },
-  nombreFija: {
+  nombreMTB: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
   },
-  descripcionFija: {
+  descripcionMTB: {
     fontSize: 14,
     color: '#666',
   },
-  precioFija: {
+  precioMTB: {
     fontSize: 16,
     fontWeight: '600',
     color: '#2c7a7b',
   },
-  tituloFija: {
+  tituloMTB: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#ffffffff',
@@ -370,7 +385,7 @@ searchButton: {
     padding: 16,
   },
   card: {
-    backgroundColor: '#584141ff',
+    backgroundColor: '#ffffffff',
     borderRadius: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
@@ -437,4 +452,4 @@ iconBar: {
 });
 
 
-export default FijaPantalla;
+export default FijaPantalla; 

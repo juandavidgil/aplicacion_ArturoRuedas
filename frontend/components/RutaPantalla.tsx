@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import {
   View, Text, TextInput, FlatList, Image,
   TouchableOpacity, StyleSheet, ActivityIndicator,
@@ -13,6 +13,10 @@ import type { StackNavigationProp } from '@react-navigation/stack';
 import { Video, ResizeMode } from 'expo-av';
 import { URL } from '../config/UrlApi';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Canvas } from '@react-three/fiber';
+import Model from '../codigos modelos/ruta';
+import useControls from 'r3f-native-orbitcontrols';
+import { OrbitControls } from '@react-three/drei';
 
 
 interface Articulo {
@@ -30,20 +34,27 @@ type RouteParams = {
   tipoBicicleta: string;
 };
 const { width, height } = Dimensions.get('window');
-const RutaPantalla: React.FC = () => {
+const MTBPantalla: React.FC = () => {
   const [busqueda, setBusqueda] = useState('');
   const [articulos, setArticulos] = useState<Articulo[]>([]);
   const [cargando, setCargando] = useState(false);
-  const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false); // <-- Estado para mostrar u ocultar
+  const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false); 
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
+
+  const route = useRoute();
+  const { tipoBicicleta } = route.params as RouteParams;
 
   const buscarArticulos = async () => {
     if (busqueda.trim() === '') return;
     setCargando(true);
     try {
-      const response = await fetch(`${URL}buscar?nombre=${encodeURIComponent(busqueda)}`);
+      const response = await fetch(`${URL}buscar?nombre=${encodeURIComponent(busqueda)}&tipo=${tipoBicicleta}`);
       const data: Articulo[] = await response.json();
       setArticulos(data);
+         const articulosValidos = data.filter(articulo => 
+        articulo.id && articulo.tipo_bicicleta.toLowerCase() === tipoBicicleta.toLowerCase()
+      );
+       setArticulos(articulosValidos);
     } catch (error) {
       console.error('Error al buscar artículos:', error);
     } finally {
@@ -86,6 +97,7 @@ const RutaPantalla: React.FC = () => {
   };
 
 
+  const [OrbitControls, events ] = useControls()
 
   return (
     <LinearGradient
@@ -98,7 +110,7 @@ const RutaPantalla: React.FC = () => {
        <View style={styles.headerWrapper}>
   {/* Header */}
   <View style={styles.header}>
-    <Text style={styles.headerTitle}>Fixie (Fixed gear)</Text>
+    <Text style={styles.headerTitle}>Ruta</Text>
   </View>
 
   {/* Buscador */}
@@ -117,7 +129,7 @@ const RutaPantalla: React.FC = () => {
       <SafeAreaView style={{ flex: 1 }}>
        
 
-     <View style={styles.containerRuta}>
+     <View style={styles.containerMTB}>
       
       
           {/* Cargando */}
@@ -133,14 +145,14 @@ const RutaPantalla: React.FC = () => {
                   contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }}
                   renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => navigation.navigate('DetallePublicacion', { publicacion: item })}>
-                      <View style={styles.cardRuta}>
-                        <Image source={{ uri: item.foto }} style={styles.imagenRuta} resizeMode="cover" />
-                        <View style={styles.infoRuta}>
-                          <Text style={styles.nombreRuta}>{item.nombre_articulo}</Text>
-                          <Text style={styles.descripcionRuta}>{item.descripcion}</Text>
-                          <Text style={styles.precioRuta}>Precio: ${item.precio}</Text>
+                      <View style={styles.cardMTB}>
+                        <Image source={{ uri: item.foto }} style={styles.imagenMTB} resizeMode="cover" />
+                        <View style={styles.infoMTB}>
+                          <Text style={styles.nombreMTB}>{item.nombre_articulo}</Text>
+                          <Text style={styles.descripcionMTB}>{item.descripcion}</Text>
+                          <Text style={styles.precioMTB}>Precio: ${item.precio}</Text>
                           <Text>Tipo: {item.tipo_bicicleta}</Text>
-                          <Text style={styles.descripcionRuta}>vendedor: {item.nombre_vendedor}</Text>
+                          <Text style={styles.descripcionMTB}>vendedor: {item.nombre_vendedor}</Text>
                           <TouchableOpacity onPress={() => AgregarCarrito(item)}>
                             <Ionicons name='cart-outline' size={25} />
                           </TouchableOpacity>
@@ -154,27 +166,30 @@ const RutaPantalla: React.FC = () => {
                   No se encontraron artículos
                 </Text>
               ) : (
-                <ScrollView style={{ marginTop: 20 }} contentContainerStyle={{ paddingBottom: 100 }}>
+                /* descomentar el content container style y cambiar ese view a ScrollView*/
+                <View style={{ marginTop: 20 }} /* contentContainerStyle={{ paddingBottom: 100 }} */>
                   
                   <Text style={{ textAlign: 'center',marginBottom: 12, fontSize: 16, lineHeight: 22,color: '#ffffffff', fontWeight: '500',   paddingHorizontal: 16  }}>
-                    Este tipo de bici es eficaz en subidas y es muy liviana, con ayuda de los cambio puede avanzar largos trayectos en muy poco tiempo.
+                    La bicicleta de ruta está diseñada para alcanzar velocidad y eficiencia en carreteras pavimentadas. Es ligera, aerodinámica y cuenta con neumáticos delgados, ideal para recorridos largos y competiciones de ciclismo.
                   </Text>
 
                   <View style={styles.screen}>
-                    <View style={styles.card}>
-                      <Video
-                        source={require('../videos/mtb.mp4')}
-                        rate={1.0}
-                        volume={1.0}
-                        isMuted={false}
-                        resizeMode={ResizeMode.COVER}
-                        shouldPlay
-                        isLooping
-                        style={styles.video}
-                      />
+                    <View style={styles.card} {...events}>
+                      <Canvas>
+                        <OrbitControls enablePan={false}/>
+                        <directionalLight position={[1,0,0]} args={['white', 5]} />
+                        <directionalLight position={[-1,0,0]} args={['white', 5]} />
+                        <directionalLight position={[0,1,0]} args={['white', 5]} />
+                        <directionalLight position={[0,-1,0]} args={['white', 5]} />
+                        <directionalLight position={[0,0,1]} args={['white', 5]} />
+                        <directionalLight position={[0,0,-1]} args={['white', 5]} />
+                        <Suspense fallback={null}>
+                            <Model />
+                        </Suspense>
+                      </Canvas>
                     </View>
                   </View>
-                </ScrollView>
+                </View>
                 
               )}
             </>
@@ -201,7 +216,7 @@ const RutaPantalla: React.FC = () => {
   
   <TouchableOpacity onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}>
     <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#ffffffff" />
-  </TouchableOpacity>
+  </TouchableOpacity> 
 </View>
 
 
@@ -226,7 +241,7 @@ const RutaPantalla: React.FC = () => {
     </TouchableOpacity>
   </View>
 )}
-
+ 
     
        
     </SafeAreaProvider>
@@ -236,7 +251,7 @@ const RutaPantalla: React.FC = () => {
 
 // Estilos (se mantienen igual que en tu código original)
 const styles = StyleSheet.create({
-  containerRuta: {
+  containerMTB: {
     flex: 1,
     padding: 16,
     
@@ -308,7 +323,7 @@ searchButton: {
     borderBottomColor: '#ffff',
   },
 
-  inputRuta: {
+  inputMTB: {
     paddingVertical: height * 0.012,
     paddingHorizontal: '3%',
     borderWidth: 1,
@@ -318,7 +333,7 @@ searchButton: {
     fontSize: width * 0.04,
     marginTop: '20%',
   },
-  cardRuta: {
+  cardMTB: {
     flexDirection: 'row',
     marginBottom: 20,
     backgroundColor: '#ffffffff',
@@ -330,32 +345,32 @@ searchButton: {
     shadowRadius: 6,
     elevation: 4,
   },
-  imagenRuta: {
+  imagenMTB: {
     width: 110,
     height: 110,
     borderRadius: 10,
     backgroundColor: '#e0e0e0',
   },
-  infoRuta: {
+  infoMTB: {
     flex: 1,
     marginLeft: 15,
     justifyContent: 'space-around',
   },
-  nombreRuta: {
+  nombreMTB: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
   },
-  descripcionRuta: {
+  descripcionMTB: {
     fontSize: 14,
     color: '#666',
   },
-  precioRuta: {
+  precioMTB: {
     fontSize: 16,
     fontWeight: '600',
     color: '#2c7a7b',
   },
-  tituloRuta: {
+  tituloMTB: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#ffffffff',
@@ -370,7 +385,7 @@ searchButton: {
     padding: 16,
   },
   card: {
-    backgroundColor: '#584141ff',
+    backgroundColor: '#ffffffff',
     borderRadius: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
@@ -437,4 +452,4 @@ iconBar: {
 });
 
 
-export default RutaPantalla;
+export default MTBPantalla; 

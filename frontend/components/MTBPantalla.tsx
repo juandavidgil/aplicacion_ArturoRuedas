@@ -14,7 +14,7 @@ import { Video, ResizeMode } from 'expo-av';
 import { URL } from '../config/UrlApi';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Canvas } from '@react-three/fiber';
-import Model from './model';
+import Model from '../codigos modelos/ruta';
 import useControls from 'r3f-native-orbitcontrols';
 import { OrbitControls } from '@react-three/drei';
 
