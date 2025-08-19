@@ -164,7 +164,7 @@ const MTBPantalla: React.FC = () => {
                 <ScrollView style={{ marginTop: 20 }} contentContainerStyle={{ paddingBottom: 100 }}>
                   
                   <Text style={{ textAlign: 'center',marginBottom: 12, fontSize: 16, lineHeight: 22,color: '#ffffffff', fontWeight: '500',   paddingHorizontal: 16  }}>
-                    es un tipo de bicicleta diseñada para ser utilizada en terrenos accidentados y sin pavimentar, como senderos, caminos de tierra, colinas y montañas
+                    Es un tipo de bicicleta diseñada para ser utilizada en terrenos accidentados y sin pavimentar, como senderos, caminos de tierra, colinas y montañas.
                   </Text>
 
                   <View style={styles.screen}>
@@ -217,15 +217,15 @@ const MTBPantalla: React.FC = () => {
 {mostrarBarraComponentes && (
   <View style={styles.barraComponentes}>
     <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
-      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/rueda.jpeg')} />
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/rueda.png')} />
     </TouchableOpacity>
 
     <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio' })}>
-      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.png')} />
     </TouchableOpacity>
 
     <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension' })}>
-      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.png')} />
     </TouchableOpacity>
 
     <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal' })}>
@@ -260,18 +260,22 @@ headerWrapper: {
 
 header: {
   backgroundColor: '#004f4d',
-  paddingVertical: height * 0.03,
+  paddingVertical: height * 0.04,
   paddingHorizontal: width * 0.2,
   alignItems: 'center',
   justifyContent: 'center',
   borderRadius: 10,
-  marginBottom: height * 0.02, // separa del buscador
+  paddingBottom: height * 0.02,
+  marginBottom: height * 0.02,
 },
 
 headerTitle: {
   fontSize: width * 0.06,
   fontWeight: 'bold',
   color: '#ffffffff',
+     // lo empuja hacia abajo dentro de su contenedor
+  marginBottom: 5, 
+    marginTop: height * 0.02, 
 },
 
 searchContainer: {
@@ -404,7 +408,7 @@ iconBar: {
   left: 0,
   right: 0,
   borderTopWidth: 1,
-  borderColor:  '#20eb4ca4',
+ 
   elevation: 8, // sombra en Android
   shadowColor: '#000', // sombra en iOS
   shadowOpacity: 0.1,
@@ -426,12 +430,12 @@ iconBar: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 12,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffffff',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor:  '#004f4d',
     borderRadius: 30,
     position: 'absolute',
-    bottom: 60,
+    bottom: 80,
     left: 16,
     right: 16,
   },

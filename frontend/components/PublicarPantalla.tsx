@@ -161,9 +161,9 @@ const PublicarPantalla: React.FC = () => {
               onValueChange={setTipoBicicleta}
               style={styles.picker}
             >
-              <Picker.Item label="MTB" value="MTB" />
-              <Picker.Item label="Ruta" value="Ruta" />
-              <Picker.Item label="Fija" value="Fija" />
+              <Picker.Item label="MTB" value="MTB" color='#ffff'/>
+              <Picker.Item label="Ruta" value="Ruta"color='#ffff'/>
+              <Picker.Item label="Fija" value="Fija" color='#ffff' />
             </Picker>
           </View>
           <View style={styles.pickerContainer}>
@@ -173,9 +173,9 @@ const PublicarPantalla: React.FC = () => {
               onValueChange={setTipoComponente}
               style={styles.picker}
             >
-              <Picker.Item label="Llantas" value="Llantas" />
-              <Picker.Item label="Marco" value="Marco" />
-              <Picker.Item label="Pedales" value="Pedales" />
+              <Picker.Item label="Llantas" value="Llantas"  color='#ffff'/>
+              <Picker.Item label="Marco" value="Marco" color='#ffff'/>
+              <Picker.Item label="Pedales" value="Pedales" color='#ffff'/>
             </Picker>
           </View>
           {foto && (
@@ -219,97 +219,133 @@ const PublicarPantalla: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  gradient: { flex: 1 },
+ gradient: { flex: 1 },
   container: {
-    padding: 20,
-    paddingBottom: 40
+    padding: 30,
+    paddingBottom: 40,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     marginVertical: 20,
     textAlign: 'center',
-    color: '#ffffffff'
+    color: '#fff',
+    letterSpacing: 0.5,
   },
   input: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 15,
+    backgroundColor: '#f9f9f9b9',
+    borderRadius: 12,
+    marginBottom: 18,
     fontSize: 16,
-    elevation: 2
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: '#004f4d',
+    color: '#1c2b44ff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
   },
   pickerContainer: {
-    backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: 12,
     marginBottom: 15,
-    elevation: 2
+    borderWidth: 2,
+    borderColor: '#004f4d',
+    overflow: 'hidden',
+    elevation: 2,
   },
   pickerLabel: {
-    padding: 15,
-    color: '#666',
-    fontSize: 16
+    padding: 10,
+    textAlign: 'center',
+    color: '#ffffffff',
+    fontSize: 18,
+    fontWeight: '500',
   },
   picker: {
-    width: '100%'
+    height:"18%",
+    width: '100%',
+    color: '#e6efffff',
   },
   image: {
     width: '100%',
-    height: 250,
-    borderRadius: 10,
+    height: 230,
+    borderRadius: 14,
     marginVertical: 15,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   buttonGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20
+    marginBottom: 24,
   },
   photoButton: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#4a90e2',
-    padding: 15,
-    borderRadius: 10,
+    paddingVertical: 14,
+    borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 5
+    marginHorizontal: 6,
+    backgroundColor: '#4a90e2',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
+    elevation: 5,
   },
   buttonText: {
     color: 'white',
-    marginLeft: 10,
-    fontWeight: '600'
+    marginLeft: 8,
+    fontWeight: '600',
+    fontSize: 15,
   },
   publishButton: {
     backgroundColor: '#00c774',
-    padding: 18,
-    borderRadius: 10,
+    paddingVertical: 16,
+    borderRadius: 30,
     alignItems: 'center',
-    elevation: 3
+    elevation: 5,
+    marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
   },
   publishText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 16
+    fontSize: 17,
+    letterSpacing: 0.5,
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.6)',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: 20,
   },
   modalContent: {
     backgroundColor: 'white',
-    padding: 30,
+    padding: 35,
     borderRadius: 20,
     alignItems: 'center',
-    width: '80%'
+    width: '80%',
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 6,
   },
   modalText: {
     marginTop: 20,
     fontSize: 18,
-    fontWeight: 'bold'
-  }
+    fontWeight: '600',
+    color: '#2d3748',
+    textAlign: 'center',
+  },
 });
+
 
 export default PublicarPantalla;
