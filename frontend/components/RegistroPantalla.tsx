@@ -125,9 +125,9 @@ const RegistroPantalla: React.FC = () => {
         style={styles.loginLink}
         onPress={() => navigation.navigate('InicioSesion')}
       >
-        <Text style={styles.loginText}>
-          ¿Ya tienes una cuenta? Inicia sesión
-        </Text>
+        <Text style={styles.linkText}>
+                    ¿Ya tienes cuenta? <Text style={styles.linkBold}>Inicia sesion</Text>
+                  </Text>
       </TouchableOpacity>
       </View>
        </ImageBackground> 
@@ -216,7 +216,15 @@ logo: {
   loginText: {
     color: '#fff',
     fontSize: 14,
-    textDecorationLine: 'underline',
+    
+  },
+  linkText: {
+    color: '#b4b0b0ff',
+    fontSize: 14,
+  },
+  linkBold: {
+    color: '#006D77',
+    fontWeight: 'bold',
   },
 });
 

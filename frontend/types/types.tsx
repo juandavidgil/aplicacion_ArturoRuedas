@@ -35,7 +35,6 @@ export type StackParamList = {
     nombreOtroUsuario: string;
   }; */
   RestablecerContraseña: undefined;
-  MODELO3d: undefined
   Administrador: undefined;
   PublicacionesAdmin: {ID_usuario : number};
   FiltroAdmin: undefined;
@@ -90,7 +89,6 @@ export type NotificacionesScreenNavigationProp = RouteProp<StackParamList, 'Noti
 export type ChatScreenNavigationProp = RouteProp<StackParamList, 'Chat'>;
 /* export type ChatPrivadoScreenNavigationProp = RouteProp<StackParamList, 'ChatPrivado'>; */
 export type CarritoScreenNavigationProp = RouteProp<StackParamList, 'Carrito'>;
-export type ProductVideoCardScreenNavigationProp = RouteProp<StackParamList, 'MODELO3d'>;
 export type FiltroAdminScreenNavigationProp = RouteProp<StackParamList, 'FiltroAdmin'>
 export type AdministradorScreenNavigationProp = RouteProp<StackParamList, 'Administrador'>;
 export type PublicacionesAdminScreenNavigationProp = RouteProp<StackParamList, 'PublicacionesAdmin'>;

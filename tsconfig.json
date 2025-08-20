@@ -4,6 +4,9 @@
     "target": "es2021",
     "module": "esnext",
     "lib": ["dom", "es2021"],
+        "jsx": "react-jsx",
+    "types": ["react"],
+
     "moduleResolution": "node",
     "strict": true,
     "esModuleInterop": true,

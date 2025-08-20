@@ -14,8 +14,7 @@ import { StackParamList } from './types/types';
 import RestablecerContraseñaPantalla from './components/RestablecerContraseñaPantalla';
 import ChatPantalla from './components/ChatPantalla';
 import NotificacionesPantalla from './components/NotificacionesPantalla';
-import ProductVideoCard from './components/MODELO3d';
-import ChatPrivadoPantalla from './components/ChatPrivadoPantalla';
+/* import ChatPrivadoPantalla from './components/ChatPrivadoPantalla'; */
 import Administrador from './components/Administrador';
 import PublicacionesAdmin from './components/PublicacionesAdmin';
 import ComponenteDetallePantalla from './components/ComponenteDetalladoPantalla';
@@ -49,7 +48,6 @@ const App = () => {
         <Stack.Screen name= "Chat" component={ChatPantalla}/>
        {/*  <Stack.Screen name='ChatPrivado' component={ChatPrivadoPantalla}/> */}
         <Stack.Screen name= "Notificaciones" component={NotificacionesPantalla}/>
-        <Stack.Screen name= "MODELO3d" component={ProductVideoCard}/>
         <Stack.Screen name="ComponenteDetalle" component={ComponenteDetallePantalla}/>
         <Stack.Screen name='FiltroAdmin' component={FiltroAdminPantalla}/>
         <Stack.Screen name='Administrador' component={Administrador}/>
