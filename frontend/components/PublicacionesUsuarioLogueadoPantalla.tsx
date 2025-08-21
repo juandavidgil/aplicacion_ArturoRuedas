@@ -69,7 +69,7 @@ const PublicacionesUsuarioLogueado: React.FC = () => {
       }, []);
      const renderItem = ({ item }: { item: Publicacion }) => (
       <TouchableOpacity onPress={() => {
-        navigation.navigate('DetallePublicacion', { publicacion: item });
+        navigation.navigate('DetallePublicacionLogueado', { publicacion: item });
       }}>
         <View style={styles.card}>
           <Image 

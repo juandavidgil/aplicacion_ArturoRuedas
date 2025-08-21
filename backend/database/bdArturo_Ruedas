@@ -232,3 +232,6 @@ SELECT
       JOIN usuario u ON cv.ID_usuario = u.ID_usuario
       WHERE cv.ID_usuario = 3
       ORDER BY cv.ID_publicacion DESC;
+
+
+SELECT * usuario

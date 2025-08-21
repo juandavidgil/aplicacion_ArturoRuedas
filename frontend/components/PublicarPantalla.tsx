@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 15,
     borderWidth: 2,
-    borderColor: '#004f4d',
+    borderColor: '#ffffffff',
     overflow: 'hidden',
     elevation: 2,
   },

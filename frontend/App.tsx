@@ -20,6 +20,7 @@ import PublicacionesAdmin from './components/PublicacionesAdmin';
 import ComponenteDetallePantalla from './components/ComponenteDetalladoPantalla';
 import FiltroAdminPantalla from './components/FiltroAdmin';
 import DetallePublicacion from './components/DetallePublicacion';
+import DetallePublicacionLogueado from './components/DetallePublicacionLogueado';
 import PerfilPantalla from './components/perfil';
 import PublicacionesUsuarioLogueado from './components/PublicacionesUsuarioLogueadoPantalla';
 
@@ -53,6 +54,7 @@ const App = () => {
         <Stack.Screen name='Administrador' component={Administrador}/>
         <Stack.Screen name='PublicacionesAdmin' component={PublicacionesAdmin}/>
         <Stack.Screen name='DetallePublicacion' component={DetallePublicacion}/>
+        <Stack.Screen name='DetallePublicacionLogueado' component={DetallePublicacionLogueado}/>
         <Stack.Screen name='Perfil' component={PerfilPantalla}/>
         <Stack.Screen name='PublicacionesUsuarioLogueado' component={PublicacionesUsuarioLogueado}/>
       </Stack.Navigator>
