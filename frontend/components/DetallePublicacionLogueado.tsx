@@ -4,6 +4,7 @@ import { StackParamList } from '../types/types';
 import { RouteProp } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
  import { CheckBox } from 'react-native-elements';
+ import {URL} from '../config/UrlApi'
  
 
 type DetallePublicacionRouteProp = RouteProp<StackParamList, 'DetallePublicacion'>;
@@ -15,13 +16,53 @@ interface Props {
 const DetallePublicacionLogueado: React.FC<Props> = ({ route }) => {
   const { publicacion } = route.params;
   const [isChecked, setIsChecked] = useState(false);
-  const presionCheckBox = () => {
-    const nuevoValor = !isChecked;
-    setIsChecked(nuevoValor);
-      if (nuevoValor) {
-      Alert.alert('Se eliminara la publicacion', 'Has marcado el checkbox.');
-    }
+const presionCheckBox = () => {
+  const nuevoValor = !isChecked;
+  setIsChecked(nuevoValor);
+
+  if (nuevoValor) {
+    Alert.alert(
+      'Se eliminará la publicación',
+      '¿Deseas continuar?',
+      [
+        {
+          text: "Rechazar",
+          onPress: () => {
+            console.log("Cancelado ❌");
+            setIsChecked(false); 
+          },
+          style: "cancel"
+        },
+        {
+          text: "Aceptar",
+          onPress: async () => {
+            try {
+              const response = await fetch(`${URL}marcar-vendido/${publicacion.id}`,{
+                method: "DELETE",
+              });
+              if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Error ${response.status}: ${errorText}`);
+              }
+              const data = await response.json();
+              console.log("🔍 Usuarios desde backend:", data);
+
+              Alert.alert("Éxito", "La publicación fue marcada como vendida ✅");
+            } catch (error) {
+              console.error("Error al marcar como vendida la publicación:", error);
+              Alert.alert(
+                "Error",
+                "No se pudo marcar como vendida la publicación. Verifica la conexión al servidor."
+              );
+              setIsChecked(false);
+            }
+          }
+        }
+      ],
+      { cancelable: false }
+    );
   }
+};
   return (
     <ScrollView style={styles.container}>
       <Image 

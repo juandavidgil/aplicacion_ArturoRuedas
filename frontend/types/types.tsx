@@ -6,13 +6,13 @@ export type ComponenteId = 'ruedas' | 'suspension' |'frenos' | 'marco' | 'sillin
 
 export type ComponenteData = {
   nombre: string;
-  imagen: any; // o ImageSourcePropType si usas React Native y quieres mayor control
+  imagen: any;
   comoColocar: string[];
   informacion: {
     utilidad: string;
     mantenimiento: string;
   };
-  herramientas: string[]; // ✅ importante para solucionar tu error
+  herramientas: string[]; 
 };
 
 
@@ -42,7 +42,7 @@ export type StackParamList = {
   DetallePublicacion: { publicacion: Publicacion };
   DetallePublicacionLogueado: { publicacion: Publicacion };
   Perfil: undefined
-  PublicacionesUsuarioLogueado: undefined;
+  PublicacionesUsuarioLogueado: { publicacion: Publicacion };
 };
 
 export interface Articulo {

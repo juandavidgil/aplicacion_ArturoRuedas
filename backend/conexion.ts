@@ -516,6 +516,26 @@ app.get('/obtener-publicaciones-usuario-logueado/:ID_usuario', async (req, res) 
   }
 });
 
+//marcar como vendido
+app.delete('/marcar-vendido/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query(
+      'DELETE FROM com_ventas WHERE ID_publicacion = $1 RETURNING *',
+      [id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Publicación no encontrada' });
+    }
+
+    console.log('Se eliminó la publicación', result.rows[0]);
+    res.json({ message: 'Publicación eliminada con éxito', deleted: result.rows[0] });
+  } catch (error) {
+    console.error('Error al eliminar publicación:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+});
 // Iniciar servidor con manejo de errores
 app.listen(PORT, () => {
   console.log(`🚀 Servidor escuchando en el puerto ${PORT}`);

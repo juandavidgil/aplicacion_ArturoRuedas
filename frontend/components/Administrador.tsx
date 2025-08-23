@@ -101,7 +101,7 @@ const Administrador: React.FC = () => {
   const renderItem = ({ item }: { item: Usuario }) => {
   console.log(" Usuario:", item);  
 
-  const hola = console.log(" ID_usuario:", item.id_usuario);
+
 
   return (
     
@@ -116,7 +116,7 @@ const Administrador: React.FC = () => {
        <TouchableOpacity 
         style={styles.adminPublicaciones} 
         onPress={
-          (hola) => navigation.navigate('PublicacionesAdmin', { ID_usuario : item.id_usuario} ) 
+          () => navigation.navigate('PublicacionesAdmin', { ID_usuario : item.id_usuario} ) 
         
         }
         
