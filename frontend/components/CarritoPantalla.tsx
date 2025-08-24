@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   View, Text, FlatList, Image, 
   TouchableOpacity, StyleSheet, ActivityIndicator,
-  SafeAreaView, Alert, Linking
+  SafeAreaView, Alert, Linking,  Dimensions
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {URL} from '../config/UrlApi'
 import { LinearGradient } from 'expo-linear-gradient';
+
 
 
 interface Articulo {
@@ -25,12 +26,14 @@ interface Articulo {
   telefono: string;
 }
 
-
+const { width, height } = Dimensions.get('window');
 const CarritoPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [articulos, setArticulos] = useState<Articulo[]>([]);
+  const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false); 
   const [cargando, setCargando] = useState(true);
   const [total, setTotal] = useState(0);
+  
 const obtenerCarrito = async () => {
   try {
     setCargando(true);
@@ -238,13 +241,14 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-       <LinearGradient
+    <LinearGradient
                           colors={['#0c2b2aff', '#000000']} // azul petróleo → negro
                           start={{ x: 0, y: 0 }}
                           end={{ x: 0, y: 1 }}
                           style={{ flex: 1 }}
                         >
+    <SafeAreaView style={styles.container}>
+       
       <Text style={styles.titulo}>Tu Carrito de Compras</Text>
       
       {cargando ? (
@@ -265,26 +269,47 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
             <Text style={styles.totalPrecio}>${total.toFixed(0)}</Text>
           </View>
           
-          <TouchableOpacity 
-            style={styles.botonComprar}
-            onPress={() => Alert.alert('Compra', 'Proceder al pago')}
-          >
-            <Ionicons name="card-outline" size={20} color="#fff" />
-            <Text style={styles.textoComprar}>Proceder al Pago</Text>
-          </TouchableOpacity>
+           <TouchableOpacity style={styles.botonComprar}>
+
+      <View style={styles.contenidoBoton}>
+        <Ionicons name="cart-outline" size={22} color="white" />
+        <Text style={styles.textoComprar}>PAGAR</Text>
+      </View>
+    </TouchableOpacity>
+       <View style={styles.iconBar}>
+      <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
+        <Ionicons name='storefront-outline' size={28} color="#ffffffff" />
+      </TouchableOpacity>
+    
+      <TouchableOpacity onPress={() => navigation.navigate('Carrito')}>
+        <Ionicons name='cart-outline' size={28} color="#ffffffff" />
+      </TouchableOpacity>
+    
+      <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
+        <Ionicons name='notifications-outline' size={28} color="#ffffffff" />
+      </TouchableOpacity>
+    
+      <TouchableOpacity onPress={()=> navigation.navigate('Perfil')}>
+              <Ionicons name="person-circle-outline" size={28} color="#f3ffffff"></Ionicons>
+      </TouchableOpacity>
+      {/* Botón de componentes */}
+      
+      <TouchableOpacity onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}>
+        <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#ffffffff" />
+      </TouchableOpacity> 
+    </View>
         </>
       )}
-      </LinearGradient>
+     
     </SafeAreaView>
-  );
+   </LinearGradient>
+   );
 };
 
-// Estilos (se mantienen igual que en tu código original)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-   
-    backgroundColor: '#f0f4f7',
+    
   },
   titulo: {
     fontSize: 24,
@@ -297,6 +322,23 @@ const styles = StyleSheet.create({
   loader: {
     marginTop: 50,
   },
+  iconBar: {
+  flexDirection: 'row',
+  justifyContent: 'space-around',
+  paddingVertical: height * 0.015, 
+  backgroundColor: '#004f4d',
+  borderTopLeftRadius: 10,
+  borderTopRightRadius: 10,
+  position: 'absolute',
+  bottom: 0, 
+  left: 0,
+  right: 0,
+  borderTopWidth: 1,
+  shadowOpacity: 0.1,
+  shadowOffset: { width: 0, height: -2 },
+  shadowRadius: 6,
+  paddingBottom:"7%",
+},
   vacio: {
     textAlign: 'center',
     marginTop: 50,
@@ -304,17 +346,19 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   card: {
-    flexDirection: 'row',
-    marginBottom: 20,
-    margin:10,
-    backgroundColor: '#ffffff',
-    padding: 12,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 4,
+  
+  flexDirection: 'row',
+  alignItems: 'center', // 👈 centra verticalmente el contenido
+  backgroundColor: '#fff',
+  marginHorizontal: 20,
+  marginVertical: 10,
+  padding: 16,
+  borderRadius: 16,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 6 },
+  shadowOpacity: 0.1,
+  shadowRadius: 8,
+  borderWidth: 1, 
   },
   imagen: {
     width: 110,
@@ -373,30 +417,43 @@ color:"#51AFF7"
     borderTopColor: '#ddd',
     paddingTop: 15,
     marginBottom: 15,
+    marginHorizontal: 20,
   },
   totalTexto: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#fffdfdff',
   },
   totalPrecio: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#e63946',
+    color: '#56e639ff',
+    marginHorizontal: 20,
   },
   botonComprar: {
-    backgroundColor: '#28a745',
-    borderRadius: 8,
-    padding: 15,
-    flexDirection: 'row',
-    justifyContent: 'center',
+   backgroundColor: '#00c774',
+    paddingVertical: 14,
+    borderRadius: 30,
     alignItems: 'center',
+     justifyContent: 'center',
+    marginTop: 10,
+    marginBottom:60,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    marginHorizontal: 20,
   },
   textoComprar: {
     color: '#fff',
     fontWeight: 'bold',
     marginLeft: 10,
     fontSize: 16,
+  },
+  contenidoBoton: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

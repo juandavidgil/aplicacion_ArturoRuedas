@@ -94,5 +94,51 @@ export const componentesData = {
 
   },
 
+   piñon: {
+      nombre: "piñon",
+    imagen: require('../img/pedal.jpg'),
+    comoColocar: [
+      "Paso 1: Para quitar el pedal hay que tener una llave numero 15 o una que encaje en la base del pedal",
+      "Paso 2:Limpia el área de montaje",
+      "Paso 3: para colocar el nuevo pedal hay que tener en cuenta que cada pedal trae una letra la cual es en el lugar donde va, R right que significa derecha y L left que significa izquierda. ",
+      "Paso 4: Asegurate que la rosca de las bielas no esten rodadas y que el pedal sea el correcto, ten en cuenta que se apretan en sentidos diferentes R hacia atras y L hacia adelante.",
+      "Paso 5: Verifica que estan bien apretados y disponte a disfrutar tus nuevos pedales.",
+    ],
+
+    herramientas: [
+      "llevar a Mantenimiento",
+      "",
+      ""
+    ],
+
+    informacion: {
+      utilidad: "El pedal es escencial para el equilibrio y el manejo de tu bicicleta",
+      mantenimiento: "Este componente es mejor llevarlo a una bicicleteria ya que necesita un buen lavado interno, ademas de herramientas.",
+    },
+
+  },
+    cadena: {
+      nombre: "cadena",
+    imagen: require('../img/pedal.jpg'),
+    comoColocar: [
+      "Paso 1: Para quitar el pedal hay que tener una llave numero 15 o una que encaje en la base del pedal",
+      "Paso 2:Limpia el área de montaje",
+      "Paso 3: para colocar el nuevo pedal hay que tener en cuenta que cada pedal trae una letra la cual es en el lugar donde va, R right que significa derecha y L left que significa izquierda. ",
+      "Paso 4: Asegurate que la rosca de las bielas no esten rodadas y que el pedal sea el correcto, ten en cuenta que se apretan en sentidos diferentes R hacia atras y L hacia adelante.",
+      "Paso 5: Verifica que estan bien apretados y disponte a disfrutar tus nuevos pedales.",
+    ],
+
+    herramientas: [
+      "llevar a Mantenimiento",
+      "",
+      ""
+    ],
+
+    informacion: {
+      utilidad: "El pedal es escencial para el equilibrio y el manejo de tu bicicleta",
+      mantenimiento: "Este componente es mejor llevarlo a una bicicleteria ya que necesita un buen lavado interno, ademas de herramientas.",
+    },
+
+  },
   // Puedes agregar más componentes aquí
 };

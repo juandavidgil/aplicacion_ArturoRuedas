@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
-  StyleSheet, SafeAreaView, ScrollView, Modal, Image
+  StyleSheet, SafeAreaView, ScrollView, Modal, Image, Dimensions
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
@@ -10,7 +10,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL} from '../config/UrlApi'
 
-const PublicarPantalla: React.FC = () => {
+const { width, height } = Dimensions.get('window');
+const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [descripcion, setDescripcion] = useState('');
   const [nombre_Articulo, setNombre_Articulo] = useState('');
   const [precio, setPrecio] = useState('');
@@ -19,7 +20,8 @@ const PublicarPantalla: React.FC = () => {
    const [tipoComponente, setTipoComponente] = useState('Llantas');
   const [modalVisible, setModalVisible] = useState(false);
   const [ID_usuario, setID_usuario] = useState<number | null>(null);
-
+  const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false);
+   
   // Cargar ID del usuario al montar el componente
   useEffect(() => {
     const cargarUsuario = async () => {
@@ -205,6 +207,28 @@ const PublicarPantalla: React.FC = () => {
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
+       <View style={styles.iconBar}>
+            <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
+              <Ionicons name='storefront-outline' size={28} color="#ffffffff" />
+            </TouchableOpacity>
+          
+            <TouchableOpacity onPress={() => navigation.navigate('Carrito')}>
+              <Ionicons name='cart-outline' size={28} color="#ffffffff" />
+            </TouchableOpacity>
+          
+            <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
+              <Ionicons name='notifications-outline' size={28} color="#ffffffff" />
+            </TouchableOpacity>
+          
+            <TouchableOpacity onPress={()=> navigation.navigate('Perfil')}>
+                    <Ionicons name="person-circle-outline" size={28} color="#f3ffffff"></Ionicons>
+            </TouchableOpacity>
+            {/* Botón de componentes */}
+            
+            <TouchableOpacity onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}>
+              <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#ffffffff" />
+            </TouchableOpacity> 
+          </View>
 
       <Modal transparent visible={modalVisible} animationType="fade">
         <View style={styles.modalContainer}>
@@ -338,6 +362,23 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 6 },
     elevation: 6,
   },
+  iconBar: {
+  flexDirection: 'row',
+  justifyContent: 'space-around',
+  paddingVertical: height * 0.015, 
+  backgroundColor: '#004f4d',
+  borderTopLeftRadius: 10,
+  borderTopRightRadius: 10,
+  position: 'absolute',
+  bottom: 0, 
+  left: 0,
+  right: 0,
+  borderTopWidth: 1,
+  shadowOpacity: 0.1,
+  shadowOffset: { width: 0, height: -2 },
+  shadowRadius: 6,
+  paddingBottom:"7%",
+},
   modalText: {
     marginTop: 20,
     fontSize: 18,
@@ -345,6 +386,7 @@ const styles = StyleSheet.create({
     color: '#2d3748',
     textAlign: 'center',
   },
+
 });
 
 

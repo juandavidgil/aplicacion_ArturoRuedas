@@ -99,15 +99,16 @@ const MTBPantalla: React.FC = () => {
 
   const [OrbitControls, events ] = useControls()
 
-  return (
-    <LinearGradient
+return (
+  <LinearGradient
   colors={['#0c2b2aff', '#000000']} // azul petróleo → negro
   start={{ x: 0, y: 0 }}
   end={{ x: 0, y: 1 }}
   style={{ flex: 1 }}
 >
-    <SafeAreaProvider>
-       <View style={styles.headerWrapper}>
+  <SafeAreaProvider>
+     <View style={styles.headerWrapper}>
+
   {/* Header */}
   <View style={styles.header}>
     <Text style={styles.headerTitle}>MTB (Mountain Bike)</Text>
@@ -121,26 +122,26 @@ const MTBPantalla: React.FC = () => {
       value={busqueda}
       onChangeText={setBusqueda}
     />
-    <TouchableOpacity onPress={buscarArticulos} style={styles.searchButton}>
-      <Ionicons name="search-outline" size={22} color="#000000ff" />
-    </TouchableOpacity>
+  <TouchableOpacity onPress={buscarArticulos} style={styles.searchButton}>
+    <Ionicons name="search-outline" size={22} color="#000000ff" />
+  </TouchableOpacity>
   </View>
 </View>
 
-      <SafeAreaView style={{ flex: 1 }}>
-     <View style={styles.containerMTB}>
-          {/* Cargando */}
-          {cargando ? (
-            <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />
-          ) : (
-            <>
-              {/* Mostrar lista si hay artículos */}
-              {articulos.length > 0 ? (
-                <FlatList
-                  data={articulos}
-                  keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
-                  contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }}
-                  renderItem={({ item }) => (
+  <SafeAreaView style={{ flex: 1 }}>
+  <View style={styles.containerMTB}>
+  {/* Cargando */}
+    {cargando ? (
+      <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />
+      ) : (
+  <>
+  {/* Mostrar lista si hay artículos */}
+    {articulos.length > 0 ? (
+        <FlatList
+          data={articulos}
+          keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
+          contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }}
+          renderItem={({ item }) => (
                     <TouchableOpacity onPress={() => navigation.navigate('DetallePublicacion', { publicacion: item })}>
                       <View style={styles.cardMTB}>
                         <Image source={{ uri: item.foto }} style={styles.imagenMTB} resizeMode="cover" />
@@ -151,47 +152,44 @@ const MTBPantalla: React.FC = () => {
                           <Text>Tipo: {item.tipo_bicicleta}</Text>
                           <Text style={styles.descripcionMTB}>vendedor: {item.nombre_vendedor}</Text>
                           <TouchableOpacity onPress={() => AgregarCarrito(item)}>
-                            <Ionicons name='cart-outline' size={25} />
+                           <Ionicons name='cart-outline' size={25} />
                           </TouchableOpacity>
                         </View>
                       </View>
                     </TouchableOpacity>
                   )}
-                />
-              ) : busqueda.trim() !== '' ? (
-                <Text style={{ marginTop: 20, textAlign: 'center' }}>
-                  No se encontraron artículos
-                </Text>
-              ) : (
-                /* descomentar el content container style y cambiar ese view a ScrollView*/
-               <ScrollView
-  scrollEnabled={scrollEnabled}
-  contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 16 }}
-  keyboardShouldPersistTaps="handled"
->
-                  
-                  <Text style={{ textAlign: 'center',marginBottom: 12, fontSize: 16, lineHeight: 22,color: '#ffffffff', fontWeight: '500',   paddingHorizontal: 16  }}>
-                    Es un tipo de bicicleta diseñada para ser utilizada en terrenos accidentados y sin pavimentar, como senderos, caminos de tierra, colinas y montañas.
-                  </Text>
+        />
 
-                  <View style={styles.screen}>
-                    <View
-  style={styles.card}
-  {...events}
-  onStartShouldSetResponder={() => {
-    setScrollEnabled(false); // 🚫 desactiva scroll
-    return true;
-  }}
-  onResponderRelease={() => {
-    setScrollEnabled(true); // ✅ reactiva scroll al soltar
-  }}
-  pointerEvents="box-none"
->
-                      <Canvas>
-                       <OrbitControls enablePan={false} enableZoom={true} enableRotate={true} />
-                       <ambientLight intensity={0.6} />
-    <directionalLight position={[1, 0, 0]} intensity={1.5} />
-    
+    ) : busqueda.trim() !== '' ? (
+      <Text style={{ marginTop: 20, textAlign: 'center' }}>
+        No se encontraron artículos
+      </Text>
+    ) : 
+(
+
+<View style={{ flex: 1, paddingHorizontal: 16, paddingBottom: 80 }}>
+  <Text
+    style={{ textAlign: 'center', marginBottom: 10, fontSize: 16, lineHeight: 22, color: '#ffffffff', fontWeight: '500', paddingHorizontal: 16,
+    }}> Es un tipo de bicicleta diseñada para ser utilizada en terrenos accidentados y sin pavimentar,
+    como senderos, caminos de tierra, colinas y montañas.
+  </Text>
+
+  <View style={styles.screen}>
+    <View
+      style={styles.card}
+      {...events}
+      onStartShouldSetResponder={() => {
+        setScrollEnabled(false); 
+        return true;
+      }}
+      onResponderRelease={() => {
+        setScrollEnabled(true); 
+      }}
+      pointerEvents="box-none"
+    >
+      <Canvas>
+        <OrbitControls enablePan={false} enableZoom={true} enableRotate={true} />
+        <ambientLight intensity={0.6} />
         <directionalLight position={[1, 0, 0]} intensity={1.5} />
         <directionalLight position={[-1, 0, 0]} intensity={1.5} />
         <directionalLight position={[0, 1, 0]} intensity={1.5} />
@@ -199,12 +197,13 @@ const MTBPantalla: React.FC = () => {
         <directionalLight position={[0, 0, 1]} intensity={1.5} />
         <directionalLight position={[0, 0, -1]} intensity={1.5} />
         <Suspense fallback={null}>
-                            <Model />
-                        </Suspense>
-                      </Canvas>
-                    </View>
-                  </View>
-                </ScrollView>
+          <Model />
+        </Suspense>
+      </Canvas>
+    </View>
+  </View>
+</View>
+
                 
               )}
             </>
@@ -236,26 +235,45 @@ const MTBPantalla: React.FC = () => {
 
 
    {/* Barra de componentes */}
-
 {mostrarBarraComponentes && (
   <View style={styles.barraComponentes}>
-    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
-      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/rueda.png')} />
-    </TouchableOpacity>
+    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
+        <Image style={styles.iconoComponentes} resizeMode="cover" source={require('../iconos/rueda.png')} />
+      </TouchableOpacity>
 
-    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio' })}>
-      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.png')} />
-    </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio' })}>
+        <Image style={styles.iconoComponentes} resizeMode="cover" source={require('../iconos/manubrio.png')} />
+      </TouchableOpacity>
 
-    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension' })}>
-      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.png')} />
-    </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension' })}>
+        <Image style={styles.iconoComponentes} resizeMode="cover" source={require('../iconos/suspension.png')} />
+      </TouchableOpacity>
 
-    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal' })}>
-      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
-    </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'marco' })}>
+        <Image style={styles.iconoComponentes} resizeMode="cover" source={require('../iconos/marco.png')} />
+      </TouchableOpacity>
+
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'cadena' })}>
+        <Image style={styles.iconoComponentes} resizeMode="cover" source={require('../iconos/cadena.png')} />
+      </TouchableOpacity>
+
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'piñon' })}>
+        <Image style={styles.iconoComponentes} resizeMode="cover" source={require('../iconos/piñon.png')} />
+      </TouchableOpacity>
+
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'plato' })}>
+        <Image style={styles.iconoComponentes} resizeMode="cover" source={require('../iconos/plato.png')} />
+      </TouchableOpacity>
+
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal' })}>
+        <Image style={styles.iconoComponentes} resizeMode="cover" source={require('../iconos/pedal.png')} />
+      </TouchableOpacity>
+      
+    </ScrollView>
   </View>
 )}
+
  
     
        
@@ -264,21 +282,16 @@ const MTBPantalla: React.FC = () => {
   );
 };
 
-// Estilos (se mantienen igual que en tu código original)
+
 const styles = StyleSheet.create({
   containerMTB: {
     flex: 1,
     padding: 16,
-    
     marginTop:0,
-  },
-  // Estilos
+  }, 
 headerWrapper: {
-  width: '100%', // ocupa todo el ancho
-  
+  width: '100%', 
   paddingBottom: 20,
-   // margen interno a los lados
-  
 },
 
 header: {
@@ -296,9 +309,8 @@ headerTitle: {
   fontSize: width * 0.06,
   fontWeight: 'bold',
   color: '#ffffffff',
-     // lo empuja hacia abajo dentro de su contenedor
   marginBottom: 5, 
-    marginTop: height * 0.02, 
+  marginTop: height * 0.02, 
 },
 
 searchContainer: {
@@ -333,14 +345,11 @@ searchButton: {
   alignItems: 'center',
 },
 
-
-
-
-   item: {
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ffff',
-  },
+item: {
+  padding: 20,
+  borderBottomWidth: 1,
+  borderBottomColor: '#ffff',
+},
 
   inputMTB: {
     paddingVertical: height * 0.012,
@@ -415,7 +424,7 @@ searchButton: {
     maxWidth: 350,
     aspectRatio: 10 / 12,
     overflow: 'hidden',
-    marginTop: 30,
+    marginTop: 15,
   },
 
   
@@ -431,9 +440,6 @@ iconBar: {
   left: 0,
   right: 0,
   borderTopWidth: 1,
- 
-  elevation: 8, // sombra en Android
-  shadowColor: '#000', // sombra en iOS
   shadowOpacity: 0.1,
   shadowOffset: { width: 0, height: -2 },
   shadowRadius: 6,
@@ -442,7 +448,8 @@ iconBar: {
 
   iconoComponentes:{
   width: 35,
-  height: 35
+  height: 35,
+  marginHorizontal: 15,
   },
   video: {
     width: '100%',

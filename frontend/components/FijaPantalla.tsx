@@ -165,15 +165,15 @@ const FijaPantalla: React.FC = () => {
                 <Text style={{ marginTop: 20, textAlign: 'center' }}>
                   No se encontraron artículos
                 </Text>
-              ) : (
-                /* descomentar el content container style y cambiar ese view a ScrollView*/
-                <View style={{ marginTop: 20 }} /* contentContainerStyle={{ paddingBottom: 100 }} */>
+              ) :
+(
+  <View style={{  paddingHorizontal: 16, paddingBottom: 20 }} >
                   
-                  <Text style={{ textAlign: 'center',marginBottom: 12, fontSize: 16, lineHeight: 22,color: '#ffffffff', fontWeight: '500',   paddingHorizontal: 16  }}>
-                   La bicicleta de piñón fijo, también conocida como fixie, es una bicicleta sencilla y ligera que no tiene piñón libre, por lo que el pedaleo es continuo mientras la rueda trasera esté en movimiento. Su diseño minimalista y directo la hace ideal para la ciudad, ofreciendo una conexión más pura entre ciclista y bicicleta
+                  <Text style={{ textAlign: 'center',marginBottom: 0, fontSize: 16, lineHeight: 22,color: '#ffffffff', fontWeight: '500',   paddingHorizontal: 16  }}>
+                   La bicicleta de piñón fijo o fixie es ligera y minimalista, sin piñón libre, lo que obliga a un pedaleo continuo. Su diseño simple la hace ideal para la ciudad.
                   </Text>
 
-                <View style={styles.screen}>
+<View style={styles.screen}>
   <View
     style={styles.card}
     {...events}   // 👈 captura gestos de orbitControls
@@ -230,15 +230,15 @@ const FijaPantalla: React.FC = () => {
 {mostrarBarraComponentes && (
   <View style={styles.barraComponentes}>
     <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
-      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/rueda.jpeg')} />
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/rueda.png')} />
     </TouchableOpacity>
 
     <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio' })}>
-      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.jpeg')} />
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.png')} />
     </TouchableOpacity>
 
     <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension' })}>
-      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.jpeg')} />
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.png')} />
     </TouchableOpacity>
 
     <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal' })}>
@@ -254,37 +254,36 @@ const FijaPantalla: React.FC = () => {
   );
 };
 
-// Estilos (se mantienen igual que en tu código original)
+
 const styles = StyleSheet.create({
   containerMTB: {
     flex: 1,
     padding: 16,
-    
     marginTop:0,
   },
-  // Estilos
+
 headerWrapper: {
-  width: '100%', // ocupa todo el ancho
-  
+  width: '100%', 
   paddingBottom: 20,
-   // margen interno a los lados
-  
 },
 
 header: {
   backgroundColor: '#004f4d',
-  paddingVertical: height * 0.03,
+  paddingVertical: height * 0.04,
   paddingHorizontal: width * 0.2,
   alignItems: 'center',
   justifyContent: 'center',
   borderRadius: 10,
-  marginBottom: height * 0.02, // separa del buscador
+  paddingBottom: height * 0.02,
+  marginBottom: height * 0.02, 
 },
 
 headerTitle: {
   fontSize: width * 0.06,
   fontWeight: 'bold',
   color: '#ffffffff',
+  marginBottom: 5, 
+  marginTop: height * 0.02, 
 },
 
 searchContainer: {
@@ -318,9 +317,6 @@ searchButton: {
   justifyContent: 'center',
   alignItems: 'center',
 },
-
-
-
 
    item: {
     padding: 20,
@@ -401,7 +397,7 @@ searchButton: {
     maxWidth: 350,
     aspectRatio: 10 / 12,
     overflow: 'hidden',
-    marginTop: 30,
+    marginTop: 15,
   },
 
   
@@ -417,9 +413,6 @@ iconBar: {
   left: 0,
   right: 0,
   borderTopWidth: 1,
-  borderColor:  '#20eb4ca4',
-  elevation: 8, // sombra en Android
-  shadowColor: '#000', // sombra en iOS
   shadowOpacity: 0.1,
   shadowOffset: { width: 0, height: -2 },
   shadowRadius: 6,
@@ -428,7 +421,8 @@ iconBar: {
 
   iconoComponentes:{
   width: 35,
-  height: 35
+  height: 35,
+  marginHorizontal: 15,
   },
   video: {
     width: '100%',
@@ -441,10 +435,10 @@ iconBar: {
     paddingVertical: 12,
     backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor:  '#004f4d',
     borderRadius: 30,
     position: 'absolute',
-    bottom: 60,
+    bottom: 80,
     left: 16,
     right: 16,
   },

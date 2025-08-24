@@ -2,7 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 
 
 
-export type ComponenteId = 'ruedas' | 'suspension' |'frenos' | 'marco' | 'sillin' | 'manubrio' | 'pedal';
+export type ComponenteId = 'ruedas' | 'suspension' |'frenos' | 'marco' | 'sillin' | 'manubrio' | 'pedal' | 'piñon'|'cadena' | 'plato';
 
 export type ComponenteData = {
   nombre: string;

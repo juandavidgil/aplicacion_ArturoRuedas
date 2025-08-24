@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Linking, Alert, TouchableOpacity  } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, Linking, Alert, TouchableOpacity, Dimensions  } from 'react-native';
 import { StackParamList } from '../types/types';
 import { RouteProp } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
  import { CheckBox } from 'react-native-elements';
  import {URL} from '../config/UrlApi'
+ import { LinearGradient } from 'expo-linear-gradient';
  
 
 type DetallePublicacionRouteProp = RouteProp<StackParamList, 'DetallePublicacion'>;
@@ -64,6 +65,12 @@ const presionCheckBox = () => {
   }
 };
   return (
+     <LinearGradient
+      colors={['#0c2b2aff', '#000000']} // azul petróleo → negro
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      style={{ flex: 1 }}
+    >
     <ScrollView style={styles.container}>
       <Image 
         source={{ uri: publicacion.foto }} 
@@ -101,18 +108,19 @@ const presionCheckBox = () => {
       
       </View>
     </ScrollView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    
   },
   imagenDetalle: {
     width: '100%',
     height: 300,
-    backgroundColor: '#e0e0e0',
+    
   },
   detalleContainer: {
     padding: 20,
@@ -121,7 +129,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333',
+    color: '#911414ff',
   },
   seccion: {
     marginBottom: 20,
@@ -139,7 +147,7 @@ const styles = StyleSheet.create({
   precioDetalle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#2c7a7b',
+    color: '#ec2314ff',
   },
   
 });
