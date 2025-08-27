@@ -1,13 +1,46 @@
 import React from 'react';
 import { 
   ImageBackground, View, Text, TouchableOpacity, 
-  StyleSheet, SafeAreaView 
+  StyleSheet, SafeAreaView, Pressable 
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../types/types';
+import * as Google from 'expo-auth-session/providers/google';
 
+// ❌ Elimina esta línea:
+// import e from 'express';
+
+// ✅ Botón de Login con Google
+export function BtnLoginGoogle() {
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    androidClientId: '100451952741-b29qvc76ukf762aj5p9nmto97caodqt4.apps.googleusercontent.com', 
+    iosClientId: '',
+  });
+
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await promptAsync();
+      if (result?.type === 'success') {
+        console.log('Inicio de sesión exitoso:', result.authentication);
+        // Aquí puedes guardar el token o navegar
+      } else {
+        console.log('Inicio de sesión cancelado');
+      }
+    } catch (error) {
+      console.error('Error al iniciar sesión con Google:', error);
+    }
+  };
+
+  return (
+    <Pressable style={styles.button} onPress={handleGoogleLogin}>
+      <Text style={styles.buttonText}>Inicia con Google</Text>
+    </Pressable>
+  );
+}
+
+// Pantalla principal
 const PresentacionPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const image = require('../img/principal.png');
@@ -34,13 +67,16 @@ const PresentacionPantalla: React.FC = () => {
               >
                 <Text style={styles.buttonText}>Iniciar Sesión</Text>
               </TouchableOpacity>
-              
+
               <TouchableOpacity 
                 style={[styles.button, styles.registerButton]}
                 onPress={() => navigation.navigate('Registro')}
               >
                 <Text style={[styles.buttonText, styles.registerButtonText]}>Registrarse</Text>
               </TouchableOpacity>
+
+              {/* ✅ Botón de Google funcionando */}
+              <BtnLoginGoogle />
             </View>
           </View>
         </LinearGradient>
@@ -49,10 +85,11 @@ const PresentacionPantalla: React.FC = () => {
   );
 };
 
+// Estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000', // Fondo por si la imagen no carga
+    backgroundColor: '#000',
   },
   image: {
     flex: 1,
