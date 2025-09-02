@@ -196,6 +196,9 @@ const MTBPantalla: React.FC = () => {
             </>
           )}
            </View>
+           <TouchableOpacity onPress={()=> navigation.navigate('ChatGPT')}>
+            <Text>chat gpt</Text>
+           </TouchableOpacity>
       </SafeAreaView>
         <View style={styles.iconBar}>
   <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>

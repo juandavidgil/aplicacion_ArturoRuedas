@@ -29,7 +29,7 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
 
 const DetallePublicacion: React.FC<Props> = ({ route }) => {
   const { publicacion } = route.params;
-  const navigation = useNavigation(); // 👈 para usar la navegación
+  const navigation = useNavigation(); 
 
   return (
     <LinearGradient

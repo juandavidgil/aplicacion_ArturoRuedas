@@ -2,10 +2,11 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { Pool } from 'pg';
 import nodemailer from 'nodemailer';
+import axios from "axios";
+import dotenv from "dotenv";
 
 
-
-
+dotenv.config();
 // Configuración mejorada de conexión PostgreSQL
 const pool = new Pool({
   host: "localhost",
@@ -536,7 +537,40 @@ app.delete('/marcar-vendido/:id', async (req, res) => {
     res.status(500).json({ error: 'Error en el servidor' });
   }
 });
+
+// chat gpt
+app.post("/chat", async (req: Request, res: Response) => {
+  const { message } = req.body;
+
+  if (!message) {
+    return res.status(400).json({ error: "El campo 'message' es requerido" });
+  }
+
+  try {
+    const response = await axios.post(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: message }],
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        },
+      }
+    );
+
+    const reply = response.data.choices[0].message.content;
+    res.json({ reply });
+  } catch (error) {
+    console.error("Error al llamar a OpenAI:", error);
+    res.status(500).json({ error: "Error interno al conectar con OpenAI" });
+  }
+});
 // Iniciar servidor con manejo de errores
+
+
 app.listen(PORT, () => {
   console.log(`🚀 Servidor escuchando en el puerto ${PORT}`);
 }).on('error', (err) => {
@@ -564,188 +598,3 @@ process.on('SIGINT', () => {
   });
 });
 
-/* ///////////////////////////////////////////////////
-// Middleware para validar acceso al chat
-const validateChatAccess = async (req: Request, res: Response, next: Function) => {
-  const { id_chat } = req.params;
-  const { user_id } = req.body; // Obtener ID de usuario del cuerpo o headers
-  
-  if (!user_id) {
-    return res.status(401).json({ error: 'Usuario no autenticado' });
-  }
-
-  try {
-    const chat = await pool.query(
-      `SELECT 1 FROM chats_usuario 
-       WHERE chatsID_chats = $1 AND usuario_ID_usuario = $2`,
-      [id_chat, user_id]
-    );
-    
-    if (chat.rows.length === 0) {
-      return res.status(403).json({ error: 'No tienes acceso a este chat' });
-    }
-    
-    next();
-  } catch (error) {
-    console.error('Error validando acceso al chat:', error);
-    res.status(500).json({ error: 'Error del servidor' });
-  }
-};
-
-// Obtener chats de un usuario
-app.get('/chats-usuario/:id_usuario', async (req: Request, res: Response) => {
-  try {
-    const { id_usuario } = req.params;
-    
-    if (!id_usuario || isNaN(Number(id_usuario))) {
-      return res.status(400).json({ error: 'ID de usuario inválido' });
-    }
-
-    const query = `
-      SELECT 
-        c.ID_chats,
-        CASE 
-          WHEN u1.ID_usuario = $1 THEN u2.ID_usuario
-          ELSE u1.ID_usuario
-        END AS otro_usuario_id,
-        CASE 
-          WHEN u1.ID_usuario = $1 THEN u2.nombre
-          ELSE u1.nombre
-        END AS otro_usuario_nombre,
-        m.mensaje AS ultimo_mensaje,
-        m.fecha_envio AS fecha_ultimo_mensaje
-      FROM chats_usuario cu1
-      JOIN chats c ON cu1.chatsID_chats = c.ID_chats
-      JOIN chats_usuario cu2 ON cu1.chatsID_chats = cu2.chatsID_chats AND cu2.usuario_ID_usuario != cu1.usuario_ID_usuario
-      JOIN usuario u1 ON cu1.usuario_ID_usuario = u1.ID_usuario
-      JOIN usuario u2 ON cu2.usuario_ID_usuario = u2.ID_usuario
-      LEFT JOIN mensaje m ON c.mensajeID_mensaje = m.ID_mensaje
-      WHERE cu1.usuario_ID_usuario = $1
-      ORDER BY COALESCE(m.fecha_envio, c.fecha_inicio) DESC
-    `;
-
-    const result = await pool.query(query, [id_usuario]);
-    res.status(200).json(result.rows);
-  } catch (error) {
-    console.error('Error al obtener chats del usuario:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
-
-// Obtener mensajes de un chat
-app.get('/mensajes-chat/:id_chat', validateChatAccess, async (req: Request, res: Response) => {
-  try {
-    const { id_chat } = req.params;
-    
-    const query = `
-      SELECT 
-        m.ID_mensaje AS id_mensaje,
-        m.mensaje AS contenido,
-        m.fecha_envio,
-        m.usuario_ID_usuario AS id_usuario,
-        u.nombre AS nombre_usuario
-      FROM mensaje m
-      JOIN usuario u ON m.usuario_ID_usuario = u.ID_usuario
-      JOIN chats c ON c.ID_chats = $1
-      WHERE m.ID_mensaje IN (
-        SELECT mensajeID_mensaje FROM chats WHERE ID_chats = $1
-      )
-      ORDER BY m.fecha_envio ASC
-    `;
-
-    const result = await pool.query(query, [id_chat]);
-    res.status(200).json(result.rows);
-  } catch (error) {
-    console.error('Error al obtener mensajes del chat:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
-
-// Enviar mensaje
-app.post('/enviar-mensaje', async (req: Request, res: Response) => {
-  try {
-    const { ID_chats, ID_usuario, mensaje } = req.body;
-    
-    if (!ID_chats || !ID_usuario || !mensaje) {
-      return res.status(400).json({ error: 'Faltan campos obligatorios' });
-    }
-
-    // Insertar mensaje
-    const result = await pool.query(
-      `INSERT INTO mensaje (mensaje, fecha_envio, usuario_ID_usuario)
-       VALUES ($1, NOW(), $2)
-       RETURNING ID_mensaje`,
-      [mensaje, ID_usuario]
-    );
-
-    const idMensaje = result.rows[0].id_mensaje;
-
-    // Actualizar chat con último mensaje
-    await pool.query(
-      'UPDATE chats SET mensajeID_mensaje = $1 WHERE ID_chats = $2',
-      [idMensaje, ID_chats]
-    );
-
-    res.status(201).json({ 
-      success: true,
-      ID_mensaje: idMensaje,
-      mensaje: 'Mensaje enviado correctamente'
-    });
-  } catch (error) {
-    console.error('Error al enviar mensaje:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
-
-// Iniciar nuevo chat
-app.post('/iniciar-chat', async (req: Request, res: Response) => {
-  try {
-    const { ID_usuario1, ID_usuario2 } = req.body;
-    
-    if (!ID_usuario1 || !ID_usuario2) {
-      return res.status(400).json({ error: 'Faltan IDs de usuario' });
-    }
-
-    if (ID_usuario1 === ID_usuario2) {
-      return res.status(400).json({ error: 'No puedes chatear contigo mismo' });
-    }
-
-    // Verificar si ya existe un chat
-    const chatExistente = await pool.query(
-      `SELECT c.ID_chats 
-       FROM chats_usuario c1
-       JOIN chats_usuario c2 ON c1.chatsID_chats = c2.chatsID_chats
-       WHERE c1.usuario_ID_usuario = $1 AND c2.usuario_ID_usuario = $2`,
-      [ID_usuario1, ID_usuario2]
-    );
-
-    if (chatExistente.rows.length > 0) {
-      return res.status(200).json({ 
-        ID_chats: chatExistente.rows[0].id_chats,
-        mensaje: 'Chat ya existente'
-      });
-    }
-
-    // Crear nuevo chat
-    const result = await pool.query(
-      'INSERT INTO chats (fecha_inicio) VALUES (NOW()) RETURNING ID_chats'
-    );
-
-    const idChat = result.rows[0].id_chats;
-
-    // Asociar usuarios al chat
-    await pool.query(
-      'INSERT INTO chats_usuario (chatsID_chats, usuario_ID_usuario) VALUES ($1, $2), ($1, $3)',
-      [idChat, ID_usuario1, ID_usuario2]
-    );
-
-    res.status(201).json({ 
-      success: true,
-      ID_chats: idChat,
-      mensaje: 'Chat iniciado correctamente'
-    });
-  } catch (error) {
-    console.error('Error al iniciar chat:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-}); */

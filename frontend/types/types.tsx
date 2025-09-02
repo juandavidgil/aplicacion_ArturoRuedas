@@ -43,6 +43,7 @@ export type StackParamList = {
   DetallePublicacionLogueado: { publicacion: Publicacion };
   Perfil: undefined
   PublicacionesUsuarioLogueado: { publicacion: Publicacion };
+  ChatGPT: undefined
 };
 
 export interface Articulo {
@@ -98,3 +99,4 @@ export type DetallePublicacioncreenNavigationProp = RouteProp<StackParamList, 'D
 export type DetallePublicacionLogueadocreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacionLogueado'>;
 export type PerfilScreenNavigationProp = RouteProp<StackParamList, 'Perfil'>;
 export type PublicacionesUsuarioLogueadoScreenNavigationProp = RouteProp<StackParamList, 'PublicacionesUsuarioLogueado'>;
+export type ChatGPTScreenNavigationProp = RouteProp<StackParamList, 'ChatGPT'>;

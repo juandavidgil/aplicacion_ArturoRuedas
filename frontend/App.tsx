@@ -23,6 +23,7 @@ import DetallePublicacion from './components/DetallePublicacion';
 import DetallePublicacionLogueado from './components/DetallePublicacionLogueado';
 import PerfilPantalla from './components/perfil';
 import PublicacionesUsuarioLogueado from './components/PublicacionesUsuarioLogueadoPantalla';
+import ChatGPT from './components/ChatgptPantalla';
 
 const Stack = createNativeStackNavigator<StackParamList>();
 
@@ -57,6 +58,7 @@ const App = () => {
         <Stack.Screen name='DetallePublicacionLogueado' component={DetallePublicacionLogueado}/>
         <Stack.Screen name='Perfil' component={PerfilPantalla}/>
         <Stack.Screen name='PublicacionesUsuarioLogueado' component={PublicacionesUsuarioLogueado}/>
+        <Stack.Screen name='ChatGPT' component={ChatGPT}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
