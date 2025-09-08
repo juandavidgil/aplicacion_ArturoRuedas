@@ -229,19 +229,19 @@ const FijaPantalla: React.FC = () => {
 
 {mostrarBarraComponentes && (
   <View style={styles.barraComponentes}>
-    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas', tipoBicicleta })}>
       <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/rueda.png')} />
     </TouchableOpacity>
 
-    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio' })}>
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio', tipoBicicleta })}>
       <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.png')} />
     </TouchableOpacity>
 
-    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension' })}>
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension', tipoBicicleta })}>
       <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.png')} />
     </TouchableOpacity>
 
-    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal' })}>
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal', tipoBicicleta })}>
       <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
     </TouchableOpacity>
   </View>

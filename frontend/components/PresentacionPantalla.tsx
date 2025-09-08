@@ -23,10 +23,10 @@ export function BtnLoginGoogle() {
     try {
       const result = await promptAsync();
       if (result?.type === 'success') {
-        console.log('Inicio de sesión exitoso:', result.authentication);
-        // Aquí puedes guardar el token o navegar
+       
+        
       } else {
-        console.log('Inicio de sesión cancelado');
+        
       }
     } catch (error) {
       console.error('Error al iniciar sesión con Google:', error);

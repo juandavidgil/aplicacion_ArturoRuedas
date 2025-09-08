@@ -22,7 +22,7 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [ID_usuario, setID_usuario] = useState<number | null>(null);
   const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false);
    
-  // Cargar ID del usuario al montar el componente
+
   useEffect(() => {
     const cargarUsuario = async () => {
       try {
@@ -175,9 +175,9 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
               onValueChange={setTipoComponente}
               style={styles.picker}
             >
-              <Picker.Item label="Llantas" value="Llantas"  color='#ffff'/>
-              <Picker.Item label="Marco" value="Marco" color='#ffff'/>
-              <Picker.Item label="Pedales" value="Pedales" color='#ffff'/>
+              <Picker.Item label="ruedas" value="ruedas"  color='#ffff'/>
+              <Picker.Item label="marco" value="marco" color='#ffff'/>
+              <Picker.Item label="pedal" value="pedal" color='#ffff'/>
             </Picker>
           </View>
           {foto && (
@@ -243,15 +243,15 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
- gradient: { flex: 1 },
+  gradient: { flex: 1 },
   container: {
-    padding: 30,
-    paddingBottom: 40,
+    paddingHorizontal: width * 0.06,
+    paddingBottom: height * 0.1,
   },
   title: {
-    fontSize: 26,
+    fontSize: width * 0.07,
     fontWeight: 'bold',
-    marginVertical: 20,
+    marginVertical: height * 0.02,
     textAlign: 'center',
     color: '#fff',
     letterSpacing: 0.5,
@@ -259,89 +259,85 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: '#f9f9f9b9',
     borderRadius: 12,
-    marginBottom: 18,
-    fontSize: 16,
-    paddingVertical: 16,
-    paddingHorizontal: 16,
+    marginBottom: height * 0.02,
+    fontSize: width * 0.04,
+    paddingVertical: height * 0.02,
+    paddingHorizontal: width * 0.04,
     borderWidth: 1,
     borderColor: '#004f4d',
     color: '#1c2b44ff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 2,
   },
   pickerContainer: {
     borderRadius: 12,
-    marginBottom: 15,
+    marginBottom: height * 0.02,
     borderWidth: 2,
     borderColor: '#ffffffff',
     overflow: 'hidden',
-    elevation: 2,
   },
   pickerLabel: {
-    padding: 10,
+    padding: height * 0.015,
     textAlign: 'center',
     color: '#ffffffff',
-    fontSize: 18,
+    fontSize: width * 0.045,
     fontWeight: '500',
   },
   picker: {
-    height:"18%",
     width: '100%',
+    height: height * 0.07,
     color: '#e6efffff',
   },
   image: {
     width: '100%',
-    height: 230,
+    height: height * 0.3,
     borderRadius: 14,
-    marginVertical: 15,
+    marginVertical: height * 0.02,
     alignSelf: 'center',
   },
   buttonGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 24,
+    marginBottom: height * 0.03,
   },
   photoButton: {
     flex: 1,
     flexDirection: 'row',
-    paddingVertical: 14,
+    paddingVertical: height * 0.015,
     borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 6,
+    marginHorizontal: width * 0.015,
     backgroundColor: '#4a90e2',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 5,
-    elevation: 5,
   },
   buttonText: {
     color: 'white',
-    marginLeft: 8,
+    marginLeft: width * 0.02,
     fontWeight: '600',
-    fontSize: 15,
+    fontSize: width * 0.038,
   },
   publishButton: {
     backgroundColor: '#00c774',
-    paddingVertical: 16,
+    paddingVertical: height * 0.022,
     borderRadius: 30,
     alignItems: 'center',
-    elevation: 5,
-    marginTop: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
+    marginTop: height * 0.02,
   },
   publishText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 17,
-    letterSpacing: 0.5,
+    fontSize: width * 0.045,
+  },
+  iconBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: height * 0.015,
+    backgroundColor: '#004f4d',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingBottom: height * 0.03,
   },
   modalContainer: {
     flex: 1,
@@ -362,23 +358,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 6 },
     elevation: 6,
   },
-  iconBar: {
-  flexDirection: 'row',
-  justifyContent: 'space-around',
-  paddingVertical: height * 0.015, 
-  backgroundColor: '#004f4d',
-  borderTopLeftRadius: 10,
-  borderTopRightRadius: 10,
-  position: 'absolute',
-  bottom: 0, 
-  left: 0,
-  right: 0,
-  borderTopWidth: 1,
-  shadowOpacity: 0.1,
-  shadowOffset: { width: 0, height: -2 },
-  shadowRadius: 6,
-  paddingBottom:"7%",
-},
+
   modalText: {
     marginTop: 20,
     fontSize: 18,

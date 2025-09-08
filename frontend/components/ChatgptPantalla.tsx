@@ -8,7 +8,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
-import { sendMessageToBackend } from "../services/api";
+import { enviarMensajeAlBackend } from "../services/api";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -29,7 +29,7 @@ const ChatGPT: React.FC = () => {
     setInput("");
     setLoading(true);
 
-    const gptResponse = await sendMessageToBackend(input);
+    const gptResponse = await enviarMensajeAlBackend(input);
     const botMessage: ChatMessage = { role: "assistant", content: gptResponse };
     setMessages((prev) => [...prev, botMessage]);
     setLoading(false);

@@ -65,6 +65,7 @@ export const componentesData = {
     "Trapo de limpieza",
     ],
 
+    
     informacion: {
       utilidad: "La suspensión es esencial para bicicletas de montaña (MTB), ya que absorbe impactos en terrenos irregulares, mejora el control y protege tanto al ciclista como al cuadro.",
     mantenimiento: "Debe mantenerse limpia y lubricada. Se recomienda llevarla a un taller especializado para realizar mantenimiento interno, como cambio de retenes o revisión de aceite.",

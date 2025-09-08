@@ -36,7 +36,7 @@ const Administrador: React.FC = () => {
       }
 
       const data = await response.json();
-       console.log("🔍 Usuarios desde backend:", data);
+       
       
       // Validación de datos
       if (!Array.isArray(data)) {
@@ -55,8 +55,7 @@ const Administrador: React.FC = () => {
   const handleEliminarUsuario = async (usuario: Usuario) => {
   const id = Number(usuario.id_usuario || usuario.id_usuario); 
 
-   console.log("🧪 Usuario recibido:", usuario);
-  console.log("🧪 ID convertido a número:", id);
+  
   
   if (!id || isNaN(id)) {
     console.error("❌ ID de usuario inválido o no numérico:", usuario);
@@ -99,7 +98,7 @@ const Administrador: React.FC = () => {
   }, []);
 
   const renderItem = ({ item }: { item: Usuario }) => {
-  console.log(" Usuario:", item);  
+   
 
 
 
@@ -124,7 +123,7 @@ const Administrador: React.FC = () => {
         <Text style={styles.buttonText}>Publicaciones</Text>
       </TouchableOpacity>
           <TouchableOpacity style={[styles.button, styles.blockButton]}>
-            <Text style={styles.buttonText}>Bloquear</Text>
+            <Text style={styles.buttonText}>Ver mas</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             style={[styles.button, styles.deleteButton]}

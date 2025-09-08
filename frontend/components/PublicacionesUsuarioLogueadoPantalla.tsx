@@ -41,7 +41,7 @@ const PublicacionesUsuarioLogueado: React.FC = () => {
       throw new Error('No se pudo obtener el ID de usuario');
     }
 
-    console.log(`🔄 Obteniendo publicaciones para usuario: ${ID_usuario}`);
+  
         try{
             setRefreshing(true);
             const response = await fetch(`${URL}obtener-publicaciones-usuario-logueado/${ID_usuario}`);
@@ -69,7 +69,10 @@ const PublicacionesUsuarioLogueado: React.FC = () => {
       }, []);
      const renderItem = ({ item }: { item: Publicacion }) => (
       <TouchableOpacity onPress={() => {
-        navigation.navigate('DetallePublicacionLogueado', { publicacion: item });
+        navigation.navigate('DetallePublicacionLogueado',{ 
+  publicacion: item, 
+  id: item.id
+});
       }}>
         <View style={styles.card}>
           <Image 

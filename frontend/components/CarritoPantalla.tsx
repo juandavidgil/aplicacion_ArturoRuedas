@@ -53,11 +53,11 @@ const obtenerCarrito = async () => {
       throw new Error('No se pudo obtener el ID de usuario');
     }
 
-    console.log(`🔄 Obteniendo carrito para usuario: ${ID_usuario}`);
+
     
     // 3. Hacer la petición al backend
     const apiUrl = `${URL}carrito/${ID_usuario}`;
-    console.log(`🌐 URL de la solicitud: ${apiUrl}`);
+   
     
     const response = await fetch(apiUrl, {
       method: 'GET',
@@ -87,7 +87,7 @@ const obtenerCarrito = async () => {
     }
 
     const data = await response.json();
-    console.log('📦 Datos recibidos:', data);
+  
     
     // 6. Actualizar el estado
     setArticulos(data);
@@ -126,7 +126,7 @@ const obtenerCarrito = async () => {
       throw new Error('No se pudo obtener el ID de usuario');
     }
 
-    console.log(`🗑️ Intentando eliminar artículo ID: ${id} del usuario ID: ${ID_usuario}`);
+    
     
     // 3. Configurar la solicitud
     const apiUrl = `${URL}eliminar-carrito`;
@@ -135,7 +135,7 @@ const obtenerCarrito = async () => {
       ID_publicacion: id 
     });
 
-    console.log(`🌐 URL: ${apiUrl}, Body: ${body}`);
+
     
     // 4. Hacer la petición
     const response = await fetch(apiUrl, {
@@ -159,7 +159,7 @@ const obtenerCarrito = async () => {
 
     // 6. Procesar la respuesta exitosa
     const result = await response.json();
-    console.log('✅ Artículo eliminado:', result);
+   
     
     // 7. Actualizar el carrito
     await obtenerCarrito();
@@ -224,17 +224,7 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
   <Ionicons name="logo-whatsapp" size={20} color="#25D366" />
   <Text style={styles.textoMensajeAlVendedor}>Chatear por WhatsApp</Text>
 </TouchableOpacity> 
-       {/*  <TouchableOpacity 
-  onPress={() => navigation.navigate('ChatPrivado', { 
-    chatId: null, 
-    idOtroUsuario: item.id_vendedor,
-    nombreOtroUsuario: item.nombre_vendedor 
-  })}
-  style={styles.botonMensajeAlVendedor}
->
-  <Ionicons name="chatbubble-ellipses-outline" size={20} color="#51AFF7" />
-  <Text style={styles.textoMensajeAlVendedor}>Mensaje al vendedor</Text>
-</TouchableOpacity>  */}
+    
       </View>
     </View>
   </TouchableOpacity>

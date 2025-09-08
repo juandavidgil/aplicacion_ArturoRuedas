@@ -1,35 +1,30 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Linking, Alert } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, Linking, Alert, TouchableOpacity } from 'react-native';
 import { StackParamList } from '../types/types';
 import { RouteProp } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
-import { CheckBox } from 'react-native-elements';
 import { URL } from '../config/UrlApi';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';
+import { useRoute, useNavigation } from '@react-navigation/native';
 
-type DetallePublicacionLogueadoRouteProp = RouteProp<
+
+type DetallePublicacionAdminRouteProp = RouteProp<
   StackParamList,
-  'DetallePublicacionLogueado'
+  'DetallePublicacionAdmin'
 >;
 
 interface Props {
-  route: DetallePublicacionLogueadoRouteProp;
+  route: DetallePublicacionAdminRouteProp;
 }
 
-const DetallePublicacionLogueado: React.FC<Props> = ({ route }) => {
+const DetallePublicacionAdmin: React.FC<Props> = ({ route }) => {
   const { publicacion, id } = route.params;
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
+  
+  const EliminarPublicacion = () => {
+   
 
- 
-  const [isChecked, setIsChecked] = useState(false);
-
-  const presionCheckBox = () => {
-    const nuevoValor = !isChecked;
-    setIsChecked(nuevoValor);
-
-    if (nuevoValor) {
+    
       Alert.alert(
         'Se eliminará la publicación',
         '¿Deseas continuar?',
@@ -38,7 +33,7 @@ const DetallePublicacionLogueado: React.FC<Props> = ({ route }) => {
             text: 'Rechazar',
             onPress: () => {
               
-              setIsChecked(false);
+              
             },
             style: 'cancel',
           },
@@ -56,24 +51,24 @@ const DetallePublicacionLogueado: React.FC<Props> = ({ route }) => {
                 const data = await response.json();
                 
 
-                Alert.alert('Éxito', 'La publicación fue marcada como vendida ✅');
+                Alert.alert('Éxito', 'La publicación fue eliminada ✅');
                 navigation.goBack()
+                
               } catch (error) {
-                console.error('Error al marcar como vendida la publicación:', error);
+                console.error('Error eliminar la publicación:', error);
                 Alert.alert(
                   'Error',
-                  'No se pudo marcar como vendida la publicación. Verifica la conexión al servidor.'
+                  'No se pudo eliminar la publicación. Verifica la conexión al servidor.'
                 );
-                setIsChecked(false);
+                
               }
             },
           },
         ],
         { cancelable: false }
       );
-    }
+    
   };
-  
 
   return (
     <LinearGradient
@@ -83,7 +78,6 @@ const DetallePublicacionLogueado: React.FC<Props> = ({ route }) => {
       style={{ flex: 1 }}
     >
       <ScrollView style={styles.container}>
-        
         <Image
           source={{ uri: publicacion.foto }}
           style={styles.imagenDetalle}
@@ -108,7 +102,9 @@ const DetallePublicacionLogueado: React.FC<Props> = ({ route }) => {
             <Text style={styles.texto}>{publicacion.tipo_bicicleta}</Text>
           </View>
 
-          <CheckBox title="Vendido" checked={isChecked} onPress={presionCheckBox} />
+          <TouchableOpacity  onPress={EliminarPublicacion}>
+            <Text>Eliminar publicacion</Text>
+            </TouchableOpacity>
         </View>
       </ScrollView>
     </LinearGradient>
@@ -152,4 +148,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DetallePublicacionLogueado;
+export default DetallePublicacionAdmin;

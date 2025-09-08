@@ -32,11 +32,11 @@ const FiltroAdminPantalla : React.FC = () =>{
                 body: JSON.stringify({usuario, contraseña, contraseña2}),
             });
              const data = await response.json();
-            console.log('Respuesta del servidor:', data); // Log para depuración
+            
 
             if(response.ok){
                 await AsyncStorage.setItem('usuario', JSON.stringify(data.usuario));
-                console.log('usuario guardado:', data.usuario);
+                
                 Alert.alert('Incio de sesion correcto');
                 navigation.navigate('Administrador')
             } else{

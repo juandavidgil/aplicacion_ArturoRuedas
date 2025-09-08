@@ -238,35 +238,35 @@ return (
 {mostrarBarraComponentes && (
   <View style={styles.barraComponentes}>
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-      <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas' })}>
+      <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas', tipoBicicleta })}>
         <Image style={styles.iconoComponentes} resizeMode="cover" source={require('../iconos/rueda.png')} />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio' })}>
+      <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio', tipoBicicleta })}>
         <Image style={styles.iconoComponentes} resizeMode="cover" source={require('../iconos/manubrio.png')} />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension' })}>
+      <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension', tipoBicicleta })}>
         <Image style={styles.iconoComponentes} resizeMode="cover" source={require('../iconos/suspension.png')} />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'marco' })}>
+      <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'marco', tipoBicicleta })}>
         <Image style={styles.iconoComponentes} resizeMode="cover" source={require('../iconos/marco.png')} />
       </TouchableOpacity>
 
-       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'cadena' })}>
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'cadena', tipoBicicleta })}>
         <Image style={styles.iconoComponentes} resizeMode="cover" source={require('../iconos/cadena.png')} />
       </TouchableOpacity>
 
-       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'piñon' })}>
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'piñon', tipoBicicleta })}>
         <Image style={styles.iconoComponentes} resizeMode="cover" source={require('../iconos/piñon.png')} />
       </TouchableOpacity>
 
-       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'plato' })}>
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'plato', tipoBicicleta })}>
         <Image style={styles.iconoComponentes} resizeMode="cover" source={require('../iconos/plato.png')} />
       </TouchableOpacity>
 
-       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal' })}>
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal', tipoBicicleta })}>
         <Image style={styles.iconoComponentes} resizeMode="cover" source={require('../iconos/pedal.png')} />
       </TouchableOpacity>
       

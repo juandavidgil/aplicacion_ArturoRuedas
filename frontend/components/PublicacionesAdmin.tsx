@@ -63,7 +63,10 @@ const PublicacionesAdmin : React.FC<Props> = ({route}) => {
   }, []);
  const renderItem = ({ item }: { item: Publicacion }) => (
   <TouchableOpacity onPress={() => {
-    navigation.navigate('DetallePublicacion', { publicacion: item });
+    navigation.navigate('DetallePublicacionAdmin',{ 
+  publicacion: item, 
+  id: item.id
+});
   }}>
     <View style={styles.card}>
       <Image 

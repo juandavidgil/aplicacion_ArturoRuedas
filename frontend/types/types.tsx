@@ -1,49 +1,37 @@
 import { RouteProp } from '@react-navigation/native';
 
-
-
 export type ComponenteId = 'ruedas' | 'suspension' |'frenos' | 'marco' | 'sillin' | 'manubrio' | 'pedal' | 'piñon'|'cadena' | 'plato';
-
-export type ComponenteData = {
-  nombre: string;
-  imagen: any;
-  comoColocar: string[];
-  informacion: {
-    utilidad: string;
-    mantenimiento: string;
-  };
-  herramientas: string[]; 
-};
-
-
+export type ComponenteData = {nombre: string; imagen: any; comoColocar: string[]; informacion: { utilidad: string; mantenimiento: string; }; herramientas: string[]; };
 export type StackParamList = {
+  
   Presentacion: undefined;
   Registro: undefined;
   InicioSesion: undefined;
+  RestablecerContraseña: undefined;
+
   Carrusel: undefined;
   MTB: { tipoBicicleta: string };
   Ruta: { tipoBicicleta: string };
   Fija: { tipoBicicleta: string };
+  
   Publicar: undefined;
   Carrito: undefined;
-  DetalleArticulo: { articulo: Articulo };
   Notificaciones: undefined;
-   Chat: undefined;
-/*  ChatPrivado: {
-    chatId: number | null;
-    idOtroUsuario: number;
-    nombreOtroUsuario: string;
-  }; */
-  RestablecerContraseña: undefined;
+
+
+  FiltroAdmin: undefined;
   Administrador: undefined;
   PublicacionesAdmin: {ID_usuario : number};
-  FiltroAdmin: undefined;
-  ComponenteDetalle: { componenteId: ComponenteId };
+  DetallePublicacionAdmin: { publicacion: Publicacion; id: number; }
+  
   DetallePublicacion: { publicacion: Publicacion };
-  DetallePublicacionLogueado: { publicacion: Publicacion };
-  Perfil: undefined
-  PublicacionesUsuarioLogueado: { publicacion: Publicacion };
+  ComponenteDetalle: { componenteId: ComponenteId, tipoBicicleta: string };
   ChatGPT: undefined
+  
+  
+  Perfil: undefined
+  PublicacionesUsuarioLogueado: undefined;
+  DetallePublicacionLogueado: { publicacion: Publicacion; id: number; };
 };
 
 export interface Articulo {
@@ -56,10 +44,10 @@ export interface Articulo {
   ID_usuario: number;
 }
 export interface Usuario {
-ID_usuario: number;
-nombre: string;
-correo: string;
-telefono: string
+  ID_usuario: number;
+  nombre: string;
+  correo: string;
+  telefono: string
 }
 
 export interface Publicacion {
@@ -74,29 +62,27 @@ export interface Publicacion {
 
 }
 
+export type RegistroScreenNavigationProp =RouteProp<StackParamList, 'Registro'>;
+export type InicioSesionScreenNavigationProp = RouteProp<StackParamList, 'InicioSesion'>;
 
-
-
-
-// Tipos para las rutas
+export type CarruselScreenNavigationProp = RouteProp<StackParamList, 'Carrusel'>;
 export type MTBScreenRouteProp = RouteProp<StackParamList, 'MTB'>;
 export type RutaScreenRouteProp = RouteProp<StackParamList, 'Ruta'>;
 export type FijaScreenRouteProp = RouteProp<StackParamList, 'Fija'>;
-export type DetalleArticuloRouteProp = RouteProp<StackParamList, 'DetalleArticulo'>;
-export type RegistroScreenNavigationProp =RouteProp<StackParamList, 'Registro'>;
-export type InicioSesionScreenNavigationProp = RouteProp<StackParamList, 'InicioSesion'>;
-export type CarruselScreenNavigationProp = RouteProp<StackParamList, 'Carrusel'>;
+
 export type PublicarScreenNavigationProp = RouteProp<StackParamList, 'Publicar'>;
 export type NotificacionesScreenNavigationProp = RouteProp<StackParamList, 'Notificaciones'>;
-export type ChatScreenNavigationProp = RouteProp<StackParamList, 'Chat'>;
-/* export type ChatPrivadoScreenNavigationProp = RouteProp<StackParamList, 'ChatPrivado'>; */
 export type CarritoScreenNavigationProp = RouteProp<StackParamList, 'Carrito'>;
+
+export type ChatGPTScreenNavigationProp = RouteProp<StackParamList, 'ChatGPT'>;
+export type DetallePublicacioncreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacion'>;
+export type ComponenteDetalleScreenNavigationProp = RouteProp<StackParamList, 'ComponenteDetalle'>;
+
 export type FiltroAdminScreenNavigationProp = RouteProp<StackParamList, 'FiltroAdmin'>
 export type AdministradorScreenNavigationProp = RouteProp<StackParamList, 'Administrador'>;
 export type PublicacionesAdminScreenNavigationProp = RouteProp<StackParamList, 'PublicacionesAdmin'>;
-export type ComponenteDetalleScreenNavigationProp = RouteProp<StackParamList, 'ComponenteDetalle'>;
-export type DetallePublicacioncreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacion'>;
-export type DetallePublicacionLogueadocreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacionLogueado'>;
+export type DetallePublicacionAdmincreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacionAdmin'>;
+
 export type PerfilScreenNavigationProp = RouteProp<StackParamList, 'Perfil'>;
 export type PublicacionesUsuarioLogueadoScreenNavigationProp = RouteProp<StackParamList, 'PublicacionesUsuarioLogueado'>;
-export type ChatGPTScreenNavigationProp = RouteProp<StackParamList, 'ChatGPT'>;
+export type DetallePublicacionLogueadocreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacionLogueado'>;
