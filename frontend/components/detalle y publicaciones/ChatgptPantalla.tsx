@@ -1,19 +1,23 @@
 import React, { useState, useRef } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
-import { enviarMensajeAlBackend } from "../../services/api";
+import axios from "axios";
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator,} from "react-native";
+import {URL} from '../../config/UrlApi'
 
 type ChatMessage = {
   role: "user" | "assistant";
   content: string;
 };
+
+const enviarMensajeAlBackend = async (message: string) => {
+  try {
+    const response = await axios.post(`${URL}chat`, { message });
+    return response.data.reply;
+  } catch (error: any) {
+    console.error("Error al conectar con el backend:", error.message);
+    return "Error en el servidor.";
+  }
+};
+
 
 const ChatGPT: React.FC = () => {
   const [input, setInput] = useState("");

@@ -3,10 +3,10 @@ import cors from 'cors';
 import { Pool } from 'pg';
 import nodemailer from 'nodemailer';
 import axios from "axios";
-/* import dotenv from "dotenv"; */
+import dotenv from "dotenv";
 
 
-/* dotenv.config(); */
+dotenv.config();
 // Configuración mejorada de conexión PostgreSQL
 const pool = new Pool({
   host: "localhost",
