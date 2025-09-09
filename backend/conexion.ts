@@ -507,6 +507,7 @@ app.get('/obtener-publicaciones/:ID_usuario', async (req, res) => {
       res.status(500).json({ error: 'Error en el servidor' });
     }
   });
+
   
   
   // chat gpt
@@ -548,32 +549,30 @@ app.get("/publicaciones", async (req: Request, res: Response) => {
     return res.status(400).json({ error: "Faltan parámetros: tipo y componente" });
   }
 
-  console.log("Parámetros recibidos:", tipo, componente);
-
   try {
     const result = await pool.query(
       `SELECT 
-        cv."ID_publicacion" AS id,
-        cv."nombre_Articulo" AS nombre_articulo,
-        cv."descripcion",
-        cv."precio",
-        cv."tipo_bicicleta",
-        cv."tipo_componente",
-        cv."foto",
-        u."nombre" AS nombre_vendedor,
-        u."telefono"
+        cv.ID_publicacion AS id,
+        cv.nombre_Articulo AS nombre_articulo,
+        cv.descripcion,
+        cv.precio,
+        cv.tipo_bicicleta,
+        cv.tipo_componente,
+        cv.foto,
+        u.nombre AS nombre_vendedor,
+        u.telefono
       FROM com_ventas cv
-      JOIN usuario u ON cv."ID_usuario" = u."ID_usuario"
-      WHERE LOWER(cv."tipo_bicicleta") = LOWER($1)
-        AND LOWER(cv."tipo_componente") = LOWER($2)
-      ORDER BY cv."ID_publicacion" DESC`,
+      JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+      WHERE LOWER(cv.tipo_bicicleta) = LOWER($1)
+        AND LOWER(cv.tipo_componente) = LOWER($2)
+      ORDER BY cv.ID_publicacion DESC`,
       [tipo, componente]
     );
 
     res.json(result.rows);
-  } catch (error) {
-    console.error("❌ Error al obtener publicaciones:", error);
-    res.status(500).json({ error: "Error en el servidor" });
+  } catch (error: any) {
+    console.error("❌ Error al obtener publicaciones:", error.message);
+    res.status(500).json({ error: error.message }); // 👈 así ves el error real
   }
 });
 

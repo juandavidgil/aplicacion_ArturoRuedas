@@ -4,6 +4,7 @@ import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import { componentesData } from '../../components/detalle y publicaciones/ComponentesData'; 
 import { StackParamList } from '../../types/types';
 import type { StackNavigationProp } from '@react-navigation/stack';
+import {URL} from '../../config/UrlApi'
 
 interface Publicacion {
   id: number;
@@ -45,6 +46,7 @@ const obtenerPublicaciones = async () => {
     setRefreshing(true);
 
    const url = `${URL}publicaciones?tipo=${encodeURIComponent(tipoBicicleta)}&componente=${encodeURIComponent(componenteId)}`;
+   console.log('se envio al backend',tipoBicicleta ,componenteId)
 
     const response = await fetch(url);
 
@@ -76,9 +78,9 @@ useEffect(() => {
            }, []);
           const renderItem = ({ item }: { item: Publicacion }) => (
            <TouchableOpacity onPress={() => {
-             navigation.navigate('DetallePublicacionAdmin',{ 
+             navigation.navigate('DetallePublicacion',{ 
            publicacion: item, 
-           id: item.id
+           
          });
            }}>
              <View style={styles.card}>
@@ -128,11 +130,10 @@ useEffect(() => {
       <TouchableOpacity onPress={() => setTab('info')}>
         <Text style={[styles.tab, tab === 'info' && styles.activeTab]}> Información</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => {
-        setTab('tienda');
-        obtenerPublicaciones(); 
-      }}>
+      <TouchableOpacity onPress={() => {setTab('tienda');}}>
         <Text style={[styles.tab, tab === 'tienda' && styles.activeTab]}> Tienda</Text>
+        
+        
       </TouchableOpacity>
     </View>
 
@@ -157,6 +158,7 @@ useEffect(() => {
             )}
           </View>
 
+            <Text>¿Necesitas mas información?</Text>
           <TouchableOpacity style={styles.botonIa} onPress={() => navigation.navigate('ChatGPT')}>
             <Text>🤖 Pregúntale a la AI</Text>
           </TouchableOpacity>

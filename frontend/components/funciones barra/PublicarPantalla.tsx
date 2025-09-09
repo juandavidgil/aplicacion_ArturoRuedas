@@ -19,12 +19,12 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [precio, setPrecio] = useState('');
   const [foto, setFoto] = useState<string | null>(null);
   const [tipoBicicleta, setTipoBicicleta] = useState('MTB');
-   const [tipoComponente, setTipoComponente] = useState('Llantas');
+   const [tipoComponente, setTipoComponente] = useState('ruedas');
   const [modalVisible, setModalVisible] = useState(false);
   const [ID_usuario, setID_usuario] = useState<number | null>(null);
   const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false);
    
-  // Cargar ID del usuario al montar el componente
+  
   useEffect(() => {
     const cargarUsuario = async () => {
       try {
@@ -46,7 +46,7 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
     setPrecio('');
     setFoto(null);
     setTipoBicicleta('MTB');
-    setTipoComponente('Llantas')
+    setTipoComponente('ruedas')
   };
 
   const PublicarBoton = async () => {
@@ -194,9 +194,16 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
               style={styles.picker}
               
             >
-              <Picker.Item label="Llantas" value="Llantas" color={Platform.OS === "ios" ? "white" : "black"} />
-              <Picker.Item label="Marco" value="Marco" color={Platform.OS === "ios" ? "white" : "black"}/>
-              <Picker.Item label="Pedales" value="Pedales" color={Platform.OS === "ios" ? "white" : "black"}/>
+              <Picker.Item label="ruedas" value="ruedas" color={Platform.OS === "ios" ? "white" : "black"} />
+              <Picker.Item label="suspension" value="suspension" color={Platform.OS === "ios" ? "white" : "black"}/>
+              <Picker.Item label="frenos" value="frenos" color={Platform.OS === "ios" ? "white" : "black"}/>
+              <Picker.Item label="marco" value="marco" color={Platform.OS === "ios" ? "white" : "black"}/>
+              <Picker.Item label="sillin" value="sillin" color={Platform.OS === "ios" ? "white" : "black"}/>
+              <Picker.Item label="manubrio" value="manubrio" color={Platform.OS === "ios" ? "white" : "black"}/>
+              <Picker.Item label="pedal" value="pedal" color={Platform.OS === "ios" ? "white" : "black"}/>
+              <Picker.Item label="piñon" value="piñon" color={Platform.OS === "ios" ? "white" : "black"}/>
+              <Picker.Item label="cadena" value="cadena" color={Platform.OS === "ios" ? "white" : "black"}/>
+              <Picker.Item label="plato" value="plato" color={Platform.OS === "ios" ? "white" : "black"}/>
             </Picker>
           </View>
 
