@@ -21,6 +21,7 @@ export type StackParamList = {
 
   FiltroAdmin: undefined;
   Administrador: undefined;
+  InformacionUsuarioAdmin: undefined
   PublicacionesAdmin: {ID_usuario : number};
   DetallePublicacionAdmin: { publicacion: Publicacion; id: number; }
   
@@ -80,6 +81,7 @@ export type ComponenteDetalleScreenNavigationProp = RouteProp<StackParamList, 'C
 
 export type FiltroAdminScreenNavigationProp = RouteProp<StackParamList, 'FiltroAdmin'>
 export type AdministradorScreenNavigationProp = RouteProp<StackParamList, 'Administrador'>;
+export type InformacionUsuarioAdminScreenNavigationProp = RouteProp<StackParamList, 'InformacionUsuarioAdmin'>;
 export type PublicacionesAdminScreenNavigationProp = RouteProp<StackParamList, 'PublicacionesAdmin'>;
 export type DetallePublicacionAdmincreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacionAdmin'>;
 

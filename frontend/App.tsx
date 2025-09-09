@@ -19,6 +19,7 @@ import NotificacionesPantalla from './components/funciones barra/NotificacionesP
 
 import FiltroAdminPantalla from './components/administrador/FiltroAdmin';
 import Administrador from './components/administrador/Administrador';
+import InformacionUsuarioAdmin from './components/administrador/InformacionUsuarioAdmin';
 import PublicacionesAdmin from './components/administrador/PublicacionesAdmin';
 import DetallePublicacionAdmin from './components/administrador/DetallePublicacionAdmin';
 
@@ -29,6 +30,7 @@ import DetallePublicacionLogueado from './components/perfil/DetallePublicacionLo
 import ChatGPT from './components/detalle y publicaciones/ChatgptPantalla';
 import DetallePublicacion from './components/detalle y publicaciones/DetallePublicacion';
 import ComponenteDetallePantalla from './components/detalle y publicaciones/ComponenteDetalladoPantalla';
+
 
 const Stack = createNativeStackNavigator<StackParamList>();
 
@@ -60,8 +62,9 @@ const App = () => {
         <Stack.Screen name='DetallePublicacion' component={DetallePublicacion}/>
         <Stack.Screen name="ComponenteDetalle" component={ComponenteDetallePantalla}/>
 
-        <Stack.Screen name='Administrador' component={Administrador}/>
         <Stack.Screen name='FiltroAdmin' component={FiltroAdminPantalla}/>
+        <Stack.Screen name='Administrador' component={Administrador}/>
+        <Stack.Screen name='InformacionUsuarioAdmin' component={InformacionUsuarioAdmin}/>
         <Stack.Screen name='PublicacionesAdmin' component={PublicacionesAdmin}/>
         <Stack.Screen name='DetallePublicacionAdmin' component={DetallePublicacionAdmin}/>
         
