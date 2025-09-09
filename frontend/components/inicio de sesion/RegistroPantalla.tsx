@@ -5,13 +5,13 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { StackParamList } from '../types/types';
-import {URL} from '../config/UrlApi'
+import { StackParamList } from '../../types/types';
+import {URL} from '../../config/UrlApi'
 
 
 const RegistroPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-    const image = require('../img/fondo1.png');
+    const image = require('../../img/fondo1.png');
   const [nombre, setNombre] = useState('');
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
@@ -61,7 +61,7 @@ const RegistroPantalla: React.FC = () => {
                   
             <View style={styles.holi}>
               <Image
-            source={require('../img/logo1.png')} // o { uri: 'URL' }
+            source={require('../../img/logo1.png')} // o { uri: 'URL' }
             style={styles.logo}/>
               
             </View>

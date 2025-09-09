@@ -8,13 +8,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StackParamList } from '../types/types';
+import { StackParamList } from '../../types/types';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { Video, ResizeMode } from 'expo-av';
-import { URL } from '../config/UrlApi';
+import { URL } from '../../config/UrlApi';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Canvas } from '@react-three/fiber';
-import Model from '../codigos modelos/Fija';
+import Model from '../../codigos modelos/Fija';
 import useControls from 'r3f-native-orbitcontrols';
 import { OrbitControls } from '@react-three/drei';
 
@@ -230,19 +230,19 @@ const FijaPantalla: React.FC = () => {
 {mostrarBarraComponentes && (
   <View style={styles.barraComponentes}>
     <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas', tipoBicicleta })}>
-      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/rueda.png')} />
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../../iconos/rueda.png')} />
     </TouchableOpacity>
 
     <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio', tipoBicicleta })}>
-      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/manubrio.png')} />
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../../iconos/manubrio.png')} />
     </TouchableOpacity>
 
     <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension', tipoBicicleta })}>
-      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/suspension.png')} />
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../../iconos/suspension.png')} />
     </TouchableOpacity>
 
     <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal', tipoBicicleta })}>
-      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../iconos/pedal.jpeg')} />
+      <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../../iconos/pedal.jpeg')} />
     </TouchableOpacity>
   </View>
 )}

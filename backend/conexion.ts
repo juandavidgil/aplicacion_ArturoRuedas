@@ -510,29 +510,29 @@ app.get('/obtener-publicaciones/:ID_usuario', async (req, res) => {
   
   
   // chat gpt
-  app.post("/chat", async (req: Request, res: Response) => {
-    const { message } = req.body;
-    
-    if (!message) {
-      return res.status(400).json({ error: "El campo 'message' es requerido" });
-    }
-    
-    try {
-      const response = await axios.post(
-        "https://api.openai.com/v1/chat/completions",
-        {
-          model: "gpt-4o",
-          messages: [{ role: "user", content: message }],
+app.post("/chat", async (req: Request, res: Response) => {
+  const { message } = req.body;
+
+  if (!message) {
+    return res.status(400).json({ error: "El campo 'message' es requerido" });
+  }
+
+  try {
+    const response = await axios.post(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        model: "gpt-4o",
+        messages: [{ role: "user", content: message }],
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-          },
-        }
-      );
-      
-      const reply = response.data.choices[0].message.content;
+      }
+    );
+
+    const reply = response.data.choices[0].message.content;
     res.json({ reply });
   } catch (error) {
     console.error("Error al llamar a OpenAI:", error);
@@ -548,7 +548,7 @@ app.get("/publicaciones", async (req: Request, res: Response) => {
     return res.status(400).json({ error: "Faltan parámetros: tipo y componente" });
   }
 
-  console.log("👉 Parámetros recibidos:", tipo, componente);
+  console.log("Parámetros recibidos:", tipo, componente);
 
   try {
     const result = await pool.query(

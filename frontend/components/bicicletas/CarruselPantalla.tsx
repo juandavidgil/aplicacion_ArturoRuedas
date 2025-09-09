@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { StackParamList } from '../types/types';
+import { StackParamList } from '../../types/types';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const { width, height } = Dimensions.get("window");
@@ -26,9 +26,9 @@ type ImagenItem = {
 };
 
 const imagenes: ImagenItem[] = [
-  { id: 1, url: require('../img/carruselMTB.png'), titulo: 'MTB', destino: 'MTB', tipoBicicleta: 'Mtb' },
-  { id: 2, url: require('../img/carruselRUTA.png'), titulo: 'Ruta', destino: 'Ruta', tipoBicicleta: 'Ruta' },
-  { id: 3, url: require('../img/carruselFIJA.png'), titulo: 'Fija', destino: 'Fija', tipoBicicleta: 'Fija' },
+  { id: 1, url: require('../../img/carruselMTB.png'), titulo: 'MTB', destino: 'MTB', tipoBicicleta: 'Mtb' },
+  { id: 2, url: require('../../img/carruselRUTA.png'), titulo: 'Ruta', destino: 'Ruta', tipoBicicleta: 'Ruta' },
+  { id: 3, url: require('../../img/carruselFIJA.png'), titulo: 'Fija', destino: 'Fija', tipoBicicleta: 'Fija' },
 ];
 
 const BackDrop: React.FC<{ scrollX: Animated.Value }> = ({ scrollX }) => {

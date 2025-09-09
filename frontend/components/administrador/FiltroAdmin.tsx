@@ -1,17 +1,17 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
-import { StackParamList } from '../types/types';
+import { StackParamList } from '../../types/types';
 import {View, ImageBackground, Image, Text,TouchableOpacity, TextInput, StyleSheet, Alert, ActivityIndicator } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {URL} from '../config/UrlApi'
+import {URL} from '../../config/UrlApi'
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const FiltroAdminPantalla : React.FC = () =>{
      const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-     const image = require('../img/fondo1.png');
+     const image = require('../../img/fondo1.png');
     const [usuario, setUsuario] = useState ('')
     const [contraseña, setContraseña] = useState('')
     const [contraseña2, setContraseña2] = useState('')
@@ -58,7 +58,7 @@ const FiltroAdminPantalla : React.FC = () =>{
                       >
                 <View style={styles.holi}>
                   <Image
-                source={require('../img/logo1.png')} // o { uri: 'URL' }
+                source={require('../../img/logo1.png')} // o { uri: 'URL' }
                 style={styles.logo}/>
                   
                 </View>

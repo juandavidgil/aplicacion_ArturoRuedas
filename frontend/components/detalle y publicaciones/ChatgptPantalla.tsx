@@ -8,7 +8,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
-import { enviarMensajeAlBackend } from "../services/api";
+import { enviarMensajeAlBackend } from "../../services/api";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -46,7 +46,7 @@ const ChatGPT: React.FC = () => {
         renderItem={({ item }) => (
           <Text style={{ marginVertical: 5 }}>
             <Text style={{ fontWeight: "bold" }}>
-              {item.role === "user" ? "Tú: " : "ChatGPT: "}
+              {item.role === "user" ? "Tú: " : "Respuesta: "}
             </Text>
             {item.content}
           </Text>

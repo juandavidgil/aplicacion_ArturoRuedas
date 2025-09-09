@@ -8,7 +8,9 @@ import { Picker } from '@react-native-picker/picker';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL} from '../config/UrlApi'
+import {URL} from '../../config/UrlApi'
+import { KeyboardAvoidingView, Platform } from 'react-native';
+
 
 const { width, height } = Dimensions.get('window');
 const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
@@ -22,7 +24,7 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [ID_usuario, setID_usuario] = useState<number | null>(null);
   const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false);
    
-
+  // Cargar ID del usuario al montar el componente
   useEffect(() => {
     const cargarUsuario = async () => {
       try {
@@ -129,10 +131,24 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
                     end={{ x: 0, y: 1 }}
                     style={{ flex: 1 }}
                   >
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={styles.container}>
-          <Text style={styles.title}>Publicar un artículo</Text>
-
+     <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined} >
+             
+             <View style={styles.header}>
+       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+         <Ionicons name="chevron-back" size={28} color="white" />
+       </TouchableOpacity>
+     
+       <Text style={styles.title}>Publica un articulo</Text>
+       
+         <View style={{ width: 28 }} />
+       </View>
+<ScrollView
+  style={{ flex: 1 }}
+  contentContainerStyle={styles.scrollContent}
+  keyboardShouldPersistTaps="handled"
+>
+ 
           <TextInput
             placeholder="Nombre del artículo*"
             value={nombre_Articulo}
@@ -162,24 +178,30 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
               selectedValue={tipoBicicleta}
               onValueChange={setTipoBicicleta}
               style={styles.picker}
+           
             >
-              <Picker.Item label="MTB" value="MTB" color='#ffff'/>
-              <Picker.Item label="Ruta" value="Ruta"color='#ffff'/>
-              <Picker.Item label="Fija" value="Fija" color='#ffff' />
+              <Picker.Item label="MTB" value="MTB"  color={Platform.OS === "ios" ? "white" : "black"} />
+              <Picker.Item label="Ruta" value="Ruta"  color={Platform.OS === "ios" ? "white" : "black"}/>
+              <Picker.Item label="Fija" value="Fija"   color={Platform.OS === "ios" ? "white" : "black"}/>
             </Picker>
           </View>
+
           <View style={styles.pickerContainer}>
             <Text style={styles.pickerLabel}>Tipo de Componente </Text>
             <Picker
               selectedValue={tipoComponente}
               onValueChange={setTipoComponente}
               style={styles.picker}
+              
             >
-              <Picker.Item label="ruedas" value="ruedas"  color='#ffff'/>
-              <Picker.Item label="marco" value="marco" color='#ffff'/>
-              <Picker.Item label="pedal" value="pedal" color='#ffff'/>
+              <Picker.Item label="Llantas" value="Llantas" color={Platform.OS === "ios" ? "white" : "black"} />
+              <Picker.Item label="Marco" value="Marco" color={Platform.OS === "ios" ? "white" : "black"}/>
+              <Picker.Item label="Pedales" value="Pedales" color={Platform.OS === "ios" ? "white" : "black"}/>
             </Picker>
           </View>
+
+
+
           {foto && (
             <Image source={{ uri: foto }} style={styles.image} />
           )}
@@ -205,8 +227,13 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
               {ID_usuario ? 'PUBLICAR' : 'INICIA SESIÓN PRIMERO'}
             </Text>
           </TouchableOpacity>
-        </ScrollView>
-      </SafeAreaView>
+          
+          </ScrollView>
+         </KeyboardAvoidingView>
+        </SafeAreaView>
+
+        {/*desde aqui ahi foother*/}
+
        <View style={styles.iconBar}>
             <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
               <Ionicons name='storefront-outline' size={28} color="#ffffffff" />
@@ -243,101 +270,135 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  gradient: { flex: 1 },
+
   container: {
-    paddingHorizontal: width * 0.06,
-    paddingBottom: height * 0.1,
+    flex:1,
+    padding: 5,
+    
   },
+
+  scrollContent: {
+  paddingHorizontal: 16,
+   
+},
+
+  header: {
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between", 
+  paddingHorizontal: 10,
+  marginTop: Platform.OS === "android" ? 10 : 5,
+},
+
+backButton: {
+   marginTop: Platform.OS === "android" ? 40 : 0,
+  marginLeft: Platform.OS === "android" ? 2 : 5, 
+  padding: Platform.OS === "android" ? 5 : 5,     
+  justifyContent: "center",
+  alignItems: "center",
+},
+
+
+
   title: {
-    fontSize: width * 0.07,
+        flex: 1,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginVertical: height * 0.02,
+    color: '#ffff',
+    marginBottom: 2,
+    marginTop: Platform.OS === "android" ? 40 : 0,
     textAlign: 'center',
-    color: '#fff',
-    letterSpacing: 0.5,
   },
   input: {
     backgroundColor: '#f9f9f9b9',
     borderRadius: 12,
-    marginBottom: height * 0.02,
-    fontSize: width * 0.04,
-    paddingVertical: height * 0.02,
-    paddingHorizontal: width * 0.04,
+    marginBottom: 18,
+    fontSize: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
     borderWidth: 1,
     borderColor: '#004f4d',
     color: '#1c2b44ff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
   },
   pickerContainer: {
     borderRadius: 12,
-    marginBottom: height * 0.02,
+    marginBottom: 15,
     borderWidth: 2,
     borderColor: '#ffffffff',
-    overflow: 'hidden',
+    elevation: 2,
   },
+ 
   pickerLabel: {
-    padding: height * 0.015,
-    textAlign: 'center',
-    color: '#ffffffff',
-    fontSize: width * 0.045,
-    fontWeight: '500',
+    padding: 15,
+    color: '#dfd6d6ff',
+    fontSize: 16
   },
   picker: {
-    width: '100%',
-    height: height * 0.07,
-    color: '#e6efffff',
+   color: '#fff',
+  width: '100%',
+  fontSize: 16,
+  paddingVertical: 10,
+  paddingHorizontal: 12,
   },
   image: {
     width: '100%',
-    height: height * 0.3,
+    height: 230,
     borderRadius: 14,
-    marginVertical: height * 0.02,
+    marginVertical: 15,
     alignSelf: 'center',
   },
   buttonGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: height * 0.03,
+    marginBottom: 24,
   },
   photoButton: {
     flex: 1,
     flexDirection: 'row',
-    paddingVertical: height * 0.015,
+    paddingVertical: 14,
     borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: width * 0.015,
+    marginHorizontal: 6,
     backgroundColor: '#4a90e2',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
+    elevation: 5,
   },
   buttonText: {
     color: 'white',
-    marginLeft: width * 0.02,
+    marginLeft: 8,
     fontWeight: '600',
-    fontSize: width * 0.038,
+    fontSize: 15,
   },
   publishButton: {
     backgroundColor: '#00c774',
-    paddingVertical: height * 0.022,
+    paddingVertical: 16,
     borderRadius: 30,
     alignItems: 'center',
-    marginTop: height * 0.02,
+    elevation: 5,
+    marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+      marginHorizontal: 20, 
+    marginBottom: 180,  
+
+
   },
   publishText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: width * 0.045,
-  },
-  iconBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: height * 0.015,
-    backgroundColor: '#004f4d',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingBottom: height * 0.03,
+    fontSize: 17,
+    letterSpacing: 0.5,
   },
   modalContainer: {
     flex: 1,
@@ -358,7 +419,23 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 6 },
     elevation: 6,
   },
-
+  iconBar: {
+  flexDirection: 'row',
+  justifyContent: 'space-around',
+  paddingVertical: height * 0.015, 
+  backgroundColor: '#004f4d',
+  borderTopLeftRadius: 10,
+  borderTopRightRadius: 10,
+  position: 'absolute',
+  bottom: 0, 
+  left: 0,
+  right: 0,
+  borderTopWidth: 1,
+  shadowOpacity: 0.1,
+  shadowOffset: { width: 0, height: -2 },
+  shadowRadius: 6,
+  paddingBottom:"7%",
+},
   modalText: {
     marginTop: 20,
     fontSize: 18,
@@ -370,4 +447,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default PublicarPantalla;
+export default PublicarPantalla; 

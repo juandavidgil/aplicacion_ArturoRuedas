@@ -3,13 +3,13 @@ import {ImageBackground, View,Text,TextInput, TouchableOpacity, StyleSheet, Safe
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { StackParamList } from '../types/types';
+import { StackParamList } from '../../types/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { URL } from '../config/UrlApi';
+import { URL } from '../../config/UrlApi';
 
 const InicioSesionPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const image = require('../img/fondo1.png');
+  const image = require('../../img/fondo1.png');
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
   const [cargando, setCargando] = useState(false);
@@ -52,7 +52,7 @@ const InicioSesionPantalla: React.FC = () => {
             >
       <View style={styles.holi}>
         <Image
-      source={require('../img/logo1.png')} // o { uri: 'URL' }
+      source={require('../../img/logo1.png')} // o { uri: 'URL' }
       style={styles.logo}/>
         
       </View>

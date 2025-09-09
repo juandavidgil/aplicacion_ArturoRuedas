@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { 
   View, Text, FlatList, Image, 
   TouchableOpacity, StyleSheet, ActivityIndicator,
-  SafeAreaView, Alert, Linking,  Dimensions
+  SafeAreaView, Alert, Linking,  Dimensions, Platform
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StackParamList } from '../types/types';
+import { StackParamList } from '../../types/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {URL} from '../config/UrlApi'
+import {URL} from '../../config/UrlApi'
 import { LinearGradient } from 'expo-linear-gradient';
 
 
@@ -53,11 +53,11 @@ const obtenerCarrito = async () => {
       throw new Error('No se pudo obtener el ID de usuario');
     }
 
-
+    console.log(`🔄 Obteniendo carrito para usuario: ${ID_usuario}`);
     
     // 3. Hacer la petición al backend
     const apiUrl = `${URL}carrito/${ID_usuario}`;
-   
+    console.log(`🌐 URL de la solicitud: ${apiUrl}`);
     
     const response = await fetch(apiUrl, {
       method: 'GET',
@@ -87,7 +87,7 @@ const obtenerCarrito = async () => {
     }
 
     const data = await response.json();
-  
+    console.log('📦 Datos recibidos:', data);
     
     // 6. Actualizar el estado
     setArticulos(data);
@@ -126,7 +126,7 @@ const obtenerCarrito = async () => {
       throw new Error('No se pudo obtener el ID de usuario');
     }
 
-    
+    console.log(`🗑️ Intentando eliminar artículo ID: ${id} del usuario ID: ${ID_usuario}`);
     
     // 3. Configurar la solicitud
     const apiUrl = `${URL}eliminar-carrito`;
@@ -135,7 +135,7 @@ const obtenerCarrito = async () => {
       ID_publicacion: id 
     });
 
-
+    console.log(`🌐 URL: ${apiUrl}, Body: ${body}`);
     
     // 4. Hacer la petición
     const response = await fetch(apiUrl, {
@@ -159,7 +159,7 @@ const obtenerCarrito = async () => {
 
     // 6. Procesar la respuesta exitosa
     const result = await response.json();
-   
+    console.log('✅ Artículo eliminado:', result);
     
     // 7. Actualizar el carrito
     await obtenerCarrito();
@@ -224,7 +224,17 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
   <Ionicons name="logo-whatsapp" size={20} color="#25D366" />
   <Text style={styles.textoMensajeAlVendedor}>Chatear por WhatsApp</Text>
 </TouchableOpacity> 
-    
+       {/*  <TouchableOpacity 
+  onPress={() => navigation.navigate('ChatPrivado', { 
+    chatId: null, 
+    idOtroUsuario: item.id_vendedor,
+    nombreOtroUsuario: item.nombre_vendedor 
+  })}
+  style={styles.botonMensajeAlVendedor}
+>
+  <Ionicons name="chatbubble-ellipses-outline" size={20} color="#51AFF7" />
+  <Text style={styles.textoMensajeAlVendedor}>Mensaje al vendedor</Text>
+</TouchableOpacity>  */}
       </View>
     </View>
   </TouchableOpacity>
@@ -238,8 +248,18 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
                           style={{ flex: 1 }}
                         >
     <SafeAreaView style={styles.container}>
-       
-      <Text style={styles.titulo}>Tu Carrito de Compras</Text>
+        <View style={styles.header}>
+  <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+    <Ionicons name="chevron-back" size={28} color="white" />
+  </TouchableOpacity>
+
+  <Text style={styles.titulo}>Tu Carrito de Compras</Text>
+
+  {/* Espaciador para balancear */}
+  <View style={{ width: 28 }} />
+</View>
+
+      
       
       {cargando ? (
         <ActivityIndicator size="large" color="#4d82bc" style={styles.loader} />
@@ -301,13 +321,32 @@ const styles = StyleSheet.create({
     flex: 1,
     
   },
+  header: {
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between", // distribuye entre icono, texto, espacio
+  marginBottom: 10,
+  paddingHorizontal: 10,
+  marginTop: Platform.OS === "android" ? 10 : 0,
+},
+
+backButton: {
+   marginTop: Platform.OS === "android" ? 40 : 0,
+  marginLeft: Platform.OS === "android" ? 10 : 5, // un poco de espacio en Android
+  padding: Platform.OS === "android" ? 5 : 5,     // más área de toque
+  justifyContent: "center",
+  alignItems: "center",
+},
+
   titulo: {
+    flex: 1,
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#ffffffff',
-    marginBottom: 20,
-    marginTop: 40,
+    color: '#ffff',
+    marginBottom: 2,
+    marginTop: Platform.OS === "android" ? 40 : 0,
     textAlign: 'center',
+    
   },
   loader: {
     marginTop: 50,
@@ -427,7 +466,7 @@ color:"#51AFF7"
     alignItems: 'center',
      justifyContent: 'center',
     marginTop: 10,
-    marginBottom:60,
+    marginBottom: Platform.OS === "android" ? 90 : 70,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.15,

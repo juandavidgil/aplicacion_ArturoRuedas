@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, ImageBackground } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { StackParamList } from '../types/types';
+import { StackParamList } from '../../types/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {URL} from '../config/UrlApi'
+import {URL} from '../../config/UrlApi'
 import { LinearGradient } from 'expo-linear-gradient';
 export interface Usuario {
   id_usuario: number;
@@ -15,7 +15,7 @@ export interface Usuario {
 
 
 const Administrador: React.FC = () => {
-  const image = require('../img/fondo1.png');
+  const image = require('../../img/fondo1.png');
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [refreshing, setRefreshing] = useState(false);

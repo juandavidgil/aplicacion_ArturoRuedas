@@ -3,32 +3,32 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StackParamList } from './types/types';
 
-import PresentacionPantalla from './components/PresentacionPantalla';
-import RegistroPantalla from './components/RegistroPantalla';
-import InicioSesionPantalla from './components/InicioSesionPantalla';
-import RestablecerContraseñaPantalla from './components/RestablecerContraseñaPantalla';
+import PresentacionPantalla from './components/inicio de sesion/PresentacionPantalla';
+import RegistroPantalla from './components/inicio de sesion/RegistroPantalla';
+import InicioSesionPantalla from './components/inicio de sesion/InicioSesionPantalla';
+import RestablecerContraseñaPantalla from './components/inicio de sesion/RestablecerContraseñaPantalla';
 
-import CarruselPantalla from './components/CarruselPantalla';
-import MTBPantalla from './components/MTBPantalla';
-import RutaPantalla from './components/RutaPantalla';
-import FijaPantalla from './components/FijaPantalla';
+import CarruselPantalla from './components/bicicletas/CarruselPantalla';
+import MTBPantalla from './components/bicicletas/MTBPantalla';
+import RutaPantalla from './components/bicicletas/RutaPantalla';
+import FijaPantalla from './components/bicicletas/FijaPantalla';
 
-import PublicarPantalla from './components/PublicarPantalla';
-import CarritoPantalla from './components/CarritoPantalla';
-import NotificacionesPantalla from './components/NotificacionesPantalla';
+import PublicarPantalla from './components/funciones barra/PublicarPantalla';
+import CarritoPantalla from './components/funciones barra/CarritoPantalla';
+import NotificacionesPantalla from './components/funciones barra/NotificacionesPantalla';
 
-import FiltroAdminPantalla from './components/FiltroAdmin';
-import Administrador from './components/Administrador';
-import PublicacionesAdmin from './components/PublicacionesAdmin';
-import DetallePublicacionAdmin from './components/DetallePublicacionAdmin';
+import FiltroAdminPantalla from './components/administrador/FiltroAdmin';
+import Administrador from './components/administrador/Administrador';
+import PublicacionesAdmin from './components/administrador/PublicacionesAdmin';
+import DetallePublicacionAdmin from './components/administrador/DetallePublicacionAdmin';
 
-import PerfilPantalla from './components/perfil';
-import PublicacionesUsuarioLogueado from './components/PublicacionesUsuarioLogueadoPantalla';
-import DetallePublicacionLogueado from './components/DetallePublicacionLogueado';
+import PerfilPantalla from './components/funciones barra/perfil';
+import PublicacionesUsuarioLogueado from './components/perfil/PublicacionesUsuarioLogueadoPantalla';
+import DetallePublicacionLogueado from './components/perfil/DetallePublicacionLogueado';
 
-import ChatGPT from './components/ChatgptPantalla';
-import DetallePublicacion from './components/DetallePublicacion';
-import ComponenteDetallePantalla from './components/ComponenteDetalladoPantalla';
+import ChatGPT from './components/detalle y publicaciones/ChatgptPantalla';
+import DetallePublicacion from './components/detalle y publicaciones/DetallePublicacion';
+import ComponenteDetallePantalla from './components/detalle y publicaciones/ComponenteDetalladoPantalla';
 
 const Stack = createNativeStackNavigator<StackParamList>();
 

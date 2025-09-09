@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, Image } from
 import { Ionicons } from "@expo/vector-icons";  
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { StackParamList } from '../types/types';
+import { StackParamList } from '../../types/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { URL } from '../config/UrlApi';
+import { URL } from '../../config/UrlApi';
 import { LinearGradient } from 'expo-linear-gradient';
 import { RouteProp } from '@react-navigation/native';
 import { title } from "process";

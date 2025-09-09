@@ -6,11 +6,10 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { StackParamList } from '../types/types';
+import { StackParamList } from '../../types/types';
 import * as Google from 'expo-auth-session/providers/google';
 
-// ❌ Elimina esta línea:
-// import e from 'express';
+
 
 // ✅ Botón de Login con Google
 export function BtnLoginGoogle() {
@@ -43,7 +42,7 @@ export function BtnLoginGoogle() {
 // Pantalla principal
 const PresentacionPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
-  const image = require('../img/principal.png');
+  const image = require('../../img/principal.png');
 
   return (
     <SafeAreaView style={styles.container}>

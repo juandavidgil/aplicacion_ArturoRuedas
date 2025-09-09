@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Linking, Alert } from 'react-native';
-import { StackParamList } from '../types/types';
+import { StackParamList } from '../../types/types';
 import { RouteProp } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { CheckBox } from 'react-native-elements';
-import { URL } from '../config/UrlApi';
+import { URL } from '../../config/UrlApi';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import type { StackNavigationProp } from '@react-navigation/stack';

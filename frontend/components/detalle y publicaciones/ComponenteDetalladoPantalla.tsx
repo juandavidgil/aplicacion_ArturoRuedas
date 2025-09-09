@@ -1,8 +1,8 @@
 import React,{ useState, useEffect}  from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, Alert } from 'react-native';
 import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
-import { componentesData } from '../components/ComponentesData'; 
-import { StackParamList } from '../types/types';
+import { componentesData } from '../../components/detalle y publicaciones/ComponentesData'; 
+import { StackParamList } from '../../types/types';
 import type { StackNavigationProp } from '@react-navigation/stack';
 
 interface Publicacion {

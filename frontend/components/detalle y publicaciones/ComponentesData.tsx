@@ -1,9 +1,9 @@
-import { ComponenteData } from '../types/types';
+
 
 export const componentesData = {
   ruedas: {
     nombre: "Ruedas",
-    imagen: require('../img/rueda.webp'),
+    imagen: require('../../img/rueda.webp'),
     comoColocar: [
     "Paso 1: Si tu bicicleta tiene frenos de llanta o de disco, suéltalos o desactiva el sistema según corresponda.",
     "Paso 2: Retira la rueda antigua aflojando las tuercas con una llave inglesa o liberando el cierre rápido.",
@@ -25,7 +25,7 @@ export const componentesData = {
 
   manubrio: {
     nombre: "manubrio",
-    imagen: require('../img/manub.webp'),
+    imagen: require('../../img/manub.webp'),
     comoColocar: [
       "Paso 1: Afloja y retira los tornillos de la potencia que sujetan el manubrio antiguo.",
     "Paso 2: Limpia el área de montaje para eliminar suciedad o grasa vieja.",
@@ -50,7 +50,7 @@ export const componentesData = {
 
   suspension: {
     nombre: "suspension",
-    imagen: require('../img/suspe.webp'),
+    imagen: require('../../img/suspe.webp'),
     comoColocar: [
       "Paso 1: Retira la rueda delantera y afloja los tornillos de la potencia para soltar la suspensión (o tenedor) vieja. Retira también los espaciadores si los hay.",
     "Paso 2: Limpia bien el área de montaje, especialmente la parte del tubo de dirección y la potencia.",
@@ -75,7 +75,7 @@ export const componentesData = {
 
   pedal: {
       nombre: "pedal",
-    imagen: require('../img/pedal.jpg'),
+    imagen: require('../../img/pedal.jpg'),
     comoColocar: [
       "Paso 1: Usa una llave número 15 o una llave específica para pedales.",
     "Paso 2: Gira el pedal izquierdo en sentido horario para aflojarlo (rosca inversa) y el derecho en sentido antihorario.",
@@ -99,7 +99,7 @@ export const componentesData = {
 
    piñon: {
       nombre: "piñon",
-    imagen: require('../iconos/piñon.png'),
+    imagen: require('../../iconos/piñon.png'),
     comoColocar: [
        "Paso 1: Retira la rueda trasera de la bicicleta.",
     "Paso 2: Usa un extractor de cassette o rueda libre (dependiendo del tipo de piñón) y una llave inglesa para aflojar el componente.",
@@ -123,7 +123,7 @@ export const componentesData = {
   },
     cadena: {
       nombre: "cadena",
-    imagen: require('../iconos/cadena.png'),
+    imagen: require('../../iconos/cadena.png'),
     comoColocar: [
      "Paso 1: Coloca la bicicleta en una base o volteada para trabajar cómodamente.",
     "Paso 2: Si es necesario quitar la cadena vieja, utiliza un corta cadenas o abre el eslabón maestro con una herramienta adecuada.",
@@ -148,7 +148,7 @@ export const componentesData = {
   
   plato: {
       nombre: "plato",
-    imagen: require('../iconos/plato.png'),
+    imagen: require('../../iconos/plato.png'),
     comoColocar: [
       "Paso 1: Retira la cadena del plato y asegúrate de tener acceso libre a los tornillos.",
     "Paso 2: Usa una llave Allen o herramienta específica para aflojar los tornillos del plato.",
@@ -172,7 +172,7 @@ export const componentesData = {
   },
     marco: {
       nombre: "marco",
-    imagen: require('../iconos/marco.png'),
+    imagen: require('../../iconos/marco.png'),
     comoColocar: [
       "Paso 1: Desmonta todos los componentes de la bicicleta (ruedas, transmisión, frenos, manubrio, suspensión, etc.) del marco antiguo.",
     "Paso 2: Limpia todas las piezas y asegúrate de que estén en buen estado para ser reutilizadas.",

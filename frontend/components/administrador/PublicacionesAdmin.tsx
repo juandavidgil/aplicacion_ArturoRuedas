@@ -3,10 +3,10 @@ import { View,Text,FlatList,TouchableOpacity,TextInput,Alert, StyleSheet, Image,
 import { Ionicons } from "@expo/vector-icons";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StackParamList } from '../types/types';
+import { StackParamList } from '../../types/types';
 import { RouteProp,useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {URL} from '../config/UrlApi'
+import {URL} from '../../config/UrlApi'
 import { LinearGradient } from 'expo-linear-gradient';
 
 

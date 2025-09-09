@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Linking, Alert, TouchableOpacity } from 'react-native';
-import { StackParamList } from '../types/types';
+import { StackParamList } from '../../types/types';
 import { RouteProp } from '@react-navigation/native';
-import { URL } from '../config/UrlApi';
+import { URL } from '../../config/UrlApi';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { useRoute, useNavigation } from '@react-navigation/native';
@@ -102,7 +102,7 @@ const DetallePublicacionAdmin: React.FC<Props> = ({ route }) => {
             <Text style={styles.texto}>{publicacion.tipo_bicicleta}</Text>
           </View>
 
-          <TouchableOpacity  onPress={EliminarPublicacion}>
+          <TouchableOpacity  style={styles.eliminarPublicacion}  onPress={EliminarPublicacion}>
             <Text>Eliminar publicacion</Text>
             </TouchableOpacity>
         </View>
@@ -146,6 +146,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ec2314ff',
   },
+  eliminarPublicacion:{
+    borderColor: '#ffffffff',
+    padding: 16,
+    color: '#ffffffff',
+  }
 });
 
 export default DetallePublicacionAdmin;
