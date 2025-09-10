@@ -21,7 +21,7 @@ export type StackParamList = {
 
   FiltroAdmin: undefined;
   Administrador: undefined;
-  InformacionUsuarioAdmin: undefined
+  InformacionUsuarioAdmin: {ID_usuario: number};
   PublicacionesAdmin: {ID_usuario : number};
   DetallePublicacionAdmin: { publicacion: Publicacion; id: number; }
   

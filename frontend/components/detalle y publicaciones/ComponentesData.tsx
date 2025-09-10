@@ -1,6 +1,8 @@
 
 
 export const componentesData = {
+
+  //los de mtb
   ruedas: {
     nombre: "Ruedas",
     imagen: require('../../img/rueda.webp'),
@@ -196,7 +198,10 @@ export const componentesData = {
     },
 
   },
-  // Puedes agregar más componentes aquí
+  // los de ruta
+
+
+  //los de fija 
 };
 
 
