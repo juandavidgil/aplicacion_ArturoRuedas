@@ -224,17 +224,7 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
   <Ionicons name="logo-whatsapp" size={20} color="#25D366" />
   <Text style={styles.textoMensajeAlVendedor}>Chatear por WhatsApp</Text>
 </TouchableOpacity> 
-       {/*  <TouchableOpacity 
-  onPress={() => navigation.navigate('ChatPrivado', { 
-    chatId: null, 
-    idOtroUsuario: item.id_vendedor,
-    nombreOtroUsuario: item.nombre_vendedor 
-  })}
-  style={styles.botonMensajeAlVendedor}
->
-  <Ionicons name="chatbubble-ellipses-outline" size={20} color="#51AFF7" />
-  <Text style={styles.textoMensajeAlVendedor}>Mensaje al vendedor</Text>
-</TouchableOpacity>  */}
+    
       </View>
     </View>
   </TouchableOpacity>

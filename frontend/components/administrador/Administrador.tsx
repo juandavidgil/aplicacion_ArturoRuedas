@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {URL} from '../../config/UrlApi'
 import { LinearGradient } from 'expo-linear-gradient';
-import InformacionUsuarioAdmin from "./InformacionUsuarioAdmin";
+
 
 export interface Usuario {
   id_usuario: number;
@@ -123,7 +123,7 @@ const Administrador: React.FC = () => {
       </TouchableOpacity>
           <TouchableOpacity 
           style={[styles.button, styles.blockButton]}
-          onPress={()=>navigation.navigate('InformacionUsuarioAdmin', {ID_usuario : item.id_usuario})}> 
+          onPress={()=>navigation.navigate('InformacionUsuarioAdmin', {usuario : item})}> 
             <Text style={styles.buttonText}>Ver mas</Text>
           </TouchableOpacity>
           <TouchableOpacity 

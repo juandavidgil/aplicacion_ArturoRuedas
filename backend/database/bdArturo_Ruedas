@@ -110,3 +110,6 @@ CREATE TABLE carrito (
 
 ALTER TABLE carrito ADD COLUMN ID_vendedor INTEGER,
 ADD CONSTRAINT fk_vendedor FOREIGN KEY (ID_vendedor) REFERENCES usuario(ID_usuario);
+
+
+SELECT * FROM usuario WHERE ID_usuario = $1
