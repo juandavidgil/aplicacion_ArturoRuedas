@@ -4,6 +4,8 @@ import { Pool } from 'pg';
 import nodemailer from 'nodemailer';
 import axios from "axios";
 import dotenv from "dotenv";
+import { Expo } from "expo-server-sdk";
+const expo = new Expo();
 
 
 dotenv.config();
@@ -242,6 +244,108 @@ app.post('/publicar_articulo', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error al publicar el artículo' });
   }
 });
+// Guardar token de notificaciones de un usuario 
+
+app.post("/test-notification", async (req: Request, res: Response) => {
+  try {
+    const { ID_usuario, token } = req.body;
+
+    if (!token) {
+      return res.status(400).json({ error: "Token requerido" });
+    }
+
+    // Enviar notificación
+    if (Expo.isExpoPushToken(token)) {
+      await expo.sendPushNotificationsAsync([
+        {
+          to: token,
+          sound: "default",
+          title: "📢 Notificación de prueba",
+          body: "Si ves esto, las notificaciones funcionan 🚀",
+        },
+      ]);
+    }
+
+    res.json({ mensaje: "Notificación enviada con éxito" });
+  } catch (error) {
+    console.error("❌ Error en /test-notification:", error);
+    res.status(500).json({ error: "Error enviando notificación" });
+  }
+});
+
+
+
+const router = express.Router();
+
+// ✅ Guardar token de notificación para un usuario
+router.post("/guardar-token", async (req: Request, res: Response) => {
+  try {
+    const { ID_usuario, token } = req.body;
+
+    if (!ID_usuario || !token) {
+      return res.status(400).json({ error: "ID_usuario y token son obligatorios" });
+    }
+
+    // Verificamos si ya existe token para este usuario
+    const existe = await pool.query(
+      "SELECT * FROM user_tokens WHERE user_id = $1 AND token = $2",
+      [ID_usuario, token]
+    );
+
+    if (existe.rows.length === 0) {
+      await pool.query(
+        "INSERT INTO user_tokens (user_id, token) VALUES ($1, $2)",
+        [ID_usuario, token]
+      );
+    }
+
+    res.json({ mensaje: "Token guardado correctamente ✅" });
+  } catch (error) {
+    console.error("Error al guardar token:", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+});
+
+// Enviar notificación de prueba
+router.post("/test-notification", async (req: Request, res: Response) => {
+  try {
+    const { ID_usuario } = req.body;
+
+    if (!ID_usuario) {
+      return res.status(400).json({ error: "ID_usuario es obligatorio" });
+    }
+
+    // Buscar todos los tokens del usuario
+    const tokens = await pool.query(
+      "SELECT token FROM user_tokens WHERE user_id = $1",
+      [ID_usuario]
+    );
+
+    if (tokens.rows.length === 0) {
+      return res.status(404).json({ error: "El usuario no tiene tokens registrados" });
+    }
+
+    const mensajes = tokens.rows.map((t: any) => ({
+      to: t.token,
+      sound: "default",
+      title: "🚀 Notificación de prueba",
+      body: "Hola, esta es una notificación de prueba.",
+    }));
+
+    // Enviar notificaciones con Expo
+    const chunks = expo.chunkPushNotifications(mensajes);
+    for (const chunk of chunks) {
+      await expo.sendPushNotificationsAsync(chunk);
+    }
+
+    res.json({ mensaje: "Notificaciones enviadas correctamente ✅" });
+  } catch (error) {
+    console.error("Error al enviar notificación:", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+});
+
+
 
 
 
@@ -278,13 +382,46 @@ app.post('/agregar-carrito', async (req: Request, res: Response) => {
       'INSERT INTO carrito (ID_usuario, ID_publicacion) VALUES ($1, $2)',
       [ID_usuario, ID_publicacion]
     );
-    
+    //NOTIFICACION
+     const datosVendedor = await pool.query(
+      `SELECT u.id_usuario, u.nombre
+       FROM com_ventas cv
+       JOIN usuario u ON cv.id_usuario = u.id_usuario
+       WHERE cv.id_publicacion = $1`,
+      [ID_publicacion]
+    );
+
+    const vendedor = datosVendedor.rows[0];
+    if (vendedor) {
+      const tokens = await pool.query(
+        "SELECT token FROM user_tokens WHERE user_id = $1",
+        [vendedor.id_usuario]
+      );
+
+      if (tokens.rows.length > 0) {
+        const mensajes = tokens.rows.map((t: any) => ({
+          to: t.token,
+          sound: "default",
+          title: "¡Nuevo interés en tu artículo!",
+          body: "Un usuario agregó tu artículo al carrito 🚀",
+        }));
+
+        const chunks = expo.chunkPushNotifications(mensajes);
+        for (const chunk of chunks) {
+          await expo.sendPushNotificationsAsync(chunk);
+        }
+
+        console.log("📩 Notificación enviada al vendedor:", vendedor.nombre);
+      }
+    }
+
     res.status(201).json({ mensaje: 'Artículo agregado al carrito correctamente' });
   } catch (error) {
     console.error('Error al agregar al carrito:', error);
     res.status(500).json({ error: 'Error en el servidor' });
   }
 });
+
 
 
 // Endpoint para obtener los artículos del carrito de un usuario
@@ -499,9 +636,66 @@ app.get('/obtener-publicaciones/:ID_usuario', async (req, res) => {
       if (result.rowCount === 0) {
         return res.status(404).json({ error: 'Publicación no encontrada' });
       }
-      
+      const publicacionEliminada = result.rows[0];
       console.log('Se eliminó la publicación', result.rows[0]);
-      res.json({ message: 'Publicación eliminada con éxito', deleted: result.rows[0] });
+      
+        const compradores = await pool.query(
+      `SELECT c.id_usuario, u.nombre
+       FROM carrito c
+       INNER JOIN usuario u ON c.id_usuario = u.id_usuario
+       WHERE c.id_publicacion = $1`,
+      [id]
+    );
+
+    if (compradores.rows.length > 0) {
+      for (const comprador of compradores.rows) {
+        const tokens = await pool.query(
+          "SELECT token FROM user_tokens WHERE user_id = $1",
+          [comprador.id_usuario]
+        );
+
+        if (tokens.rows.length > 0) {
+          const mensajes = tokens.rows.map((t: any) => ({
+            to: t.token,
+            sound: "default",
+            title: "Artículo vendido ❌",
+            body: `El artículo "${publicacionEliminada.nombre_articulo}" ya fue vendido.`,
+          }));
+
+          const chunks = expo.chunkPushNotifications(mensajes);
+          for (const chunk of chunks) {
+            await expo.sendPushNotificationsAsync(chunk);
+          }
+
+          console.log(`✅ Notificación enviada al comprador: ${comprador.nombre}`);
+
+          // 🔹 Guardar notificación en BD (para tu pantalla de notificaciones)
+          await pool.query(
+            `INSERT INTO notificaciones (id_usuario, titulo, cuerpo)
+             VALUES ($1, $2, $3)`,
+            [
+              comprador.id_usuario,
+              'Artículo vendido ❌',
+              `El artículo "${publicacionEliminada.nombre_articulo}" ya fue vendido.`,
+            ]
+          );
+        } else {
+          console.log(`⚠️ Comprador ${comprador.id_usuario} no tiene tokens registrados`);
+        }
+      }
+    } else {
+      console.log('⚠️ Nadie tenía este artículo en el carrito');
+    }
+
+    // Limpiar carrito de esa publicación
+    await pool.query('DELETE FROM carrito WHERE ID_publicacion = $1', [id]);
+
+    // 🔹 Responder una sola vez
+    res.json({
+      message: 'Publicación eliminada con éxito, notificaciones enviadas y carrito limpiado',
+      deleted: publicacionEliminada,
+    });
+  
     } catch (error) {
       console.error('Error al eliminar publicación:', error);
       res.status(500).json({ error: 'Error en el servidor' });

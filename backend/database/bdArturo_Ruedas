@@ -108,8 +108,22 @@ CREATE TABLE carrito (
     CONSTRAINT fk_ID_usuario FOREIGN KEY (ID_usuario) REFERENCES usuario(ID_usuario)
 );
 
+CREATE TABLE user_tokens (
+  id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES usuario(ID_usuario),
+  token TEXT NOT NULL,
+  UNIQUE(user_id, token)
+);
+
+CREATE TABLE notificaciones (
+  id SERIAL PRIMARY KEY,
+  id_usuario INT NOT NULL,
+  titulo TEXT NOT NULL,
+  cuerpo TEXT NOT NULL,
+  fecha TIMESTAMP DEFAULT NOW(),
+  leida BOOLEAN DEFAULT FALSE
+);
+
+
 ALTER TABLE carrito ADD COLUMN ID_vendedor INTEGER,
 ADD CONSTRAINT fk_vendedor FOREIGN KEY (ID_vendedor) REFERENCES usuario(ID_usuario);
-
-
-SELECT * FROM usuario WHERE ID_usuario = $1

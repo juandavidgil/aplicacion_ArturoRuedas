@@ -18,12 +18,13 @@ interface GLTFResult {
     [name: string]: THREE.Material
   }
 }
-export default function FixieBike(props: GroupProps) {
-  const model = Asset.fromModule(
-    require('../../assets/modelos/fija.glb')
-  ).uri
 
-  const { nodes, materials } = useGLTF(model) as unknown as GLTFResult
+export default function FixieBike(props: GroupProps) {
+  // Usar localUri en vez de uri
+  const asset = Asset.fromModule(require('../../assets/modelos/fija.glb'))
+  const modelPath = asset.localUri ?? asset.uri
+
+  const { nodes, materials } = useGLTF(modelPath) as unknown as GLTFResult
 
   return (
     <group {...props} dispose={null} scale={7} position={[0, -3.5, 0]}>
@@ -56,4 +57,5 @@ export default function FixieBike(props: GroupProps) {
   )
 }
 
-useGLTF.preload('../../assets/modelos/fija.glb')
+// Preload usando require, no string
+useGLTF.preload(require('../../assets/modelos/fija.glb'))
