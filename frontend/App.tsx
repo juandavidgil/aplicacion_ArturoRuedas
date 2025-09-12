@@ -23,7 +23,7 @@ import InformacionUsuarioAdmin from './components/administrador/InformacionUsuar
 import PublicacionesAdmin from './components/administrador/PublicacionesAdmin';
 import DetallePublicacionAdmin from './components/administrador/DetallePublicacionAdmin';
 
-import PerfilPantalla from './components/funciones barra/perfil';
+import PerfilPantalla from './components/perfil/perfil';
 import PublicacionesUsuarioLogueado from './components/perfil/PublicacionesUsuarioLogueadoPantalla';
 import DetallePublicacionLogueado from './components/perfil/DetallePublicacionLogueado';
 

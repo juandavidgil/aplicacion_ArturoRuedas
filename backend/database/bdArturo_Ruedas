@@ -40,7 +40,7 @@ CREATE TABLE usuarioadmin (
 
 --usuario administrador
 INSERT INTO usuarioadmin ( usuario, contraseña, contraseña2)
-    VALUES ('admin1', 'hola', 'hola2')
+    VALUES ('123', '123', '')
 
 -- Crear tabla mensaje
 CREATE TABLE mensaje (
@@ -99,17 +99,23 @@ CREATE TABLE com_ventas_componentes (
     CONSTRAINT fk_componentes FOREIGN KEY (componentesID_componentes) REFERENCES componentes(ID_componentes)
 );
 
--- Crear tabla carrito
+-- Crear tabla carrito (con ON DELETE CASCADE)
 CREATE TABLE carrito (
     ID_carrito SERIAL PRIMARY KEY,
     ID_publicacion INTEGER NOT NULL,
     ID_usuario INTEGER NOT NULL,
-    CONSTRAINT fk_ID_publicacion FOREIGN KEY (ID_publicacion) REFERENCES com_ventas(ID_publicacion),
-    CONSTRAINT fk_ID_usuario FOREIGN KEY (ID_usuario) REFERENCES usuario(ID_usuario)
+    ID_vendedor INTEGER,
+    CONSTRAINT fk_ID_publicacion FOREIGN KEY (ID_publicacion) 
+        REFERENCES com_ventas(ID_publicacion) 
+        ON DELETE CASCADE,  -- 👈 este es el cambio importante
+    CONSTRAINT fk_ID_usuario FOREIGN KEY (ID_usuario) 
+        REFERENCES usuario(ID_usuario),
+    CONSTRAINT fk_vendedor FOREIGN KEY (ID_vendedor) 
+        REFERENCES usuario(ID_usuario)
 );
 
-ALTER TABLE carrito ADD COLUMN ID_vendedor INTEGER,
-ADD CONSTRAINT fk_vendedor FOREIGN KEY (ID_vendedor) REFERENCES usuario(ID_usuario);
 
 
 SELECT * FROM usuario WHERE ID_usuario = $1
+
+SELECT * FROM com_ventas

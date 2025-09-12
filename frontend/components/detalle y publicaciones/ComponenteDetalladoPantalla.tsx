@@ -14,6 +14,8 @@ import { componentesData } from "../../components/detalle y publicaciones/Compon
 import { StackParamList } from "../../types/types";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import { URL } from "../../config/UrlApi";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Publicacion {
   id: number;
@@ -46,6 +48,39 @@ const ComponenteDetallePantalla = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [articulos, setPublicaciones] = useState<Publicacion[]>([]);
 
+   const AgregarCarrito = async (publicacion: Publicacion) => {
+    try {
+      const usuarioStr = await AsyncStorage.getItem('usuario');
+      if (!usuarioStr) {
+        Alert.alert('Error', 'Debes iniciar sesión primero');
+        navigation.navigate('InicioSesion');
+        return;
+      }
+
+      const usuario = JSON.parse(usuarioStr);
+      const ID_usuario = usuario.ID_usuario;
+
+      if (!ID_usuario) throw new Error('No se pudo obtener el ID de usuario');
+      if (!publicacion.id) throw new Error('El artículo no tiene ID definido');
+
+      const response = await fetch(`${URL}agregar-carrito`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          ID_usuario: ID_usuario, 
+          ID_publicacion: publicacion.id
+        }),
+      });
+
+      const responseData = await response.json();
+      if (!response.ok) throw new Error(responseData.error || 'Error al agregar al carrito');
+
+      Alert.alert('Éxito', 'Artículo agregado al carrito');
+    } catch (error) {
+      console.error('Error completo en AgregarCarrito:', error);
+      Alert.alert('Error al agregar al carrito');
+    }
+  };
   const obtenerPublicaciones = async () => {
     console.log("👉 Parámetros recibidos:", tipoBicicleta, componenteId);
     try {
@@ -105,6 +140,9 @@ const ComponenteDetallePantalla = () => {
           <Text style={styles.precio}>Precio: ${item.precio}</Text>
           <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
           <Text style={styles.tipo}>Vendedor: {item.nombre_vendedor}</Text>
+           <TouchableOpacity onPress={() => AgregarCarrito(item)}>
+              <Ionicons name='cart-outline' size={25} />
+            </TouchableOpacity>
         </View>
       </View>
     </TouchableOpacity>
