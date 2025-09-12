@@ -772,6 +772,17 @@ app.get("/publicaciones", async (req: Request, res: Response) => {
 
 
 
+app.get("/usuario/:id", async (req, res) => {
+  const { id } = req.params;
+  const result = await pool.query("SELECT * FROM usuario WHERE ID_usuario = $1", [id]);
+  if (result.rows.length === 0) {
+    return res.status(404).json({ error: "Usuario no encontrado" });
+  }
+  res.json(result.rows[0]);
+});
+
+
+
 // Iniciar servidor con manejo de errores
 app.listen(PORT, () => {
   console.log(`🚀 Servidor escuchando en el puerto ${PORT}`);

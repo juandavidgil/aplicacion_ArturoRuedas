@@ -48,7 +48,8 @@ export interface Usuario {
   id_usuario: number;
   nombre: string;
   correo: string;
-  telefono: string
+  telefono: string;
+  contraseña: string;
 }
 
 

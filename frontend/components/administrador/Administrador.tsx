@@ -13,6 +13,7 @@ export interface Usuario {
   nombre: string;
   correo: string;
   telefono: string;
+  contraseña: string;
 }
 
 
