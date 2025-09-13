@@ -12,8 +12,9 @@ Notifications.setNotificationHandler({
     shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: false,
-     shouldShowBanner: true,
-     shouldShowList: true,
+    shouldShowBanner: true, 
+    shouldShowList: true,
+
   }),
 });
 
@@ -21,7 +22,7 @@ const NotificacionesPantalla: React.FC = () => {
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
   const [usuario, setUsuario] = useState<any>(null);
 
-  // ✅ Cargar el usuario logueado desde AsyncStorage
+  // ✅ Cargar usuario logueado desde AsyncStorage
   useEffect(() => {
     const cargarUsuario = async () => {
       const usuarioData = await AsyncStorage.getItem("usuario");
@@ -60,12 +61,12 @@ const NotificacionesPantalla: React.FC = () => {
 
         setExpoPushToken(token);
 
-        // ✅ Guardar token en el backend con el campo correcto
+        // ✅ Guardar token en el backend
         if (usuario?.ID_usuario) {
-         await axios.post("http://192.168.100.6:3001/test-notification", {
-  ID_usuario: usuario?.ID_usuario ?? 1,
-});
-
+          await axios.post("http://192.168.100.6:3001/guardar-token", {
+            ID_usuario: usuario?.ID_usuario ?? 1,
+            token,
+          });
         }
       } catch (error) {
         console.error("Error obteniendo token de Expo:", error);
@@ -84,19 +85,33 @@ const NotificacionesPantalla: React.FC = () => {
     }
   }, [usuario]);
 
+  // ✅ Listeners de notificaciones
+  useEffect(() => {
+    const subscription = Notifications.addNotificationReceivedListener(notification => {
+      console.log("📩 Notificación recibida:", notification);
+    });
+
+    const responseSubscription = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log("👆 Usuario interactuó con la notificación:", response);
+    });
+
+    return () => {
+      subscription.remove();
+      responseSubscription.remove();
+    };
+  }, []);
+
   // ✅ Botón para probar notificación
   const enviarNotificacionPrueba = async () => {
     if (!expoPushToken) {
       Alert.alert("Error", "No se encontró token de notificación.");
       return;
     }
-
     try {
       await axios.post("http://192.168.100.6:3001/test-notification", {
         ID_usuario: usuario?.ID_usuario ?? 1,
         token: expoPushToken,
       });
-
       Alert.alert("Éxito", "Notificación de prueba enviada 🚀");
     } catch (error) {
       console.error("Error enviando notificación de prueba:", error);

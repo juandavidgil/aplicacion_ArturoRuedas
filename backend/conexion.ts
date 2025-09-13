@@ -244,106 +244,79 @@ app.post('/publicar_articulo', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error al publicar el artículo' });
   }
 });
-// Guardar token de notificaciones de un usuario 
-
-app.post("/test-notification", async (req: Request, res: Response) => {
-  try {
-    const { ID_usuario, token } = req.body;
-
-    if (!token) {
-      return res.status(400).json({ error: "Token requerido" });
-    }
-
-    // Enviar notificación
-    if (Expo.isExpoPushToken(token)) {
-      await expo.sendPushNotificationsAsync([
-        {
-          to: token,
-          sound: "default",
-          title: "📢 Notificación de prueba",
-          body: "Si ves esto, las notificaciones funcionan 🚀",
-        },
-      ]);
-    }
-
-    res.json({ mensaje: "Notificación enviada con éxito" });
-  } catch (error) {
-    console.error("❌ Error en /test-notification:", error);
-    res.status(500).json({ error: "Error enviando notificación" });
-  }
-});
 
 
 
-const router = express.Router();
-
-// ✅ Guardar token de notificación para un usuario
-router.post("/guardar-token", async (req: Request, res: Response) => {
+// Guardar token de notificación en BD
+app.post("/guardar-token", async (req: Request, res: Response) => {
   try {
     const { ID_usuario, token } = req.body;
 
     if (!ID_usuario || !token) {
-      return res.status(400).json({ error: "ID_usuario y token son obligatorios" });
+      return res.status(400).json({ error: "Faltan ID_usuario o token" });
     }
 
-    // Verificamos si ya existe token para este usuario
-    const existe = await pool.query(
-      "SELECT * FROM user_tokens WHERE user_id = $1 AND token = $2",
+    if (!Expo.isExpoPushToken(token)) {
+      return res.status(400).json({ error: "Token inválido" });
+    }
+
+    await pool.query(
+      "INSERT INTO user_tokens (ID_usuario, token) VALUES ($1, $2) ON CONFLICT (token) DO NOTHING",
       [ID_usuario, token]
     );
 
-    if (existe.rows.length === 0) {
-      await pool.query(
-        "INSERT INTO user_tokens (user_id, token) VALUES ($1, $2)",
-        [ID_usuario, token]
-      );
-    }
-
-    res.json({ mensaje: "Token guardado correctamente ✅" });
+    res.json({ message: "Token guardado correctamente" });
   } catch (error) {
-    console.error("Error al guardar token:", error);
-    res.status(500).json({ error: "Error en el servidor" });
+    console.error("Error guardando token:", error);
+    res.status(500).json({ error: "Error guardando token" });
   }
 });
 
-// Enviar notificación de prueba
-router.post("/test-notification", async (req: Request, res: Response) => {
+// Enviar notificación de prueba a un usuario
+app.post("/test-notification", async (req: Request, res: Response) => {
   try {
-    const { ID_usuario } = req.body;
+    const { ID_usuario, token } = req.body;
 
     if (!ID_usuario) {
-      return res.status(400).json({ error: "ID_usuario es obligatorio" });
+      return res.status(400).json({ error: "Falta ID_usuario" });
     }
 
-    // Buscar todos los tokens del usuario
-    const tokens = await pool.query(
-      "SELECT token FROM user_tokens WHERE user_id = $1",
-      [ID_usuario]
+     let tokens: string[] = [];
+    if (token) {
+      tokens = [token];
+    } else {
+      const result = await pool.query(
+        "SELECT token FROM user_tokens WHERE ID_usuario = $1",
+        [ID_usuario]
+      );
+      tokens = result.rows.map((row) => row.token);
+    }
+
+    if (tokens.length === 0) {
+      return res
+        .status(404)
+        .json({ error: "No hay tokens registrados para este usuario" });
+    }
+
+    // Enviar notificaciones
+    await Promise.all(
+      tokens.map((t) =>
+        axios.post("https://exp.host/--/api/v2/push/send", {
+          to: t,
+          sound: "default",
+          title: "🚀 Notificación de prueba",
+          body: "Este es un mensaje de prueba desde el backend",
+        })
+      )
     );
 
-    if (tokens.rows.length === 0) {
-      return res.status(404).json({ error: "El usuario no tiene tokens registrados" });
-    }
-
-    const mensajes = tokens.rows.map((t: any) => ({
-      to: t.token,
-      sound: "default",
-      title: "🚀 Notificación de prueba",
-      body: "Hola, esta es una notificación de prueba.",
-    }));
-
-    // Enviar notificaciones con Expo
-    const chunks = expo.chunkPushNotifications(mensajes);
-    for (const chunk of chunks) {
-      await expo.sendPushNotificationsAsync(chunk);
-    }
-
-    res.json({ mensaje: "Notificaciones enviadas correctamente ✅" });
+    res.json({ success: true, message: "Notificación enviada" });
   } catch (error) {
-    console.error("Error al enviar notificación:", error);
-    res.status(500).json({ error: "Error en el servidor" });
+    console.error("Error enviando notificación:", error);
+    res.status(500).json({ error: "Error enviando notificación" });
   }
 });
+
 
 
 
@@ -355,35 +328,34 @@ app.post('/agregar-carrito', async (req: Request, res: Response) => {
     const { ID_usuario, ID_publicacion } = req.body;
     console.log('ID_usuario recibido:', ID_usuario);
     console.log('ID_publicacion recibido:', ID_publicacion);
-    
+
     if (!ID_usuario || !ID_publicacion) {
       return res.status(400).json({ error: 'IDs de usuario y publicación son obligatorios' });
-      
     }
-    
-    // Verificar existencia del usuario por correo
+
+    // Verificar existencia
     const verificacion = await pool.query(
       `SELECT 
-      (SELECT 1 FROM usuario WHERE ID_usuario = $1) AS usuario_existe,
-      (SELECT 1 FROM com_ventas WHERE ID_publicacion = $2) AS articulo_existe,
-      (SELECT 1 FROM carrito WHERE ID_usuario = $1 AND ID_publicacion = $2) AS en_carrito`,
+        (SELECT 1 FROM usuario WHERE ID_usuario = $1) AS usuario_existe,
+        (SELECT 1 FROM com_ventas WHERE ID_publicacion = $2) AS articulo_existe,
+        (SELECT 1 FROM carrito WHERE ID_usuario = $1 AND ID_publicacion = $2) AS en_carrito`,
       [ID_usuario, ID_publicacion]
     );
-    
-    console.log('Resultado de verificación:', verificacion.rows[0]);
-    
+
     const { usuario_existe, articulo_existe, en_carrito } = verificacion.rows[0];
-    
+
     if (!usuario_existe) return res.status(404).json({ error: 'Usuario no encontrado' });
     if (!articulo_existe) return res.status(404).json({ error: 'Artículo no encontrado' });
-    if (en_carrito) return res.status(409).json({ error: 'Artículo ya está en el                                                                                               carrito' });
-    
+    if (en_carrito) return res.status(409).json({ error: 'Artículo ya está en el carrito' });
+
+    // Insertar en carrito
     await pool.query(
       'INSERT INTO carrito (ID_usuario, ID_publicacion) VALUES ($1, $2)',
       [ID_usuario, ID_publicacion]
     );
-    //NOTIFICACION
-     const datosVendedor = await pool.query(
+
+    // Obtener datos del vendedor
+    const datosVendedor = await pool.query(
       `SELECT u.id_usuario, u.nombre
        FROM com_ventas cv
        JOIN usuario u ON cv.id_usuario = u.id_usuario
@@ -393,10 +365,15 @@ app.post('/agregar-carrito', async (req: Request, res: Response) => {
 
     const vendedor = datosVendedor.rows[0];
     if (vendedor) {
+      console.log("👨‍💼 Vendedor encontrado:", vendedor);
+
+      // Obtener tokens
       const tokens = await pool.query(
-        "SELECT token FROM user_tokens WHERE user_id = $1",
+        "SELECT token FROM user_tokens WHERE ID_usuario = $1",
         [vendedor.id_usuario]
       );
+
+      console.log("🔑 Tokens del vendedor:", tokens.rows);
 
       if (tokens.rows.length > 0) {
         const mensajes = tokens.rows.map((t: any) => ({
@@ -406,12 +383,21 @@ app.post('/agregar-carrito', async (req: Request, res: Response) => {
           body: "Un usuario agregó tu artículo al carrito 🚀",
         }));
 
+        // Enviar notificaciones en chunks
         const chunks = expo.chunkPushNotifications(mensajes);
+
         for (const chunk of chunks) {
-          await expo.sendPushNotificationsAsync(chunk);
+          try {
+            const tickets = await expo.sendPushNotificationsAsync(chunk);
+            console.log("🎫 Respuesta de Expo:", tickets);
+          } catch (err) {
+            console.error("❌ Error al enviar notificación:", err);
+          }
         }
 
         console.log("📩 Notificación enviada al vendedor:", vendedor.nombre);
+      } else {
+        console.log("⚠️ El vendedor no tiene tokens registrados.");
       }
     }
 
@@ -421,6 +407,7 @@ app.post('/agregar-carrito', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Error en el servidor' });
   }
 });
+
 
 
 
@@ -625,82 +612,116 @@ app.get('/obtener-publicaciones/:ID_usuario', async (req, res) => {
   });
   
   //marcar como vendido
-  app.delete('/marcar-vendido/:id', async (req, res) => {
-    try {
-      const { id } = req.params;
-      const result = await pool.query(
-        'DELETE FROM com_ventas WHERE ID_publicacion = $1 RETURNING *',
-        [id]
-      );
-      
-      if (result.rowCount === 0) {
-        return res.status(404).json({ error: 'Publicación no encontrada' });
-      }
-      const publicacionEliminada = result.rows[0];
-      console.log('Se eliminó la publicación', result.rows[0]);
-      
-        const compradores = await pool.query(
-      `SELECT c.id_usuario, u.nombre
+// Reemplaza sólo la ruta /marcar-vendido por esta
+app.delete('/marcar-vendido/:id', async (req, res) => {
+  const idPublicacion = Number(req.params.id);
+  try {
+    // 0) obtener publicación
+    const pubRes = await pool.query('SELECT * FROM com_ventas WHERE ID_publicacion = $1', [idPublicacion]);
+    if (pubRes.rowCount === 0) return res.status(404).json({ error: 'Publicación no encontrada' });
+    const publicacion = pubRes.rows[0];
+    // column name puede ser nombre_Articulo en la BD -> normalizamos texto
+    const nombreArticulo = publicacion.nombre_articulo ?? publicacion.nombre_Articulo ?? publicacion.nombre_Articulo ?? 'Artículo';
+
+    // 1) obtener compradores que tienen en carrito (ANTES de borrar)
+    const compradoresRes = await pool.query(
+      `SELECT c.ID_usuario AS id_usuario, u.nombre
        FROM carrito c
-       INNER JOIN usuario u ON c.id_usuario = u.id_usuario
-       WHERE c.id_publicacion = $1`,
-      [id]
+       JOIN usuario u ON c.ID_usuario = u.ID_usuario
+       WHERE c.ID_publicacion = $1`,
+      [idPublicacion]
     );
+    console.log('👥 Compradores encontrados:', compradoresRes.rows);
 
-    if (compradores.rows.length > 0) {
-      for (const comprador of compradores.rows) {
-        const tokens = await pool.query(
-          "SELECT token FROM user_tokens WHERE user_id = $1",
-          [comprador.id_usuario]
-        );
+    // 2) obtener tokens de esos compradores
+    const compradoresIds = compradoresRes.rows.map((r: any) => r.id_usuario);
+    let tokensRows: { id_usuario: number; token: string }[] = [];
+    if (compradoresIds.length > 0) {
+      const tokensRes = await pool.query(
+        `SELECT ID_usuario, token FROM user_tokens WHERE ID_usuario = ANY($1::int[])`,
+        [compradoresIds]
+      );
+      tokensRows = tokensRes.rows;
+    }
+    console.log('🔑 Tokens encontrados para compradores:', tokensRows);
 
-        if (tokens.rows.length > 0) {
-          const mensajes = tokens.rows.map((t: any) => ({
-            to: t.token,
-            sound: "default",
-            title: "Artículo vendido ❌",
-            body: `El artículo "${publicacionEliminada.nombre_articulo}" ya fue vendido.`,
-          }));
+    // 3) borrar publicación y limpiar carrito dentro de transacción (consistencia)
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      const delPub = await client.query('DELETE FROM com_ventas WHERE ID_publicacion = $1 RETURNING *', [idPublicacion]);
+      await client.query('DELETE FROM carrito WHERE ID_publicacion = $1', [idPublicacion]);
+      await client.query('COMMIT');
+      console.log('🗑️ Publicación y carrito eliminados en BD');
+    } catch (txErr) {
+      await client.query('ROLLBACK');
+      client.release();
+      console.error('❌ Error en transacción:', txErr);
+      return res.status(500).json({ error: 'Error en transacción al eliminar publicación' });
+    }
+    client.release();
 
-          const chunks = expo.chunkPushNotifications(mensajes);
-          for (const chunk of chunks) {
-            await expo.sendPushNotificationsAsync(chunk);
+    // 4) enviar notificaciones a cada token usando el mismo endpoint que ya FUNCIONA (axios -> exp.host)
+    if (tokensRows.length > 0) {
+      // enviar en paralelo (Promise.all), registrar respuestas
+      const results = await Promise.all(tokensRows.map(async (r) => {
+        try {
+          const payload = {
+            to: r.token,
+            sound: 'default',
+            title: 'Artículo ya no disponible ❌',
+            body: `El artículo "${nombreArticulo}" que tenías en tu carrito ya fue vendido.`,
+            data: { ID_publicacion: idPublicacion },
+          };
+          const resp = await axios.post('https://exp.host/--/api/v2/push/send', payload, { timeout: 10000 });
+          console.log(`📩 Enviado a ${r.id_usuario} token:${r.token} -> status ${resp.status}`);
+          return { ok: true, id_usuario: r.id_usuario, token: r.token, resp: resp.data };
+        } catch (err: any) {
+          console.error('❌ Error enviando notificación a token:', r.token, err?.response?.data ?? err.message);
+          // si la API devuelve que el dispositivo no está registrado, eliminamos token
+          const errData = err?.response?.data;
+          // Expo si falla con token devuelve error en cuerpo; si ves DeviceNotRegistered en resp -> eliminar
+          if (errData && typeof errData === 'object' && JSON.stringify(errData).includes('DeviceNotRegistered')) {
+            await pool.query('DELETE FROM user_tokens WHERE token = $1', [r.token]).catch(e => console.error('Error eliminando token inválido:', e));
+            console.log('🚮 Token eliminado por DeviceNotRegistered:', r.token);
           }
+          return { ok: false, id_usuario: r.id_usuario, token: r.token, error: err?.message ?? err };
+        }
+      }));
 
-          console.log(`✅ Notificación enviada al comprador: ${comprador.nombre}`);
+      console.log('✅ Resultados envío notificaciones:', results);
 
-          // 🔹 Guardar notificación en BD (para tu pantalla de notificaciones)
+      // 5) guardar notificaciones en BD
+      for (const comprador of compradoresRes.rows) {
+        try {
           await pool.query(
             `INSERT INTO notificaciones (id_usuario, titulo, cuerpo)
              VALUES ($1, $2, $3)`,
             [
               comprador.id_usuario,
-              'Artículo vendido ❌',
-              `El artículo "${publicacionEliminada.nombre_articulo}" ya fue vendido.`,
+              'Artículo ya no disponible ❌',
+              `El artículo "${nombreArticulo}" que tenías en tu carrito ya fue vendido.`,
             ]
           );
-        } else {
-          console.log(`⚠️ Comprador ${comprador.id_usuario} no tiene tokens registrados`);
+        } catch (insertErr) {
+          console.error('❌ Error guardando notificación en BD para usuario', comprador.id_usuario, insertErr);
         }
       }
     } else {
-      console.log('⚠️ Nadie tenía este artículo en el carrito');
+      console.log('⚠️ No se encontraron tokens para notificar a compradores.');
     }
 
-    // Limpiar carrito de esa publicación
-    await pool.query('DELETE FROM carrito WHERE ID_publicacion = $1', [id]);
-
-    // 🔹 Responder una sola vez
-    res.json({
-      message: 'Publicación eliminada con éxito, notificaciones enviadas y carrito limpiado',
-      deleted: publicacionEliminada,
+    return res.json({
+      message: 'Publicación eliminada, compradores notificados (si tenían token) y carrito limpiado',
+      deleted: publicacion,
     });
-  
-    } catch (error) {
-      console.error('Error al eliminar publicación:', error);
-      res.status(500).json({ error: 'Error en el servidor' });
-    }
-  });
+  } catch (error) {
+    console.error('❌ Error en /marcar-vendido:', error);
+    return res.status(500).json({ error: 'Error en el servidor' });
+  }
+});
+
+
 
   
   

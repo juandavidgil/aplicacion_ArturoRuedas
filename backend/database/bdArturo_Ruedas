@@ -114,6 +114,15 @@ CREATE TABLE carrito (
         REFERENCES usuario(ID_usuario)
 );
 
+CREATE TABLE IF NOT EXISTS user_tokens (
+    ID SERIAL PRIMARY KEY,
+    ID_usuario INT NOT NULL,
+    token TEXT UNIQUE NOT NULL,
+    fecha_registro TIMESTAMP DEFAULT NOW(),
+    CONSTRAINT fk_usuario FOREIGN KEY (ID_usuario)
+        REFERENCES usuario (ID_usuario) ON DELETE CASCADE
+);
+
 
 
 SELECT * FROM usuario WHERE ID_usuario = $1

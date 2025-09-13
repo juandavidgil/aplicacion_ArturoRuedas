@@ -12,7 +12,7 @@ import { StackParamList } from '../../types/types';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Canvas } from '@react-three/fiber';
-import Model from '../../codigos modelos/mtb';
+// import Model from '../../codigos modelos/mtb';
 import useControls from 'r3f-native-orbitcontrols';
 import { OrbitControls } from '@react-three/drei';
 import { URL } from '../../config/UrlApi';
@@ -250,7 +250,7 @@ const MTBPantalla: React.FC = () => {
                         }}
                         pointerEvents="box-none"
                       >
-                        <Canvas>
+                        {/* <Canvas>
                           <OrbitControlsCmp enablePan={false} />
                           <ambientLight intensity={0.6} />
                           <directionalLight position={[1, 0, 0]} intensity={1.5} />
@@ -262,7 +262,7 @@ const MTBPantalla: React.FC = () => {
                           <Suspense fallback={null}>
                             <Model />
                           </Suspense>
-                        </Canvas>
+                        </Canvas> */}
                       </View>
                     </View>
                   </View>
