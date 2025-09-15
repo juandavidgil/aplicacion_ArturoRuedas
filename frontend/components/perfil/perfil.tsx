@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator, Alert } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator, Alert, Dimensions } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../../types/types';
 import { URL } from '../../config/UrlApi';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 interface Usuario {
   Id_usuario: number;
   nombre: string;
   correo: string;
   telefono: string;
- /*  foto?: string; */
 }
+const { width, height } = Dimensions.get('window');
+
 
 const PerfilPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [loading, setLoading] = useState(true);
+   const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -30,27 +32,24 @@ const PerfilPantalla: React.FC = () => {
         index: 0,
         routes: [{ name: "Presentacion" }], 
       });
-
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
-    }
-  };
+    }
+  };
   
   useEffect(() => {
     const fetchUsuario = async () => {
       const usuarioStr = await AsyncStorage.getItem('usuario');
+      if (!usuarioStr) {
+        Alert.alert('Error', 'Debes iniciar sesión primero');
+        return;
+      }
+      const usuario = JSON.parse(usuarioStr);
+      const ID_usuario = usuario.ID_usuario;
       
-                if (!usuarioStr) {
-                     Alert.alert('Error', 'Debes iniciar sesión primero');
-                     return;
-                   }
-          const usuario = JSON.parse(usuarioStr);
-          const ID_usuario = usuario.ID_usuario;
-          
-          
-          if (!ID_usuario) {
-            throw new Error('No se pudo obtener el ID de usuario');
-          }
+      if (!ID_usuario) {
+        throw new Error('No se pudo obtener el ID de usuario');
+      }
       try {
         const response = await fetch(`${URL}usuario/${ID_usuario}`);
         const data = await response.json();
@@ -61,95 +60,168 @@ const PerfilPantalla: React.FC = () => {
         setLoading(false);
       }
     };
-
     fetchUsuario();
   }, []);
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#333" />
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#fff" />
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      {/* Imagen de perfil */}
-     {/*  {usuario?.foto ? (
-        <Image source={{ uri: usuario.foto }} style={styles.avatar} />
-      ) : (
-        <Image source={require("../assets/avatar.png")} style={styles.avatar} /> 
-      )} */}
+    <LinearGradient colors={['#0c2b2a', '#000']} style={styles.gradient}>
+      <View style={styles.container}>
+        
+        {/* Tarjeta central */}
+        <View style={styles.card}>
+          {/* Avatar */}
+          {/* <Image
+            source={require("../assets/avatar.png")}
+            style={styles.avatar}
+          /> */}
 
-      {/* Datos del usuario */}
-      <Text style={styles.name}>{usuario?.nombre}</Text>
-      <Text style={styles.info}>Correo: {usuario?.correo}</Text>
-      <Text style={styles.info}>Teléfono: {usuario?.telefono}</Text>
+          {/* Datos */}
+          <Text style={styles.name}>{usuario?.nombre}</Text>
+          <Text style={styles.info}> {usuario?.correo}</Text>
+          <Text style={styles.info}>{usuario?.telefono}</Text>
 
-      {/* Botones */}
-      <TouchableOpacity /*  onPress={()=> navigation.navigate('EditarPerfil' , {usuario})} */
-      style={styles.button}>
-        <Text style={styles.buttonText}>Editar mi información</Text>
-      </TouchableOpacity>
+          {/* Botones */}
+          <TouchableOpacity style={styles.button}>
+            <LinearGradient colors={['#64eb76ff', '#23bd15ff']} style={styles.buttonBg}>
+              <Text style={styles.buttonText}> 🖋️ Editar mi información</Text>
+            </LinearGradient>
+          </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('PublicacionesUsuarioLogueado')}
-      >
-        <Text style={styles.buttonText}>Ver mis publicaciones</Text>
-      </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('PublicacionesUsuarioLogueado')}
+          >
+            <LinearGradient colors={['#23bd15ff', '#15922aff']} style={styles.buttonBg}>
+              <Text style={styles.buttonText}>📄 Ver mis publicaciones</Text>
+            </LinearGradient>
+          </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.button, styles.dangerButton]}>
-        <Text style={styles.buttonText}>Cambiar contraseña</Text>
-      </TouchableOpacity>
-    
+          <TouchableOpacity style={styles.button}>
+            <LinearGradient colors={['#15922aff', '#155206ff']} style={styles.buttonBg}>
+              <Text style={styles.buttonText}>🔒 Cambiar contraseña</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
 
-      {/* Botón cerrar sesión */}
-      <TouchableOpacity  onPress={handleLogout}>
-        <Text>Cerrar Sesión</Text>
-      </TouchableOpacity>
-    </View>
+        {/* Botón cerrar sesión */}
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <LinearGradient colors={['#ff416c', '#ff4b2b']} style={styles.buttonBg}>
+            <Text style={styles.buttonText}>Cerrar Sesión</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+  {/* foother */}
+            <View style={styles.iconBar}>
+          <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
+            <Ionicons name='storefront-outline' size={28} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Carrito')}>
+            <Ionicons name='cart-outline' size={28} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
+            <Ionicons name='notifications-outline' size={28} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=> navigation.navigate('Perfil')}>
+            <Ionicons name="person-circle-outline" size={28} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}>
+            <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#fff" />
+          </TouchableOpacity> 
+        </View>
+
+
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#000",
+  },
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#f8f9fa",
+    justifyContent: "center",
     alignItems: "center",
+    padding: 20,
+  },
+  card: {
+    backgroundColor: "rgba(255,255,255,0.05)",
+    borderRadius: 20,
+    padding: 25,
+    alignItems: "center",
+    width: "90%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 8,
   },
   avatar: {
     width: 120,
     height: 120,
     borderRadius: 60,
-    marginBottom: 20,
+    marginBottom: 15,
+    borderWidth: 3,
+    borderColor: "#00c6ff",
   },
   name: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 8,
+    color: "#fff",
   },
   info: {
     fontSize: 16,
-    color: "#555",
+    color: "#ddd",
     marginBottom: 5,
   },
   button: {
-    backgroundColor: "#007bff",
-    padding: 12,
-    borderRadius: 8,
     marginTop: 15,
-    width: "80%",
-    alignItems: "center",
+    width: "100%",
   },
-  dangerButton: {
-    backgroundColor: "#dc3545",
+  buttonBg: {
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: "center",
   },
   buttonText: {
     color: "#fff",
     fontSize: 16,
+    fontWeight: "600",
+  },
+  logoutButton: {
+    marginTop: 25,
+    width: "90%",
+  },
+    iconBar: {
+    flexDirection: 'row', 
+    justifyContent: 'space-around',
+    paddingVertical: height * 0.015, 
+    backgroundColor: '#004f4d',
+    borderTopLeftRadius: 10, 
+    borderTopRightRadius: 10,
+    position: 'absolute', 
+    bottom: 0, 
+    left: 0, 
+    right: 0,
+    shadowOpacity: 0.1, 
+    shadowOffset: { width: 0, height: -2 },
+    shadowRadius: 6, 
+    paddingBottom:"7%",
   },
 });
 

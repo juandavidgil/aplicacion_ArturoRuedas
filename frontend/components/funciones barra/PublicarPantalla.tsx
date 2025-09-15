@@ -258,7 +258,7 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 5 },
+  container: { flex: 1, padding: 10 },
   scrollContent: { paddingHorizontal: 16 },
   header: {
     flexDirection: "row",
