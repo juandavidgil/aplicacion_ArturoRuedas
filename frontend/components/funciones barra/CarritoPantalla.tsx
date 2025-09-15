@@ -125,10 +125,11 @@ const CarritoPantalla: React.FC = () => {
       <View style={styles.card}>
         {/* ✅ Mostrar solo la primera foto */}
         <Image 
-          source={{ uri: item.fotos && item.fotos.length > 0 ? item.fotos[0] : '' }} 
-          style={styles.imagen} 
-          resizeMode="cover" 
-        />
+  source={{ uri: item.fotos && item.fotos.length > 0 ? item.fotos[0] : 'https://via.placeholder.com/120' }} 
+  style={styles.imagen} 
+  resizeMode="cover" 
+/>
+
 
         <View style={styles.info}>
           <Text style={styles.nombre}>{item.nombre_articulo}</Text>

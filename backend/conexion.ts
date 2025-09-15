@@ -464,34 +464,37 @@ app.post('/agregar-carrito', async (req: Request, res: Response) => {
 app.get('/carrito/:id_usuario', async (req: Request, res: Response) => {
   try {
     const { id_usuario } = req.params;
-    
     if (!id_usuario || isNaN(Number(id_usuario))) {
       return res.status(400).json({ error: 'ID de usuario inválido' });
     }
-    
+
     const result = await pool.query(
       `SELECT 
-      cv.ID_publicacion as id,
-      cv.nombre_Articulo,
-      cv.descripcion,
-      cv.precio,
-      cv.tipo_bicicleta,
-      u.nombre as nombre_vendedor,
-      u.telefono,
-      cv.ID_usuario as id_vendedor
+        cv.ID_publicacion as id,
+        cv.nombre_Articulo,
+        cv.descripcion,
+        cv.precio,
+        cv.tipo_bicicleta,
+        u.nombre as nombre_vendedor,
+        u.telefono,
+        cv.ID_usuario as id_vendedor,
+        COALESCE(json_agg(f.url_foto) FILTER (WHERE f.url_foto IS NOT NULL), '[]') as fotos
       FROM carrito c
       JOIN com_ventas cv ON c.ID_publicacion = cv.ID_publicacion 
       JOIN usuario u ON cv.ID_usuario = u.ID_usuario
-      WHERE c.ID_usuario = $1`,
+      LEFT JOIN com_ventas_fotos f ON cv.ID_publicacion = f.ID_publicacion
+      WHERE c.ID_usuario = $1
+      GROUP BY cv.ID_publicacion, u.nombre, u.telefono, cv.ID_usuario`,
       [id_usuario]
     );
-    
+
     res.status(200).json(result.rows);
   } catch (error) {
     console.error('Error al obtener carrito:', error);
     res.status(500).json({ error: 'Error en el servidor' });
   }
 });
+
 // Endpoint para eliminar un artículo del carrito
 app.delete('/eliminar-carrito', async (req: Request, res: Response) => {
   console.log('🗑️ Solicitud DELETE recibida en /eliminar-carrito');

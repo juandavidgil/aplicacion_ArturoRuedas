@@ -162,3 +162,21 @@ SELECT
       ORDER BY cv.ID_publicacion DESC;
 
       SELECT * FROM com_ventas_fotos
+
+
+      SELECT 
+        cv.ID_publicacion as id,
+        cv.nombre_Articulo,
+        cv.descripcion,
+        cv.precio,
+        cv.tipo_bicicleta,
+        u.nombre as nombre_vendedor,
+        u.telefono,
+        cv.ID_usuario as id_vendedor,
+        COALESCE(json_agg(f.url_foto) FILTER (WHERE f.url_foto IS NOT NULL), '[]') as fotos
+      FROM carrito c
+      JOIN com_ventas cv ON c.ID_publicacion = cv.ID_publicacion 
+      JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+      LEFT JOIN com_ventas_fotos f ON cv.ID_publicacion = f.ID_publicacion
+      WHERE c.ID_usuario = $1
+      GROUP BY cv.ID_publicacion, u.nombre, u.telefono, cv.ID_usuario
