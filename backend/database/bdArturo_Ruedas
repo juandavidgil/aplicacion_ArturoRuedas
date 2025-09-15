@@ -42,31 +42,9 @@ CREATE TABLE usuarioadmin (
 INSERT INTO usuarioadmin ( usuario, contraseña, contraseña2)
     VALUES ('123', '123', '')
 
--- Crear tabla mensaje
-CREATE TABLE mensaje (
-    ID_mensaje SERIAL PRIMARY KEY,
-    mensaje VARCHAR(50) NOT NULL,
-    fecha_envio DATE NOT NULL,
-    usuario_ID_usuario INTEGER NOT NULL,
-    CONSTRAINT fk_usuario_mensaje FOREIGN KEY (usuario_ID_usuario) REFERENCES usuario(ID_usuario)
-);
+INSERT INTO usuarioadmin ( usuario, contraseña, contraseña2)
+    VALUES ('123', '123', '123')
 
--- Crear tabla chats
-CREATE TABLE chats (
-    ID_chats SERIAL PRIMARY KEY,
-    fecha_inicio DATE NOT NULL,
-    mensajeID_mensaje INTEGER,
-    CONSTRAINT fk_mensaje_chat FOREIGN KEY (mensajeID_mensaje) REFERENCES mensaje(ID_mensaje)
-);
-
--- Crear tabla chats_usuario
-CREATE TABLE chats_usuario (
-    chatsID_chats INTEGER,
-    usuario_ID_usuario INTEGER,
-    PRIMARY KEY (chatsID_chats, usuario_ID_usuario),
-    CONSTRAINT fk_chats FOREIGN KEY (chatsID_chats) REFERENCES chats(ID_chats),
-    CONSTRAINT fk_usuario_chat FOREIGN KEY (usuario_ID_usuario) REFERENCES usuario(ID_usuario)
-);
 
 -- Crear tabla com_ventas
 CREATE TABLE com_ventas (
@@ -74,11 +52,17 @@ CREATE TABLE com_ventas (
     nombre_Articulo VARCHAR(25) NOT NULL,
     precio VARCHAR(25) NOT NULL,
     descripcion VARCHAR(500) NOT NULL,
-    tipo_bicicleta VARCHAR(5),
-    tipo_componente VARCHAR(15),
-    foto VARCHAR(1000) NOT NULL,
-    ID_usuario INTEGER,
+    tipo_bicicleta VARCHAR(50),
+    tipo_componente VARCHAR(50),
+    ID_usuario INTEGER NOT NULL,
     CONSTRAINT fk_usuario_ventas FOREIGN KEY (ID_usuario) REFERENCES usuario(ID_usuario)
+);
+
+CREATE TABLE com_ventas_fotos (
+    ID_foto SERIAL PRIMARY KEY,
+    ID_publicacion INTEGER NOT NULL,
+    url_foto VARCHAR(1000) NOT NULL,
+    CONSTRAINT fk_publicacion_fotos FOREIGN KEY (ID_publicacion) REFERENCES com_ventas(ID_publicacion) ON DELETE CASCADE
 );
 
 -- Crear tabla com_ventas_usuario
@@ -128,3 +112,53 @@ CREATE TABLE IF NOT EXISTS user_tokens (
 SELECT * FROM usuario WHERE ID_usuario = $1
 
 SELECT * FROM com_ventas
+
+
+SELECT 
+        cv.ID_publicacion as id,
+        cv.nombre_articulo, 
+        cv.descripcion, 
+        cv.precio, 
+        cv.tipo_bicicleta, 
+        cv.tipo_componente,
+        cv.ID_usuario,
+        u.nombre as nombre_vendedor,
+        u.telefono,
+        COALESCE(
+          json_agg(cvf.url_foto) FILTER (WHERE cvf.url_foto IS NOT NULL),
+          '[]'
+        ) as fotos
+      FROM com_ventas cv
+      INNER JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+      LEFT JOIN com_ventas_fotos cvf ON cv.ID_publicacion = cvf.ID_publicacion
+      WHERE cv.nombre_articulo ILIKE $1
+      GROUP BY 
+        cv.ID_publicacion, 
+        cv.nombre_articulo, 
+        cv.descripcion, 
+        cv.precio, 
+        cv.tipo_bicicleta, 
+        cv.tipo_componente,
+        cv.ID_usuario,
+        u.nombre, 
+        u.telefono
+
+
+          SELECT 
+        cv.ID_publicacion AS id,
+        cv.nombre_Articulo,
+        cv.descripcion,
+        cv.precio,
+        cv.tipo_bicicleta,
+        COALESCE(
+          json_agg(cvf.url_foto) FILTER (WHERE cvf.url_foto IS NOT NULL),
+          '[]'
+        ) AS fotos
+      FROM com_ventas cv
+      JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+      LEFT JOIN com_ventas_fotos cvf ON cv.ID_publicacion = cvf.ID_publicacion
+      WHERE cv.ID_usuario = $1
+      GROUP BY cv.ID_publicacion, cv.nombre_Articulo, cv.descripcion, cv.precio, cv.tipo_bicicleta
+      ORDER BY cv.ID_publicacion DESC;
+
+      SELECT * FROM com_ventas_fotos

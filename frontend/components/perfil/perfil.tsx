@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 interface Usuario {
-  ID_usuario: number;
+  Id_usuario: number;
   nombre: string;
   correo: string;
   telefono: string;
@@ -88,7 +88,8 @@ const PerfilPantalla: React.FC = () => {
       <Text style={styles.info}>Teléfono: {usuario?.telefono}</Text>
 
       {/* Botones */}
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity /*  onPress={()=> navigation.navigate('EditarPerfil' , {usuario})} */
+      style={styles.button}>
         <Text style={styles.buttonText}>Editar mi información</Text>
       </TouchableOpacity>
 

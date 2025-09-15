@@ -2,7 +2,7 @@ import React, { Suspense, useState, useEffect } from 'react';
 import {
   View, Text, TextInput, FlatList, Image,
   TouchableOpacity, StyleSheet, ActivityIndicator,
-  SafeAreaView, Alert, Dimensions
+  SafeAreaView, Alert, Dimensions, ScrollView
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -23,7 +23,7 @@ interface Articulo {
   descripcion: string;
   precio: string;
   tipo_bicicleta: string;
-  foto: string;
+  fotos: string[];
   nombre_vendedor: string;
   telefono: string;
 }
@@ -43,13 +43,12 @@ const FijaPantalla: React.FC = () => {
   const route = useRoute();
   const { tipoBicicleta } = route.params as RouteParams;
 
-  // 🔹 debounce: busca automáticamente cuando escribes
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (busqueda.trim() !== '') {
         buscarArticulos(busqueda);
       } else {
-        setArticulos([]); // limpiar si está vacío
+        setArticulos([]);
       }
     }, 500);
 
@@ -62,24 +61,15 @@ const FijaPantalla: React.FC = () => {
       const response = await fetch(
         `${URL}buscar?nombre=${encodeURIComponent(texto)}&tipo=${tipoBicicleta}`
       );
-
-      if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status}`);
-      }
-
+      if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
       const data = await response.json();
-      console.log("Respuesta del backend buscar:", data);
-
-      // Aseguramos que siempre sea un array
       const resultados: Articulo[] = Array.isArray(data) ? data 
         : (Array.isArray(data.articulos) ? data.articulos : []);
-
       const articulosValidos = resultados.filter(
         (articulo) =>
           articulo.id &&
-          articulo.tipo_bicicleta.toLowerCase() === tipoBicicleta.toLowerCase()
+          articulo.tipo_bicicleta?.toLowerCase() === tipoBicicleta.toLowerCase()
       );
-
       setArticulos(articulosValidos);
     } catch (error) {
       console.error('Error al obtener artículos:', error);
@@ -97,25 +87,17 @@ const FijaPantalla: React.FC = () => {
         navigation.navigate('InicioSesion');
         return;
       }
-
       const usuario = JSON.parse(usuarioStr);
       const ID_usuario = usuario.ID_usuario;
-
       if (!ID_usuario) throw new Error('No se pudo obtener el ID de usuario');
       if (!articulo.id) throw new Error('El artículo no tiene ID definido');
-
       const response = await fetch(`${URL}agregar-carrito`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          ID_usuario: ID_usuario, 
-          ID_publicacion: articulo.id
-        }),
+        body: JSON.stringify({ ID_usuario, ID_publicacion: articulo.id }),
       });
-
       const responseData = await response.json();
       if (!response.ok) throw new Error(responseData.error || 'Error al agregar al carrito');
-
       Alert.alert('Éxito', 'Artículo agregado al carrito');
     } catch (error) {
       console.error('Error completo en AgregarCarrito:', error);
@@ -137,12 +119,11 @@ const FijaPantalla: React.FC = () => {
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Fixie (Piñon Fijo)</Text>
           </View>
-
-          {/* Buscador */}
           <View style={styles.searchContainer}>
             <TextInput
               style={styles.searchInput}
               placeholder="Buscar artículos..."
+              placeholderTextColor="#666"
               value={busqueda}
               onChangeText={setBusqueda}
             />
@@ -152,7 +133,7 @@ const FijaPantalla: React.FC = () => {
         <SafeAreaView style={{ flex: 1 }}>
           <View style={styles.containerMTB}>
             {cargando ? (
-              <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />
+              <ActivityIndicator size="large" color="#00ffb3" style={{ marginTop: 20 }} />
             ) : (
               <>
                 {articulos.length > 0 ? (
@@ -163,15 +144,21 @@ const FijaPantalla: React.FC = () => {
                     renderItem={({ item }) => (
                       <TouchableOpacity onPress={() => navigation.navigate('DetallePublicacion', { publicacion: item })}>
                         <View style={styles.cardMTB}>
-                          <Image source={{ uri: item.foto }} style={styles.imagenMTB} resizeMode="cover" />
+                          <Image 
+                            source={{ uri: item.fotos?.[0] || '' }} 
+                            style={styles.imagenMTB} 
+                            resizeMode="cover" 
+                          />
                           <View style={styles.infoMTB}>
                             <Text style={styles.nombreMTB}>{item.nombre_articulo}</Text>
-                            <Text style={styles.descripcionMTB}>{item.descripcion}</Text>
+                            <Text style={styles.descripcionMTB} numberOfLines={2}>
+                              Descripcion:{item.descripcion}
+                            </Text>
                             <Text style={styles.precioMTB}>Precio: ${item.precio}</Text>
-                            <Text>Tipo: {item.tipo_bicicleta}</Text>
-                            <Text style={styles.descripcionMTB}>vendedor: {item.nombre_vendedor}</Text>
-                            <TouchableOpacity onPress={() => AgregarCarrito(item)}>
-                              <Ionicons name='cart-outline' size={25} />
+                            <Text style={styles.precioMTB}>Tipo: {item.tipo_bicicleta}</Text>
+                            <Text style={styles.descripcionMTB}>Vendedor: {item.nombre_vendedor}</Text>
+                            <TouchableOpacity onPress={() => AgregarCarrito(item)} style={{ marginTop: 8 }}>
+                              <Ionicons name='cart-outline' size={25} color="#004f4d" />
                             </TouchableOpacity>
                           </View>
                         </View>
@@ -179,7 +166,7 @@ const FijaPantalla: React.FC = () => {
                     )}
                   />
                 ) : busqueda.trim() !== '' ? (
-                  <Text style={{ marginTop: 20, textAlign: 'center' }}>
+                  <Text style={{ marginTop: 20, textAlign: 'center', color: "#fff" }}>
                     No se encontraron artículos
                   </Text>
                 ) : (
@@ -194,18 +181,7 @@ const FijaPantalla: React.FC = () => {
                         onStartShouldSetResponder={() => true}
                         pointerEvents="box-none"
                       >
-                        <Canvas>
-                          <OrbitControls enablePan={false} />
-                          <directionalLight position={[1, 0, 0]} intensity={5} />
-                          <directionalLight position={[-1, 0, 0]} intensity={5} />
-                          <directionalLight position={[0, 1, 0]} intensity={5} />
-                          <directionalLight position={[0, -1, 0]} intensity={5} />
-                          <directionalLight position={[0, 0, 1]} intensity={5} />
-                          <directionalLight position={[0, 0, -1]} intensity={5} />
-                          <Suspense fallback={null}>
-                            <Model />
-                          </Suspense>
-                        </Canvas>
+                        {/* Modelo 3D */}
                       </View>
                     </View>
                   </View>
@@ -234,9 +210,14 @@ const FijaPantalla: React.FC = () => {
           </TouchableOpacity> 
         </View>
 
-        {/* Barra de componentes */}
+        {/* Barra de componentes deslizable */}
         {mostrarBarraComponentes && (
-          <View style={styles.barraComponentes}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.barraComponentes}
+            contentContainerStyle={{ paddingHorizontal: 10 }}
+          >
             <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas', tipoBicicleta })}>
               <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../../iconos/rueda.png')} />
             </TouchableOpacity>
@@ -249,7 +230,7 @@ const FijaPantalla: React.FC = () => {
             <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal', tipoBicicleta })}>
               <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../../iconos/pedal.jpeg')} />
             </TouchableOpacity>
-          </View>
+          </ScrollView>
         )}
       </SafeAreaProvider>
     </LinearGradient>
@@ -307,8 +288,7 @@ const styles = StyleSheet.create({
   },
   iconoComponentes:{ width: 35, height: 35, marginHorizontal: 15 },
   barraComponentes: {
-    flexDirection: 'row', justifyContent: 'space-around',
-    paddingVertical: 12, backgroundColor: '#fff',
+    flexDirection: 'row', paddingVertical: 12, backgroundColor: '#fff',
     borderWidth: 1, borderColor:  '#004f4d', borderRadius: 30,
     position: 'absolute', bottom: 80, left: 16, right: 16,
   },

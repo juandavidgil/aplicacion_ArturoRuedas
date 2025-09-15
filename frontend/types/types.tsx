@@ -30,7 +30,8 @@ export type StackParamList = {
   ChatGPT: undefined
   
   
-  Perfil: undefined
+  Perfil: undefined;
+  EditarPerfil: {usuario : Usuario };
   PublicacionesUsuarioLogueado: undefined;
   DetallePublicacionLogueado: { publicacion: Publicacion; id: number; };
 };
@@ -59,7 +60,7 @@ export interface Publicacion {
   descripcion: string;
   precio: string;
   tipo_bicicleta: string;
-  foto: string;
+  fotos: string[];
   nombre_vendedor: string;
   telefono: string
 
@@ -88,5 +89,6 @@ export type PublicacionesAdminScreenNavigationProp = RouteProp<StackParamList, '
 export type DetallePublicacionAdmincreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacionAdmin'>;
 
 export type PerfilScreenNavigationProp = RouteProp<StackParamList, 'Perfil'>;
+export type EditarPerfilScreenNavigationProp = RouteProp<StackParamList, 'EditarPerfil'>;
 export type PublicacionesUsuarioLogueadoScreenNavigationProp = RouteProp<StackParamList, 'PublicacionesUsuarioLogueado'>;
 export type DetallePublicacionLogueadocreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacionLogueado'>;

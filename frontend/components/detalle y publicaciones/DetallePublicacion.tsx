@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Linking, Alert, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, Linking, Alert, TouchableOpacity, Dimensions, FlatList } from 'react-native';
 import { StackParamList } from '../../types/types';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -46,10 +46,20 @@ const DetallePublicacion: React.FC<Props> = ({ route }) => {
       </View>
 
       <ScrollView style={styles.container}>
-        <Image 
-          source={{ uri: publicacion.foto }} 
-          style={styles.imagenDetalle}
-          resizeMode="contain"
+        {/* Carrusel de fotos */}
+        <FlatList
+          data={publicacion.fotos} // debe ser un array de URLs
+          keyExtractor={(item, index) => index.toString()}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <Image 
+              source={{ uri: item }} 
+              style={styles.imagenDetalle}
+              resizeMode="contain"
+            />
+          )}
         />
         
         <View style={styles.detalleContainer}>
@@ -65,8 +75,6 @@ const DetallePublicacion: React.FC<Props> = ({ route }) => {
             <Text style={styles.texto}>{publicacion.descripcion}</Text>
           </View>
           
-          
-          
           <View style={styles.seccion}>
             <Text style={styles.subtitulo}>Tipo de bicicleta</Text>
             <Text style={styles.texto}>{publicacion.tipo_bicicleta}</Text>
@@ -81,10 +89,10 @@ const DetallePublicacion: React.FC<Props> = ({ route }) => {
             onPress={() => enviarWhatsApp(publicacion.telefono, `Hola ${publicacion.nombre_vendedor}, estoy interesado en tu artículo: ${publicacion.nombre_articulo}`)}
             style={styles.botonMensajeAlVendedor}
           >
-             <View style={styles.contenidoBoton}>
-    <Ionicons name="logo-whatsapp" size={20} color="#25D366" />
-    <Text style={styles.textoMensajeAlVendedor}>Chatear por WhatsApp</Text>
-  </View>
+            <View style={styles.contenidoBoton}>
+              <Ionicons name="logo-whatsapp" size={20} color="#25D366" />
+              <Text style={styles.textoMensajeAlVendedor}>Chatear por WhatsApp</Text>
+            </View>
           </TouchableOpacity> 
         </View>
       </ScrollView>
@@ -104,10 +112,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 50,
     alignSelf: 'flex-start',
-    margin:5,
+    margin: 5,
   },
   imagenDetalle: {
-    width: '100%',
+    width: width, // ancho de la pantalla
     height: 300,
     backgroundColor: '#e0e0e0',
   },
@@ -141,12 +149,11 @@ const styles = StyleSheet.create({
   botonMensajeAlVendedor: {
     backgroundColor: '#f4f8f6ff',
     paddingVertical: 16,
-   
     borderRadius: 30,
     alignItems: 'center',
-     justifyContent: 'center',
+    justifyContent: 'center',
     marginTop: 10,
-    marginBottom:90,
+    marginBottom: 90,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.15,
@@ -154,17 +161,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   contenidoBoton: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-},
-textoMensajeAlVendedor: {
-  color: "#25D366",
-  marginLeft: 10,
-  fontWeight: '600',
-  fontSize: 16,
-},
-
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textoMensajeAlVendedor: {
+    color: "#25D366",
+    marginLeft: 10,
+    fontWeight: '600',
+    fontSize: 16,
+  },
 });
 
 export default DetallePublicacion;

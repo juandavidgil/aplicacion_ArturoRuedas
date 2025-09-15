@@ -14,8 +14,8 @@ import { componentesData } from "../../components/detalle y publicaciones/Compon
 import { StackParamList } from "../../types/types";
 import type { StackNavigationProp } from "@react-navigation/stack";
 import { URL } from "../../config/UrlApi";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Publicacion {
   id: number;
@@ -24,7 +24,7 @@ interface Publicacion {
   precio: string;
   tipo_bicicleta: string;
   tipo_componente: string;
-  foto: string;
+  fotos: string[]; 
   nombre_vendedor: string;
   telefono: string;
 }
@@ -48,39 +48,41 @@ const ComponenteDetallePantalla = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [articulos, setPublicaciones] = useState<Publicacion[]>([]);
 
-   const AgregarCarrito = async (publicacion: Publicacion) => {
+  const AgregarCarrito = async (publicacion: Publicacion) => {
     try {
-      const usuarioStr = await AsyncStorage.getItem('usuario');
+      const usuarioStr = await AsyncStorage.getItem("usuario");
       if (!usuarioStr) {
-        Alert.alert('Error', 'Debes iniciar sesión primero');
-        navigation.navigate('InicioSesion');
+        Alert.alert("Error", "Debes iniciar sesión primero");
+        navigation.navigate("InicioSesion");
         return;
       }
 
       const usuario = JSON.parse(usuarioStr);
       const ID_usuario = usuario.ID_usuario;
 
-      if (!ID_usuario) throw new Error('No se pudo obtener el ID de usuario');
-      if (!publicacion.id) throw new Error('El artículo no tiene ID definido');
+      if (!ID_usuario) throw new Error("No se pudo obtener el ID de usuario");
+      if (!publicacion.id) throw new Error("El artículo no tiene ID definido");
 
       const response = await fetch(`${URL}agregar-carrito`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          ID_usuario: ID_usuario, 
-          ID_publicacion: publicacion.id
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ID_usuario: ID_usuario,
+          ID_publicacion: publicacion.id,
         }),
       });
 
       const responseData = await response.json();
-      if (!response.ok) throw new Error(responseData.error || 'Error al agregar al carrito');
+      if (!response.ok)
+        throw new Error(responseData.error || "Error al agregar al carrito");
 
-      Alert.alert('Éxito', 'Artículo agregado al carrito');
+      Alert.alert("Éxito", "Artículo agregado al carrito");
     } catch (error) {
-      console.error('Error completo en AgregarCarrito:', error);
-      Alert.alert('Error al agregar al carrito');
+      console.error("Error completo en AgregarCarrito:", error);
+      Alert.alert("Error al agregar al carrito");
     }
   };
+
   const obtenerPublicaciones = async () => {
     console.log("👉 Parámetros recibidos:", tipoBicicleta, componenteId);
     try {
@@ -119,34 +121,37 @@ const ComponenteDetallePantalla = () => {
     obtenerPublicaciones();
   }, [tipoBicicleta, componenteId]);
 
-  const renderItem = ({ item }: { item: Publicacion }) => (
-    <TouchableOpacity
-      onPress={() => {
-        navigation.navigate("DetallePublicacion", { publicacion: item });
-      }}
-    >
-      <View style={styles.card}>
-        <Image
-          source={{ uri: item.foto }}
-          style={styles.imagen}
-          resizeMode="cover"
-          onError={() => console.log("Error cargando imagen")}
-        />
-        <View style={styles.info}>
-          <Text style={styles.nombre}>{item.nombre_articulo}</Text>
-          <Text style={styles.descripcion}>
-            Descripción: {item.descripcion.substring(0, 50)}...
-          </Text>
-          <Text style={styles.precio}>Precio: ${item.precio}</Text>
-          <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
-          <Text style={styles.tipo}>Vendedor: {item.nombre_vendedor}</Text>
-           <TouchableOpacity onPress={() => AgregarCarrito(item)}>
-              <Ionicons name='cart-outline' size={25} />
+  const renderItem = ({ item }: { item: Publicacion }) => {
+    const portada = item.fotos && item.fotos.length > 0 ? item.fotos[0] : ""; // ✅ usar primera foto
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("DetallePublicacion", { publicacion: item });
+        }}
+      >
+        <View style={styles.card}>
+          <Image
+            source={{ uri: portada }}
+            style={styles.imagen}
+            resizeMode="cover"
+            onError={() => console.log("Error cargando imagen")}
+          />
+          <View style={styles.info}>
+            <Text style={styles.nombre}>{item.nombre_articulo}</Text>
+            <Text style={styles.descripcion}>
+              Descripción: {item.descripcion.substring(0, 50)}...
+            </Text>
+            <Text style={styles.precio}>Precio: ${item.precio}</Text>
+            <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
+            <Text style={styles.tipo}>Vendedor: {item.nombre_vendedor}</Text>
+            <TouchableOpacity onPress={() => AgregarCarrito(item)}>
+              <Ionicons name="cart-outline" size={25} />
             </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   if (!componente) {
     return (
@@ -160,7 +165,6 @@ const ComponenteDetallePantalla = () => {
     <View style={styles.container}>
       <Text style={styles.title}>{componente.nombre}</Text>
 
-      {/* 👇 Imagen solo en colocar e info */}
       {tab !== "tienda" && (
         <Image
           source={componente.imagen}
@@ -187,7 +191,6 @@ const ComponenteDetallePantalla = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Contenido dinámico */}
       {tab === "colocar" && (
         <ScrollView contentContainerStyle={styles.content}>
           {componente.comoColocar.map((paso, index) => (
@@ -236,8 +239,8 @@ const ComponenteDetallePantalla = () => {
         </ScrollView>
       )}
 
-      {tab === "tienda" && (
-        articulos.length === 0 ? (
+      {tab === "tienda" &&
+        (articulos.length === 0 ? (
           <Text style={{ textAlign: "center", marginTop: 20 }}>
             No hay publicaciones disponibles.
           </Text>
@@ -250,8 +253,7 @@ const ComponenteDetallePantalla = () => {
             onRefresh={obtenerPublicaciones}
             contentContainerStyle={{ paddingBottom: 100 }}
           />
-        )
-      )}
+        ))}
     </View>
   );
 };

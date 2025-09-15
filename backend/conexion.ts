@@ -185,31 +185,47 @@ app.post('/restablecer-contrasena', async (req, res) => {
 });
 
 //buscar 
+// 🔍 Buscar publicaciones por nombre
 app.get('/buscar', async (req: Request, res: Response) => {
   const nombre = req.query.nombre as string;
-  
+
   if (!nombre || nombre.trim() === '') {
     return res.status(400).json({ error: 'El parámetro "nombre" es obligatorio' });
   }
-  
+
   try {
     const resultado = await pool.query(
       `SELECT 
-      cv.ID_publicacion as id,
-      cv.nombre_Articulo, 
-      cv.descripcion, 
-      cv.precio, 
-      cv.tipo_bicicleta, 
-      cv.foto, 
-      cv.ID_usuario,
-      u.nombre as nombre_vendedor,
-      u.telefono
-      FROM com_ventas cv 
-      INNER JOIN usuario u ON cv.ID_usuario = u.ID_usuario 
-      WHERE cv.nombre_Articulo ILIKE $1`,
+        cv.ID_publicacion as id,
+        cv.nombre_articulo, 
+        cv.descripcion, 
+        cv.precio, 
+        cv.tipo_bicicleta, 
+        cv.tipo_componente,
+        cv.ID_usuario,
+        u.nombre as nombre_vendedor,
+        u.telefono,
+        COALESCE(
+          json_agg(cvf.url_foto) FILTER (WHERE cvf.url_foto IS NOT NULL),
+          '[]'
+        ) as fotos
+      FROM com_ventas cv
+      INNER JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+      LEFT JOIN com_ventas_fotos cvf ON cv.ID_publicacion = cvf.ID_publicacion
+      WHERE cv.nombre_articulo ILIKE $1
+      GROUP BY 
+        cv.ID_publicacion, 
+        cv.nombre_articulo, 
+        cv.descripcion, 
+        cv.precio, 
+        cv.tipo_bicicleta, 
+        cv.tipo_componente,
+        cv.ID_usuario,
+        u.nombre, 
+        u.telefono`,
       [`%${nombre}%`]
     );
-    
+
     res.status(200).json(resultado.rows);
   } catch (error) {
     console.error('❌ Error al buscar artículos:', error);
@@ -218,32 +234,65 @@ app.get('/buscar', async (req: Request, res: Response) => {
 });
 
 
-//Publicar articulo
+// Publicar artículo con múltiples fotos
+
 app.post('/publicar_articulo', async (req: Request, res: Response) => {
-  const { nombre_Articulo, descripcion, precio, tipo_bicicleta,tipo_componente , foto, ID_usuario } = req.body;
-  
+  const { 
+    nombre_Articulo, 
+    descripcion, 
+    precio, 
+    tipo_bicicleta, 
+    tipo_componente, 
+    fotos,        // ahora viene un array de fotos
+    ID_usuario 
+  } = req.body;
+
   if (!ID_usuario) {
     return res.status(400).json({ error: 'ID de usuario es requerido' });
   }
-  
+
+  if (!fotos || !Array.isArray(fotos) || fotos.length === 0) {
+    return res.status(400).json({ error: 'Se requiere al menos una foto' });
+  }
+
+  const client = await pool.connect();
   try {
-    const result = await pool.query(
+    await client.query('BEGIN');
+
+    // Insertar publicación
+    const result = await client.query(
       `INSERT INTO com_ventas 
-      (nombre_Articulo, descripcion, precio, tipo_bicicleta,tipo_componente , foto, ID_usuario) 
-      VALUES ($1, $2, $3, $4, $5, $6 ,$7) 
-      RETURNING ID_publicacion`,
-      [nombre_Articulo, descripcion, precio, tipo_bicicleta, tipo_componente , foto, ID_usuario]
+        (nombre_Articulo, descripcion, precio, tipo_bicicleta, tipo_componente, ID_usuario) 
+       VALUES ($1, $2, $3, $4, $5, $6) 
+       RETURNING ID_publicacion`,
+      [nombre_Articulo, descripcion, precio, tipo_bicicleta, tipo_componente, ID_usuario]
     );
-    
+
+    const idPublicacion = result.rows[0].id_publicacion;
+
+    // Insertar fotos relacionadas
+    for (const foto of fotos) {
+      await client.query(
+        `INSERT INTO com_ventas_fotos (ID_publicacion, url_foto) VALUES ($1, $2)`,
+        [idPublicacion, foto]
+      );
+    }
+
+    await client.query('COMMIT');
+
     res.status(201).json({ 
       mensaje: 'Artículo publicado con éxito',
-      ID_publicacion: result.rows[0].ID_publicacion
+      ID_publicacion: idPublicacion
     });
   } catch (error) {
+    await client.query('ROLLBACK');
     console.error('Error al publicar artículo:', error);
     res.status(500).json({ error: 'Error al publicar el artículo' });
+  } finally {
+    client.release();
   }
 });
+
 
 
 
@@ -542,34 +591,37 @@ app.get('/obtener-usuarios', async (req, res) => {
       res.status(500).json({ error: 'Error en el servidor' }); // ✔️ Siempre devuelve JSON
   }
 });
-//administrar publicaciones - administrador
+// administrar publicaciones - administrador con múltiples fotos
 app.get('/obtener-publicaciones/:ID_usuario', async (req, res) => {
   try {
     const { ID_usuario } = req.params;
-    
+
     const result = await pool.query(`
       SELECT 
-      cv.ID_publicacion as id,
-      cv.nombre_Articulo,
-      cv.descripcion,
-      cv.precio,
-      cv.tipo_bicicleta,
-      cv.foto,
-      u.nombre AS nombre_vendedor
+        cv.ID_publicacion AS id,
+        cv.nombre_Articulo,
+        cv.descripcion,
+        cv.precio,
+        cv.tipo_bicicleta,
+        COALESCE(array_agg(cf.url_foto) FILTER (WHERE cf.url_foto IS NOT NULL), ARRAY[]::text[]) AS fotos, 
+        u.nombre AS nombre_vendedor
       FROM com_ventas cv
       JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+      LEFT JOIN com_ventas_fotos cf ON cv.ID_publicacion = cf.ID_publicacion
       WHERE cv.ID_usuario = $1
+      GROUP BY cv.ID_publicacion, u.nombre
       ORDER BY cv.ID_publicacion DESC;
-      `, [ID_usuario]);
-      
-      console.log('Publicaciones obtenidas:', result.rows.length);
-      res.status(200).json(result.rows);
-      
-    } catch (error) {
-      console.error('Error al obtener publicaciones:', error);
-      res.status(500).json({ error: 'Error en el servidor' });
-    }
-  });
+    `, [ID_usuario]);
+
+    console.log('Publicaciones obtenidas:', result.rows.length);
+    res.status(200).json(result.rows);
+
+  } catch (error) {
+    console.error('Error al obtener publicaciones:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+});
+
   //eliminar usuario - administrador
   app.delete('/eliminar-usuario/:id', async (req, res) => {
     try {
@@ -581,49 +633,79 @@ app.get('/obtener-publicaciones/:ID_usuario', async (req, res) => {
       res.status(500).json({ error: "Error al eliminar usuario" });
     }
   });
-  
 
-  //publicaciones del usuario logueado
-  app.get('/obtener-publicaciones-usuario-logueado/:ID_usuario', async (req, res) => {
+  //eliminar publicacion - administrador
+
+  app.delete('/eliminar-publicaciones-admin/:id', async (req, res) => {
     try {
-    const { ID_usuario } = req.params;
-
-    const result = await pool.query(`
-      SELECT 
-      cv.ID_publicacion as id,
-      cv.nombre_Articulo,
-      cv.descripcion,
-      cv.precio,
-      cv.tipo_bicicleta,
-      cv.foto
-      FROM com_ventas cv
-      JOIN usuario u ON cv.ID_usuario = u.ID_usuario
-      WHERE cv.ID_usuario = $1
-      ORDER BY cv.ID_publicacion DESC;
-      `, [ID_usuario]);
+      const { id } = req.params;
+      const result = await pool.query(
+        'DELETE FROM com_ventas WHERE ID_publicacion = $1 RETURNING *',
+        [id]
+      );
       
-      console.log('Publicaciones obtenidas:', result.rows.length);
-      res.status(200).json(result.rows);
+      if (result.rowCount === 0) {
+        return res.status(404).json({ error: 'Publicación no encontrada' });
+      }
       
+      console.log('Se eliminó la publicación', result.rows[0]);
+      res.json({ message: 'Publicación eliminada con éxito', deleted: result.rows[0] });
     } catch (error) {
-      console.error('Error al obtener publicaciones:', error);
+      console.error('Error al eliminar publicación:', error);
       res.status(500).json({ error: 'Error en el servidor' });
     }
   });
+
+
+// publicaciones del usuario logueado
+app.get('/obtener-publicaciones-usuario-logueado/:ID_usuario', async (req, res) => {
+  try {
+    const { ID_usuario } = req.params;
+
+    const result = await pool.query(
+      `
+      SELECT 
+        cv.ID_publicacion AS id,
+        cv.nombre_Articulo,
+        cv.descripcion,
+        cv.precio,
+        cv.tipo_bicicleta,
+        COALESCE(
+          json_agg(cvf.url_foto) FILTER (WHERE cvf.url_foto IS NOT NULL),
+          '[]'
+        ) AS fotos
+      FROM com_ventas cv
+      JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+      LEFT JOIN com_ventas_fotos cvf ON cv.ID_publicacion = cvf.ID_publicacion
+      WHERE cv.ID_usuario = $1
+      GROUP BY cv.ID_publicacion, cv.nombre_Articulo, cv.descripcion, cv.precio, cv.tipo_bicicleta
+      ORDER BY cv.ID_publicacion DESC;
+      `,
+      [ID_usuario]
+    );
+
+    console.log('Publicaciones obtenidas:', result.rows.length);
+    res.status(200).json(result.rows);
+
+  } catch (error) {
+    console.error('Error al obtener publicaciones:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+});
+
   
   //marcar como vendido
-// Reemplaza sólo la ruta /marcar-vendido por esta
 app.delete('/marcar-vendido/:id', async (req, res) => {
   const idPublicacion = Number(req.params.id);
   try {
-    // 0) obtener publicación
+  
     const pubRes = await pool.query('SELECT * FROM com_ventas WHERE ID_publicacion = $1', [idPublicacion]);
     if (pubRes.rowCount === 0) return res.status(404).json({ error: 'Publicación no encontrada' });
     const publicacion = pubRes.rows[0];
-    // column name puede ser nombre_Articulo en la BD -> normalizamos texto
+
     const nombreArticulo = publicacion.nombre_articulo ?? publicacion.nombre_Articulo ?? publicacion.nombre_Articulo ?? 'Artículo';
 
-    // 1) obtener compradores que tienen en carrito (ANTES de borrar)
+   
     const compradoresRes = await pool.query(
       `SELECT c.ID_usuario AS id_usuario, u.nombre
        FROM carrito c
@@ -756,7 +838,7 @@ app.post("/chat", async (req: Request, res: Response) => {
   }
 });
 
-//publicaciones disponibles filtradas por bicicleta y tipo
+// Publicaciones disponibles filtradas por bicicleta y tipo
 app.get("/publicaciones", async (req: Request, res: Response) => {
   const { tipo, componente } = req.query;
 
@@ -773,13 +855,22 @@ app.get("/publicaciones", async (req: Request, res: Response) => {
         cv.precio,
         cv.tipo_bicicleta,
         cv.tipo_componente,
-        cv.foto,
         u.nombre AS nombre_vendedor,
-        u.telefono
+        u.telefono,
+        -- Todas las fotos
+        COALESCE(
+          json_agg(cvf.url_foto) FILTER (WHERE cvf.url_foto IS NOT NULL), '[]'
+        ) AS fotos,
+        -- Primera foto (para compatibilidad con tu frontend actual)
+        COALESCE(
+          (ARRAY_AGG(cvf.url_foto ORDER BY cvf.id_foto ASC))[1], NULL
+        ) AS foto
       FROM com_ventas cv
       JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+      LEFT JOIN com_ventas_fotos cvf ON cv.ID_publicacion = cvf.ID_publicacion
       WHERE LOWER(cv.tipo_bicicleta) = LOWER($1)
         AND LOWER(cv.tipo_componente) = LOWER($2)
+      GROUP BY cv.ID_publicacion, u.nombre, u.telefono, cv.nombre_Articulo, cv.descripcion, cv.precio, cv.tipo_bicicleta, cv.tipo_componente
       ORDER BY cv.ID_publicacion DESC`,
       [tipo, componente]
     );
@@ -787,12 +878,12 @@ app.get("/publicaciones", async (req: Request, res: Response) => {
     res.json(result.rows);
   } catch (error: any) {
     console.error("❌ Error al obtener publicaciones:", error.message);
-    res.status(500).json({ error: error.message }); // 👈 así ves el error real
+    res.status(500).json({ error: error.message });
   }
 });
 
 
-
+//informacion del usuario
 app.get("/usuario/:id", async (req, res) => {
   const { id } = req.params;
   const result = await pool.query("SELECT * FROM usuario WHERE ID_usuario = $1", [id]);
@@ -802,6 +893,22 @@ app.get("/usuario/:id", async (req, res) => {
   res.json(result.rows[0]);
 });
 
+//editar informacion del usuario
+app.put("/EditarUsuario/:id", async (req, res) => {
+  const { id } = req.params;
+  const { nombre, correo, telefono } = req.body;
+
+  try {
+    const result = await pool.query(
+      "UPDATE usuario SET nombre=$1, correo=$2, telefono=$3 WHERE ID_usuario=$4 RETURNING *",
+      [nombre, correo, telefono, id]
+    );
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al actualizar usuario" });
+  }
+});
 
 
 // Iniciar servidor con manejo de errores

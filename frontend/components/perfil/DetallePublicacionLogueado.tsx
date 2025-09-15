@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Linking, Alert } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, Alert, FlatList, Dimensions } from 'react-native';
 import { StackParamList } from '../../types/types';
 import { RouteProp } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
 import { CheckBox } from 'react-native-elements';
 import { URL } from '../../config/UrlApi';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -18,11 +17,12 @@ interface Props {
   route: DetallePublicacionLogueadoRouteProp;
 }
 
+const { width } = Dimensions.get('window');
+
 const DetallePublicacionLogueado: React.FC<Props> = ({ route }) => {
   const { publicacion, id } = route.params;
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
 
- 
   const [isChecked, setIsChecked] = useState(false);
 
   const presionCheckBox = () => {
@@ -34,35 +34,23 @@ const DetallePublicacionLogueado: React.FC<Props> = ({ route }) => {
         'Se eliminará la publicación',
         '¿Deseas continuar?',
         [
-          {
-            text: 'Rechazar',
-            onPress: () => {
-              
-              setIsChecked(false);
-            },
-            style: 'cancel',
-          },
+          { text: 'Rechazar', onPress: () => setIsChecked(false), style: 'cancel' },
           {
             text: 'Aceptar',
             onPress: async () => {
               try {
-                const response = await fetch(`${URL}marcar-vendido/${id}`, {
-                  method: 'DELETE',
-                });
+                const response = await fetch(`${URL}marcar-vendido/${id}`, { method: 'DELETE' });
                 if (!response.ok) {
                   const errorText = await response.text();
                   throw new Error(`Error ${response.status}: ${errorText}`);
                 }
-                const data = await response.json();
-                
-
                 Alert.alert('Éxito', 'La publicación fue marcada como vendida ✅');
-                navigation.goBack()
+                navigation.goBack();
               } catch (error) {
-                console.error('Error al marcar como vendida la publicación:', error);
+                console.error('Error al marcar como vendida:', error);
                 Alert.alert(
                   'Error',
-                  'No se pudo marcar como vendida la publicación. Verifica la conexión al servidor.'
+                  'No se pudo marcar como vendida. Verifica la conexión al servidor.'
                 );
                 setIsChecked(false);
               }
@@ -73,7 +61,10 @@ const DetallePublicacionLogueado: React.FC<Props> = ({ route }) => {
       );
     }
   };
-  
+
+  const renderFoto = ({ item }: { item: string }) => (
+    <Image source={{ uri: item }} style={styles.imagenCarrusel} resizeMode="contain" />
+  );
 
   return (
     <LinearGradient
@@ -83,12 +74,17 @@ const DetallePublicacionLogueado: React.FC<Props> = ({ route }) => {
       style={{ flex: 1 }}
     >
       <ScrollView style={styles.container}>
-        
-        <Image
-          source={{ uri: publicacion.foto }}
-          style={styles.imagenDetalle}
-          resizeMode="contain"
-        />
+        {publicacion.fotos && publicacion.fotos.length > 0 && (
+          <FlatList
+            data={publicacion.fotos}
+            renderItem={renderFoto}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            style={styles.carrusel}
+          />
+        )}
 
         <View style={styles.detalleContainer}>
           <Text style={styles.tituloDetalle}>{publicacion.nombre_articulo}</Text>
@@ -119,8 +115,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  imagenDetalle: {
-    width: '100%',
+  carrusel: {
+    maxHeight: 300,
+  },
+  imagenCarrusel: {
+    width: width,
     height: 300,
   },
   detalleContainer: {

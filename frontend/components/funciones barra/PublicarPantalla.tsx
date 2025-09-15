@@ -8,23 +8,22 @@ import { Picker } from '@react-native-picker/picker';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL} from '../../config/UrlApi'
+import { URL } from '../../config/UrlApi';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 
-
 const { width, height } = Dimensions.get('window');
+
 const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [descripcion, setDescripcion] = useState('');
   const [nombre_Articulo, setNombre_Articulo] = useState('');
   const [precio, setPrecio] = useState('');
-  const [foto, setFoto] = useState<string | null>(null);
+  const [fotos, setFotos] = useState<string[]>([]); // ahora varias fotos
   const [tipoBicicleta, setTipoBicicleta] = useState('MTB');
-   const [tipoComponente, setTipoComponente] = useState('ruedas');
+  const [tipoComponente, setTipoComponente] = useState('ruedas');
   const [modalVisible, setModalVisible] = useState(false);
   const [ID_usuario, setID_usuario] = useState<number | null>(null);
   const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false);
-   
-  
+
   useEffect(() => {
     const cargarUsuario = async () => {
       try {
@@ -44,9 +43,9 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
     setNombre_Articulo('');
     setDescripcion('');
     setPrecio('');
-    setFoto(null);
+    setFotos([]);
     setTipoBicicleta('MTB');
-    setTipoComponente('ruedas')
+    setTipoComponente('ruedas');
   };
 
   const PublicarBoton = async () => {
@@ -55,8 +54,8 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
       return;
     }
 
-    if (!nombre_Articulo || !descripcion || !precio || !foto) {
-      alert('Todos los campos son obligatorios');
+    if (!nombre_Articulo || !descripcion || !precio || fotos.length === 0) {
+      alert('Todos los campos y al menos una foto son obligatorios');
       return;
     }
 
@@ -67,7 +66,7 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
         precio: parseFloat(precio),
         tipo_bicicleta: tipoBicicleta,
         tipo_componente: tipoComponente,
-        foto,
+        fotos, // se envía el array
         ID_usuario
       };
 
@@ -104,7 +103,7 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
     });
 
     if (!result.canceled && result.assets.length > 0) {
-      setFoto(result.assets[0].uri);
+      setFotos([...fotos, result.assets[0].uri]); // se agrega nueva foto
     }
   };
 
@@ -117,153 +116,135 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
       quality: 0.8,
       allowsEditing: true,
       aspect: [4, 3],
+      allowsMultipleSelection: true, // permite varias
+      selectionLimit: 5 // máximo 5 (ajústalo si quieres)
     });
 
     if (!result.canceled && result.assets.length > 0) {
-      setFoto(result.assets[0].uri);
+      setFotos([...fotos, ...result.assets.map(asset => asset.uri)]);
     }
   };
 
   return (
-     <LinearGradient
-                    colors={['#0c2b2aff', '#000000']} // azul petróleo → negro
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 0, y: 1 }}
-                    style={{ flex: 1 }}
-                  >
-     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined} >
-             
-             <View style={styles.header}>
-       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-         <Ionicons name="chevron-back" size={28} color="white" />
-       </TouchableOpacity>
-     
-       <Text style={styles.title}>Publica un articulo</Text>
-       
-         <View style={{ width: 28 }} />
-       </View>
-<ScrollView
-  style={{ flex: 1 }}
-  contentContainerStyle={styles.scrollContent}
-  keyboardShouldPersistTaps="handled"
->
- 
-          <TextInput
-            placeholder="Nombre del artículo*"
-            value={nombre_Articulo}
-            onChangeText={setNombre_Articulo}
-            style={styles.input}
-          />
-
-          <TextInput
-            placeholder="Descripción*"
-            value={descripcion}
-            onChangeText={setDescripcion}
-            style={[styles.input, { height: 100 }]}
-            multiline
-          />
-
-          <TextInput
-            placeholder="Precio*"
-            value={precio}
-            onChangeText={setPrecio}
-            keyboardType="numeric"
-            style={styles.input}
-          />
-
-          <View style={styles.pickerContainer}>
-            <Text style={styles.pickerLabel}>Tipo Bicicleta</Text>
-            <Picker
-              selectedValue={tipoBicicleta}
-              onValueChange={setTipoBicicleta}
-              style={styles.picker}
-           
-            >
-              <Picker.Item label="MTB" value="MTB"  color={Platform.OS === "ios" ? "white" : "black"} />
-              <Picker.Item label="Ruta" value="Ruta"  color={Platform.OS === "ios" ? "white" : "black"}/>
-              <Picker.Item label="Fija" value="Fija"   color={Platform.OS === "ios" ? "white" : "black"}/>
-            </Picker>
-          </View>
-
-          <View style={styles.pickerContainer}>
-            <Text style={styles.pickerLabel}>Tipo de Componente </Text>
-            <Picker
-              selectedValue={tipoComponente}
-              onValueChange={setTipoComponente}
-              style={styles.picker}
-              
-            >
-              <Picker.Item label="ruedas" value="ruedas" color={Platform.OS === "ios" ? "white" : "black"} />
-              <Picker.Item label="suspension" value="suspension" color={Platform.OS === "ios" ? "white" : "black"}/>
-              <Picker.Item label="frenos" value="frenos" color={Platform.OS === "ios" ? "white" : "black"}/>
-              <Picker.Item label="marco" value="marco" color={Platform.OS === "ios" ? "white" : "black"}/>
-              <Picker.Item label="sillin" value="sillin" color={Platform.OS === "ios" ? "white" : "black"}/>
-              <Picker.Item label="manubrio" value="manubrio" color={Platform.OS === "ios" ? "white" : "black"}/>
-              <Picker.Item label="pedal" value="pedal" color={Platform.OS === "ios" ? "white" : "black"}/>
-              <Picker.Item label="piñon" value="piñon" color={Platform.OS === "ios" ? "white" : "black"}/>
-              <Picker.Item label="cadena" value="cadena" color={Platform.OS === "ios" ? "white" : "black"}/>
-              <Picker.Item label="plato" value="plato" color={Platform.OS === "ios" ? "white" : "black"}/>
-            </Picker>
-          </View>
-
-
-
-          {foto && (
-            <Image source={{ uri: foto }} style={styles.image} />
-          )}
-
-          <View style={styles.buttonGroup}>
-            <TouchableOpacity onPress={tomarFoto} style={styles.photoButton}>
-              <Ionicons name="camera" size={24} color="white" />
-              <Text style={styles.buttonText}>Tomar Foto</Text>
+    <LinearGradient
+      colors={['#0c2b2aff', '#000000']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView style={styles.container}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined} >
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+              <Ionicons name="chevron-back" size={28} color="white" />
             </TouchableOpacity>
-
-            <TouchableOpacity onPress={seleccionarFoto} style={styles.photoButton}>
-              <Ionicons name="image" size={24} color="white" />
-              <Text style={styles.buttonText}>Galería</Text>
-            </TouchableOpacity>
+            <Text style={styles.title}>Publica un articulo</Text>
+            <View style={{ width: 28 }} />
           </View>
 
-          <TouchableOpacity 
-            onPress={PublicarBoton} 
-            style={styles.publishButton}
-            disabled={!ID_usuario}
+          <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={styles.scrollContent}
+            keyboardShouldPersistTaps="handled"
           >
-            <Text style={styles.publishText}>
-              {ID_usuario ? 'PUBLICAR' : 'INICIA SESIÓN PRIMERO'}
-            </Text>
-          </TouchableOpacity>
-          
+            <TextInput
+              placeholder="Nombre del artículo*"
+              value={nombre_Articulo}
+              onChangeText={setNombre_Articulo}
+              style={styles.input}
+            />
+
+            <TextInput
+              placeholder="Descripción*"
+              value={descripcion}
+              onChangeText={setDescripcion}
+              style={[styles.input, { height: 100 }]}
+              multiline
+            />
+
+            <TextInput
+              placeholder="Precio*"
+              value={precio}
+              onChangeText={setPrecio}
+              keyboardType="numeric"
+              style={styles.input}
+            />
+
+            <View style={styles.pickerContainer}>
+              <Text style={styles.pickerLabel}>Tipo Bicicleta</Text>
+              <Picker selectedValue={tipoBicicleta} onValueChange={setTipoBicicleta} style={styles.picker}>
+                <Picker.Item label="MTB" value="MTB" color={Platform.OS === "ios" ? "white" : "black"} />
+                <Picker.Item label="Ruta" value="Ruta" color={Platform.OS === "ios" ? "white" : "black"} />
+                <Picker.Item label="Fija" value="Fija" color={Platform.OS === "ios" ? "white" : "black"} />
+              </Picker>
+            </View>
+
+            <View style={styles.pickerContainer}>
+              <Text style={styles.pickerLabel}>Tipo de Componente</Text>
+              <Picker selectedValue={tipoComponente} onValueChange={setTipoComponente} style={styles.picker}>
+                <Picker.Item label="ruedas" value="ruedas" color={Platform.OS === "ios" ? "white" : "black"} />
+                <Picker.Item label="suspension" value="suspension" color={Platform.OS === "ios" ? "white" : "black"} />
+                <Picker.Item label="frenos" value="frenos" color={Platform.OS === "ios" ? "white" : "black"} />
+                <Picker.Item label="marco" value="marco" color={Platform.OS === "ios" ? "white" : "black"} />
+                <Picker.Item label="sillin" value="sillin" color={Platform.OS === "ios" ? "white" : "black"} />
+                <Picker.Item label="manubrio" value="manubrio" color={Platform.OS === "ios" ? "white" : "black"} />
+                <Picker.Item label="pedal" value="pedal" color={Platform.OS === "ios" ? "white" : "black"} />
+                <Picker.Item label="piñon" value="piñon" color={Platform.OS === "ios" ? "white" : "black"} />
+                <Picker.Item label="cadena" value="cadena" color={Platform.OS === "ios" ? "white" : "black"} />
+                <Picker.Item label="plato" value="plato" color={Platform.OS === "ios" ? "white" : "black"} />
+              </Picker>
+            </View>
+
+            {/* Carrusel horizontal de fotos seleccionadas */}
+            {fotos.length > 0 && (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginVertical: 15 }}>
+                {fotos.map((uri, index) => (
+                  <Image key={index} source={{ uri }} style={styles.image} />
+                ))}
+              </ScrollView>
+            )}
+
+            <View style={styles.buttonGroup}>
+              <TouchableOpacity onPress={tomarFoto} style={styles.photoButton}>
+                <Ionicons name="camera" size={24} color="white" />
+                <Text style={styles.buttonText}>Tomar Foto</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={seleccionarFoto} style={styles.photoButton}>
+                <Ionicons name="image" size={24} color="white" />
+                <Text style={styles.buttonText}>Galería</Text>
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity onPress={PublicarBoton} style={styles.publishButton} disabled={!ID_usuario}>
+              <Text style={styles.publishText}>
+                {ID_usuario ? 'PUBLICAR' : 'INICIA SESIÓN PRIMERO'}
+              </Text>
+            </TouchableOpacity>
           </ScrollView>
-         </KeyboardAvoidingView>
-        </SafeAreaView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
 
-        {/*desde aqui ahi foother*/}
+      {/* Footer */}
+      <View style={styles.iconBar}>
+        <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
+          <Ionicons name='storefront-outline' size={28} color="#ffffffff" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Carrito')}>
+          <Ionicons name='cart-outline' size={28} color="#ffffffff" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
+          <Ionicons name='notifications-outline' size={28} color="#ffffffff" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Perfil')}>
+          <Ionicons name="person-circle-outline" size={28} color="#f3ffffff" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}>
+          <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#ffffffff" />
+        </TouchableOpacity>
+      </View>
 
-       <View style={styles.iconBar}>
-            <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
-              <Ionicons name='storefront-outline' size={28} color="#ffffffff" />
-            </TouchableOpacity>
-          
-            <TouchableOpacity onPress={() => navigation.navigate('Carrito')}>
-              <Ionicons name='cart-outline' size={28} color="#ffffffff" />
-            </TouchableOpacity>
-          
-            <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
-              <Ionicons name='notifications-outline' size={28} color="#ffffffff" />
-            </TouchableOpacity>
-          
-            <TouchableOpacity onPress={()=> navigation.navigate('Perfil')}>
-                    <Ionicons name="person-circle-outline" size={28} color="#f3ffffff"></Ionicons>
-            </TouchableOpacity>
-            {/* Botón de componentes */}
-            
-            <TouchableOpacity onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}>
-              <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#ffffffff" />
-            </TouchableOpacity> 
-          </View>
-
+      {/* Modal de éxito */}
       <Modal transparent visible={modalVisible} animationType="fade">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -277,38 +258,24 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-
-  container: {
-    flex:1,
-    padding: 5,
-    
-  },
-
-  scrollContent: {
-  paddingHorizontal: 16,
-   
-},
-
+  container: { flex: 1, padding: 5 },
+  scrollContent: { paddingHorizontal: 16 },
   header: {
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-between", 
-  paddingHorizontal: 10,
-  marginTop: Platform.OS === "android" ? 10 : 5,
-},
-
-backButton: {
-   marginTop: Platform.OS === "android" ? 40 : 0,
-  marginLeft: Platform.OS === "android" ? 2 : 5, 
-  padding: Platform.OS === "android" ? 5 : 5,     
-  justifyContent: "center",
-  alignItems: "center",
-},
-
-
-
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    marginTop: Platform.OS === "android" ? 10 : 5,
+  },
+  backButton: {
+    marginTop: Platform.OS === "android" ? 40 : 0,
+    marginLeft: Platform.OS === "android" ? 2 : 5,
+    padding: 5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   title: {
-        flex: 1,
+    flex: 1,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#ffff',
@@ -339,31 +306,16 @@ backButton: {
     borderColor: '#ffffffff',
     elevation: 2,
   },
- 
-  pickerLabel: {
-    padding: 15,
-    color: '#dfd6d6ff',
-    fontSize: 16
-  },
-  picker: {
-   color: '#fff',
-  width: '100%',
-  fontSize: 16,
-  paddingVertical: 10,
-  paddingHorizontal: 12,
-  },
+  pickerLabel: { padding: 15, color: '#dfd6d6ff', fontSize: 16 },
+  picker: { color: '#fff', width: '100%', fontSize: 16, paddingVertical: 10, paddingHorizontal: 12 },
   image: {
-    width: '100%',
-    height: 230,
+    width: 150,
+    height: 150,
     borderRadius: 14,
-    marginVertical: 15,
-    alignSelf: 'center',
+    marginRight: 10,
+    backgroundColor: '#e0e0e0',
   },
-  buttonGroup: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 24,
-  },
+  buttonGroup: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 24 },
   photoButton: {
     flex: 1,
     flexDirection: 'row',
@@ -379,12 +331,7 @@ backButton: {
     shadowRadius: 5,
     elevation: 5,
   },
-  buttonText: {
-    color: 'white',
-    marginLeft: 8,
-    fontWeight: '600',
-    fontSize: 15,
-  },
+  buttonText: { color: 'white', marginLeft: 8, fontWeight: '600', fontSize: 15 },
   publishButton: {
     backgroundColor: '#00c774',
     paddingVertical: 16,
@@ -396,24 +343,11 @@ backButton: {
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
     shadowRadius: 6,
-      marginHorizontal: 20, 
-    marginBottom: 180,  
-
-
+    marginHorizontal: 20,
+    marginBottom: 180,
   },
-  publishText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 17,
-    letterSpacing: 0.5,
-  },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
+  publishText: { color: 'white', fontWeight: 'bold', fontSize: 17, letterSpacing: 0.5 },
+  modalContainer: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', padding: 20 },
   modalContent: {
     backgroundColor: 'white',
     padding: 35,
@@ -427,31 +361,23 @@ backButton: {
     elevation: 6,
   },
   iconBar: {
-  flexDirection: 'row',
-  justifyContent: 'space-around',
-  paddingVertical: height * 0.015, 
-  backgroundColor: '#004f4d',
-  borderTopLeftRadius: 10,
-  borderTopRightRadius: 10,
-  position: 'absolute',
-  bottom: 0, 
-  left: 0,
-  right: 0,
-  borderTopWidth: 1,
-  shadowOpacity: 0.1,
-  shadowOffset: { width: 0, height: -2 },
-  shadowRadius: 6,
-  paddingBottom:"7%",
-},
-  modalText: {
-    marginTop: 20,
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#2d3748',
-    textAlign: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: height * 0.015,
+    backgroundColor: '#004f4d',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    borderTopWidth: 1,
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: -2 },
+    shadowRadius: 6,
+    paddingBottom: "7%",
   },
-
+  modalText: { marginTop: 20, fontSize: 18, fontWeight: '600', color: '#2d3748', textAlign: 'center' },
 });
 
-
-export default PublicarPantalla; 
+export default PublicarPantalla;

@@ -24,6 +24,7 @@ import PublicacionesAdmin from './components/administrador/PublicacionesAdmin';
 import DetallePublicacionAdmin from './components/administrador/DetallePublicacionAdmin';
 
 import PerfilPantalla from './components/perfil/perfil';
+import EditarPerfil from './components/perfil/EditarPerfil';
 import PublicacionesUsuarioLogueado from './components/perfil/PublicacionesUsuarioLogueadoPantalla';
 import DetallePublicacionLogueado from './components/perfil/DetallePublicacionLogueado';
 
@@ -69,6 +70,7 @@ const App = () => {
         <Stack.Screen name='DetallePublicacionAdmin' component={DetallePublicacionAdmin}/>
         
         <Stack.Screen name='Perfil' component={PerfilPantalla}/>
+        <Stack.Screen name='EditarPerfil' component={EditarPerfil}/>
         <Stack.Screen name='PublicacionesUsuarioLogueado' component={PublicacionesUsuarioLogueado}/>
         <Stack.Screen name='DetallePublicacionLogueado' component={DetallePublicacionLogueado}/>
         

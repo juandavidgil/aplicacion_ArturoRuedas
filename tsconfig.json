@@ -7,7 +7,7 @@
         "jsx": "react-jsx",
     "types": ["react"],
 
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
