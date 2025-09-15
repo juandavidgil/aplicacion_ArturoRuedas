@@ -14,9 +14,10 @@ interface Publicacion {
   descripcion: string;
   precio: string;
   tipo_bicicleta: string;
-  fotos: string[];   // ✅ ahora usamos fotos (array)
+  fotos: string[];
   nombre_vendedor: string;
   telefono: string;
+  foto:string;
 }
 
 const PublicacionesUsuarioLogueado: React.FC = () => {
@@ -72,7 +73,7 @@ const PublicacionesUsuarioLogueado: React.FC = () => {
     >
       <View style={styles.card}>
         <Image
-          source={{ uri: item.fotos?.[0] || "" }}   // ✅ mostramos la primera foto
+          source={{ uri: item.fotos?.[0] || "" }}   
           style={styles.imagen}
           resizeMode="cover"
           onError={() => console.log("Error cargando imagen")}

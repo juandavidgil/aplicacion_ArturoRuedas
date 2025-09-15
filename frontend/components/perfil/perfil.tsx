@@ -12,6 +12,7 @@ interface Usuario {
   nombre: string;
   correo: string;
   telefono: string;
+  foto: string;
 }
 const { width, height } = Dimensions.get('window');
 
@@ -77,16 +78,16 @@ const PerfilPantalla: React.FC = () => {
         
         {/* Tarjeta central */}
         <View style={styles.card}>
-          {/* Avatar */}
-          {/* <Image
-            source={require("../assets/avatar.png")}
-            style={styles.avatar}
-          /> */}
+       <Image
+  source={ usuario?.foto ? { uri: usuario.foto } : require('../../img/avatar.png') }
+  style={styles.avatar}
+/>
 
-          {/* Datos */}
+
+          
           <Text style={styles.name}>{usuario?.nombre}</Text>
-          <Text style={styles.info}> {usuario?.correo}</Text>
-          <Text style={styles.info}>{usuario?.telefono}</Text>
+          <Text style={styles.info}>Correo: {usuario?.correo}</Text>
+          <Text style={styles.info}>Telefono: {usuario?.telefono}</Text>
 
           {/* Botones */}
           <TouchableOpacity style={styles.button}>

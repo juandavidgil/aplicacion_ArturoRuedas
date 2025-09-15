@@ -51,6 +51,7 @@ export interface Usuario {
   correo: string;
   telefono: string;
   contraseña: string;
+  foto: string;
 }
 
 
@@ -63,6 +64,7 @@ export interface Publicacion {
   fotos: string[];
   nombre_vendedor: string;
   telefono: string
+  foto:string;
 
 }
 

@@ -48,7 +48,7 @@ const DetallePublicacion: React.FC<Props> = ({ route }) => {
       <ScrollView style={styles.container}>
         {/* Carrusel de fotos */}
         <FlatList
-          data={publicacion.fotos} // debe ser un array de URLs
+          data={publicacion.fotos}
           keyExtractor={(item, index) => index.toString()}
           horizontal
           pagingEnabled
@@ -79,12 +79,20 @@ const DetallePublicacion: React.FC<Props> = ({ route }) => {
             <Text style={styles.subtitulo}>Tipo de bicicleta</Text>
             <Text style={styles.texto}>{publicacion.tipo_bicicleta}</Text>
           </View>
-          
+
+          {/* Sección Vendedor con foto al lado del nombre */}
           <View style={styles.seccion}>
             <Text style={styles.subtitulo}>Vendedor</Text>
-            <Text style={styles.texto}>{publicacion.nombre_vendedor}</Text>
+            <View style={styles.vendedorContainer}>
+              <Image
+                source={publicacion?.foto ? { uri: publicacion.foto } : require('../../img/avatar.png')}
+                style={styles.avatar}
+              />
+              <Text style={styles.textoVendedor}>{publicacion.nombre_vendedor}</Text>
+            </View>
           </View>
 
+          {/* Botón WhatsApp */}
           <TouchableOpacity 
             onPress={() => enviarWhatsApp(publicacion.telefono, `Hola ${publicacion.nombre_vendedor}, estoy interesado en tu artículo: ${publicacion.nombre_articulo}`)}
             style={styles.botonMensajeAlVendedor}
@@ -115,7 +123,7 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   imagenDetalle: {
-    width: width, // ancho de la pantalla
+    width: width,
     height: 300,
     backgroundColor: '#e0e0e0',
   },
@@ -145,6 +153,24 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: '#00ffb3',
+  },
+  vendedorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  avatar: { 
+    width: 45, 
+    height: 45, 
+    borderRadius: 22.5, 
+    borderWidth: 2, 
+    borderColor: "#007bff",
+  },
+  textoVendedor: {
+    fontSize: 16,
+    color: '#ddd',
+    marginLeft: 10,
+    fontWeight: '600',
   },
   botonMensajeAlVendedor: {
     backgroundColor: '#f4f8f6ff',

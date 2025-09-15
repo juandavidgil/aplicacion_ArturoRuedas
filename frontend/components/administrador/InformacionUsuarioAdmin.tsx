@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, ImageBackground, ScrollView, Linking } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, ImageBackground, ScrollView, Linking, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StackParamList } from '../../types/types';
 import { RouteProp } from '@react-navigation/native';
@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {URL} from '../../config/UrlApi'
 import { LinearGradient } from 'expo-linear-gradient';
+import PublicacionesUsuarioLogueado from "../perfil/PublicacionesUsuarioLogueadoPantalla";
 
 type InformacionUsuarioAdminRouteProp = RouteProp<
   StackParamList,
@@ -21,6 +22,7 @@ export interface Usuario {
   nombre: string;
   correo: string;
   telefono: string;
+  foto:string;
 }
 
 const enviarWhatsApp = (numero: string, mensaje: string) => {
@@ -49,14 +51,17 @@ console.log("usuario que llego a esta pantalla:", usuario)
       style={{ flex: 1 }}
     >
       <ScrollView style={styles.container}>
-        {/* aqui va la foto de perfil */}
-    {/*     <Image
-          source={{ uri: publicacion.foto }}
-          style={styles.imagenDetalle}
-          resizeMode="contain"
-        />
- */}
+       
+       
+    <Image
+      source={usuario?.foto ? { uri: usuario.foto } : require('../../img/avatar.png')}
+      style={styles.avatar}
+    />
         <View style={styles.detalleContainer}>
+          <View style={styles.seccion}>
+            <Text style={styles.subtitulo}>ID del usuario</Text>
+            <Text style={styles.texto}>{usuario.id_usuario}</Text>
+          </View>
           <Text style={styles.tituloDetalle}>{usuario.nombre}</Text>
 
           <View style={styles.seccion}>
@@ -66,13 +71,9 @@ console.log("usuario que llego a esta pantalla:", usuario)
 
           <View style={styles.seccion}>
             <Text style={styles.subtitulo}>Telefono</Text>
-            <Text style={styles.precioDetalle}>${usuario.telefono}</Text>
+            <Text style={styles.precioDetalle}>{usuario.telefono}</Text>
           </View>
 
-          <View style={styles.seccion}>
-            <Text style={styles.subtitulo}>ID del usuario</Text>
-            <Text style={styles.texto}>{usuario.id_usuario}</Text>
-          </View>
  <TouchableOpacity 
             onPress={() => enviarWhatsApp(usuario.telefono, `Hola ${usuario.nombre}, esperamos te encuentres muy bien, somos los administradores de Arturo Ruedas y queremos comunicarnos contigo por la siguiente razón`)}
             style={styles.botonMensajeAlVendedor}
@@ -149,6 +150,14 @@ textoMensajeAlVendedor: {
   fontWeight: '600',
   fontSize: 16,
 },
+  avatar: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    marginBottom: 15,
+    borderWidth: 3,
+    borderColor: "#00c6ff",
+  },
 });
 
 

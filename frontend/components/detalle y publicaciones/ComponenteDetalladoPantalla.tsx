@@ -27,6 +27,7 @@ interface Publicacion {
   fotos: string[]; 
   nombre_vendedor: string;
   telefono: string;
+  foto:string;
 }
 
 type RouteParams = {
@@ -143,6 +144,7 @@ const ComponenteDetallePantalla = () => {
             </Text>
             <Text style={styles.precio}>Precio: ${item.precio}</Text>
             <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
+            
             <Text style={styles.tipo}>Vendedor: {item.nombre_vendedor}</Text>
             <TouchableOpacity onPress={() => AgregarCarrito(item)}>
               <Ionicons name="cart-outline" size={25} />

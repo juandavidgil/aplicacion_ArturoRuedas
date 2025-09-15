@@ -25,6 +25,7 @@ interface Publicacion {
   fotos: string[];
   nombre_vendedor: string;
   telefono: string;
+  foto: string;
 }
 
 type PublicacionesAdminRouteProp = RouteProp<StackParamList, 'PublicacionesAdmin'>;

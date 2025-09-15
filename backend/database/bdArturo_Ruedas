@@ -22,13 +22,11 @@ CREATE TABLE usuario (
     correo VARCHAR(50) NOT NULL,
     contraseña VARCHAR(25) NOT NULL,
     telefono VARCHAR(10) NOT NULL,
-    bicicletaID_bicicleta INTEGER,
+    foto VARCHAR(1000) NOT NULL,
     CONSTRAINT fk_bicicleta FOREIGN KEY (bicicletaID_bicicleta) REFERENCES bicicleta(ID_bicicleta)
 );
 
--- Insertar un usuario de ejemplo
-INSERT INTO usuario (nombre, correo, contraseña, telefono)
-VALUES ('cristian', 'cris@gmail.com', '123', '3236870976');
+
 
 -- Crear tabla usuario administrador
 CREATE TABLE usuarioadmin (
@@ -39,9 +37,6 @@ CREATE TABLE usuarioadmin (
 )
 
 --usuario administrador
-INSERT INTO usuarioadmin ( usuario, contraseña, contraseña2)
-    VALUES ('123', '123', '')
-
 INSERT INTO usuarioadmin ( usuario, contraseña, contraseña2)
     VALUES ('123', '123', '123')
 
@@ -65,25 +60,11 @@ CREATE TABLE com_ventas_fotos (
     CONSTRAINT fk_publicacion_fotos FOREIGN KEY (ID_publicacion) REFERENCES com_ventas(ID_publicacion) ON DELETE CASCADE
 );
 
--- Crear tabla com_ventas_usuario
-CREATE TABLE com_ventas_usuario (
-    com_ventasID_publicacion INTEGER,
-    usuario_ID_usuario INTEGER,
-    PRIMARY KEY (com_ventasID_publicacion, usuario_ID_usuario),
-    CONSTRAINT fk_ventas FOREIGN KEY (com_ventasID_publicacion) REFERENCES com_ventas(ID_publicacion),
-    CONSTRAINT fk_usuario_venta FOREIGN KEY (usuario_ID_usuario) REFERENCES usuario(ID_usuario)
-);
 
--- Crear tabla com_ventas_componentes
-CREATE TABLE com_ventas_componentes (
-    com_ventasID_publicacion INTEGER,
-    componentesID_componentes INTEGER,
-    PRIMARY KEY (com_ventasID_publicacion, componentesID_componentes),
-    CONSTRAINT fk_ventas_componentes FOREIGN KEY (com_ventasID_publicacion) REFERENCES com_ventas(ID_publicacion),
-    CONSTRAINT fk_componentes FOREIGN KEY (componentesID_componentes) REFERENCES componentes(ID_componentes)
-);
 
--- Crear tabla carrito (con ON DELETE CASCADE)
+
+
+-- Crear tabla carrito 
 CREATE TABLE carrito (
     ID_carrito SERIAL PRIMARY KEY,
     ID_publicacion INTEGER NOT NULL,
@@ -108,75 +89,18 @@ CREATE TABLE IF NOT EXISTS user_tokens (
 );
 
 
-
-SELECT * FROM usuario WHERE ID_usuario = $1
-
-SELECT * FROM com_ventas
-
-
-SELECT 
-        cv.ID_publicacion as id,
-        cv.nombre_articulo, 
-        cv.descripcion, 
-        cv.precio, 
-        cv.tipo_bicicleta, 
-        cv.tipo_componente,
-        cv.ID_usuario,
-        u.nombre as nombre_vendedor,
-        u.telefono,
-        COALESCE(
-          json_agg(cvf.url_foto) FILTER (WHERE cvf.url_foto IS NOT NULL),
-          '[]'
-        ) as fotos
-      FROM com_ventas cv
-      INNER JOIN usuario u ON cv.ID_usuario = u.ID_usuario
-      LEFT JOIN com_ventas_fotos cvf ON cv.ID_publicacion = cvf.ID_publicacion
-      WHERE cv.nombre_articulo ILIKE $1
-      GROUP BY 
-        cv.ID_publicacion, 
-        cv.nombre_articulo, 
-        cv.descripcion, 
-        cv.precio, 
-        cv.tipo_bicicleta, 
-        cv.tipo_componente,
-        cv.ID_usuario,
-        u.nombre, 
-        u.telefono
-
-
-          SELECT 
+ SELECT 
         cv.ID_publicacion AS id,
         cv.nombre_Articulo,
         cv.descripcion,
         cv.precio,
         cv.tipo_bicicleta,
-        COALESCE(
-          json_agg(cvf.url_foto) FILTER (WHERE cvf.url_foto IS NOT NULL),
-          '[]'
-        ) AS fotos
+        COALESCE(array_agg(cf.url_foto) FILTER (WHERE cf.url_foto IS NOT NULL), ARRAY[]::text[]) AS fotos, 
+        u.nombre AS nombre_vendedor,
+        u.foto
       FROM com_ventas cv
       JOIN usuario u ON cv.ID_usuario = u.ID_usuario
-      LEFT JOIN com_ventas_fotos cvf ON cv.ID_publicacion = cvf.ID_publicacion
+      LEFT JOIN com_ventas_fotos cf ON cv.ID_publicacion = cf.ID_publicacion
       WHERE cv.ID_usuario = $1
-      GROUP BY cv.ID_publicacion, cv.nombre_Articulo, cv.descripcion, cv.precio, cv.tipo_bicicleta
+      GROUP BY cv.ID_publicacion, u.nombre, u.foto
       ORDER BY cv.ID_publicacion DESC;
-
-      SELECT * FROM com_ventas_fotos
-
-
-      SELECT 
-        cv.ID_publicacion as id,
-        cv.nombre_Articulo,
-        cv.descripcion,
-        cv.precio,
-        cv.tipo_bicicleta,
-        u.nombre as nombre_vendedor,
-        u.telefono,
-        cv.ID_usuario as id_vendedor,
-        COALESCE(json_agg(f.url_foto) FILTER (WHERE f.url_foto IS NOT NULL), '[]') as fotos
-      FROM carrito c
-      JOIN com_ventas cv ON c.ID_publicacion = cv.ID_publicacion 
-      JOIN usuario u ON cv.ID_usuario = u.ID_usuario
-      LEFT JOIN com_ventas_fotos f ON cv.ID_publicacion = f.ID_publicacion
-      WHERE c.ID_usuario = $1
-      GROUP BY cv.ID_publicacion, u.nombre, u.telefono, cv.ID_usuario

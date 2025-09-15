@@ -71,7 +71,7 @@ const validarCamposUsuario = (req: Request, res: Response, next: Function) => {
 // Ruta para registrar usuario - Mejorada
 app.post('/registrar', validarCamposUsuario, async (req: Request, res: Response) => {
   try {
-    const { nombre, correo, contraseña, telefono } = req.body;
+    const { nombre, correo, contraseña, telefono, foto } = req.body;
     
     const usuarioExistente = await pool.query(
       'SELECT 1 FROM usuario WHERE correo = $1',
@@ -83,8 +83,8 @@ app.post('/registrar', validarCamposUsuario, async (req: Request, res: Response)
     }
 
     const result = await pool.query(
-      'INSERT INTO usuario (nombre, correo, contraseña, telefono) VALUES ($1, $2, $3, $4) RETURNING id_usuario, nombre, correo',
-      [nombre, correo, contraseña, telefono]
+      'INSERT INTO usuario (nombre, correo, contraseña, telefono, foto) VALUES ($1, $2, $3, $4, $5) RETURNING id_usuario, nombre, correo',
+      [nombre, correo, contraseña, telefono, foto]
     );
     
     res.status(201).json({ 
@@ -93,7 +93,7 @@ app.post('/registrar', validarCamposUsuario, async (req: Request, res: Response)
     });
   } catch (error) {
     console.error('Error al registrar usuario:', error);
-    res.status(500).json({ error: 'Error en el servidor' });
+    res.status(500).json({ error: 'Error en el servidorrr' });
   }
 });
 
@@ -205,6 +205,7 @@ app.get('/buscar', async (req: Request, res: Response) => {
         cv.ID_usuario,
         u.nombre as nombre_vendedor,
         u.telefono,
+        u.foto,
         COALESCE(
           json_agg(cvf.url_foto) FILTER (WHERE cvf.url_foto IS NOT NULL),
           '[]'
@@ -222,7 +223,8 @@ app.get('/buscar', async (req: Request, res: Response) => {
         cv.tipo_componente,
         cv.ID_usuario,
         u.nombre, 
-        u.telefono`,
+        u.telefono,
+        u.foto`,
       [`%${nombre}%`]
     );
 
@@ -477,6 +479,7 @@ app.get('/carrito/:id_usuario', async (req: Request, res: Response) => {
         cv.tipo_bicicleta,
         u.nombre as nombre_vendedor,
         u.telefono,
+        u.foto,
         cv.ID_usuario as id_vendedor,
         COALESCE(json_agg(f.url_foto) FILTER (WHERE f.url_foto IS NOT NULL), '[]') as fotos
       FROM carrito c
@@ -484,7 +487,7 @@ app.get('/carrito/:id_usuario', async (req: Request, res: Response) => {
       JOIN usuario u ON cv.ID_usuario = u.ID_usuario
       LEFT JOIN com_ventas_fotos f ON cv.ID_publicacion = f.ID_publicacion
       WHERE c.ID_usuario = $1
-      GROUP BY cv.ID_publicacion, u.nombre, u.telefono, cv.ID_usuario`,
+      GROUP BY cv.ID_publicacion, u.nombre, u.telefono, u.foto, cv.ID_usuario`,
       [id_usuario]
     );
 
@@ -584,7 +587,8 @@ app.get('/obtener-usuarios', async (req, res) => {
       ID_usuario as id_usuario,
       nombre,
       correo,
-      telefono
+      telefono,
+      foto
       FROM usuario 
       `);
       console.log('Usuarios obtenidos:', result.rows.length);
@@ -607,12 +611,13 @@ app.get('/obtener-publicaciones/:ID_usuario', async (req, res) => {
         cv.precio,
         cv.tipo_bicicleta,
         COALESCE(array_agg(cf.url_foto) FILTER (WHERE cf.url_foto IS NOT NULL), ARRAY[]::text[]) AS fotos, 
-        u.nombre AS nombre_vendedor
+        u.nombre AS nombre_vendedor,
+        u.foto
       FROM com_ventas cv
       JOIN usuario u ON cv.ID_usuario = u.ID_usuario
       LEFT JOIN com_ventas_fotos cf ON cv.ID_publicacion = cf.ID_publicacion
       WHERE cv.ID_usuario = $1
-      GROUP BY cv.ID_publicacion, u.nombre
+      GROUP BY cv.ID_publicacion, u.nombre, u.foto
       ORDER BY cv.ID_publicacion DESC;
     `, [ID_usuario]);
 
@@ -860,6 +865,7 @@ app.get("/publicaciones", async (req: Request, res: Response) => {
         cv.tipo_componente,
         u.nombre AS nombre_vendedor,
         u.telefono,
+        u.foto,
         -- Todas las fotos
         COALESCE(
           json_agg(cvf.url_foto) FILTER (WHERE cvf.url_foto IS NOT NULL), '[]'
@@ -873,7 +879,7 @@ app.get("/publicaciones", async (req: Request, res: Response) => {
       LEFT JOIN com_ventas_fotos cvf ON cv.ID_publicacion = cvf.ID_publicacion
       WHERE LOWER(cv.tipo_bicicleta) = LOWER($1)
         AND LOWER(cv.tipo_componente) = LOWER($2)
-      GROUP BY cv.ID_publicacion, u.nombre, u.telefono, cv.nombre_Articulo, cv.descripcion, cv.precio, cv.tipo_bicicleta, cv.tipo_componente
+      GROUP BY cv.ID_publicacion, u.nombre, u.telefono, u.foto, cv.nombre_Articulo, cv.descripcion, cv.precio, cv.tipo_bicicleta, cv.tipo_componente
       ORDER BY cv.ID_publicacion DESC`,
       [tipo, componente]
     );

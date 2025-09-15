@@ -26,6 +26,7 @@ interface Articulo {
   fotos: string[];
   nombre_vendedor: string;
   telefono: string;
+  foto:string;
 }
 
 type RouteParams = {
