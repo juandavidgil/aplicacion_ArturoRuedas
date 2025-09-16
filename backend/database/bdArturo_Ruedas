@@ -23,6 +23,7 @@ CREATE TABLE usuario (
     contraseña VARCHAR(25) NOT NULL,
     telefono VARCHAR(10) NOT NULL,
     foto VARCHAR(1000) NOT NULL,
+    bicicletaID_bicicleta INT,
     CONSTRAINT fk_bicicleta FOREIGN KEY (bicicletaID_bicicleta) REFERENCES bicicleta(ID_bicicleta)
 );
 
@@ -72,7 +73,7 @@ CREATE TABLE carrito (
     ID_vendedor INTEGER,
     CONSTRAINT fk_ID_publicacion FOREIGN KEY (ID_publicacion) 
         REFERENCES com_ventas(ID_publicacion) 
-        ON DELETE CASCADE,  -- 👈 este es el cambio importante
+        ON DELETE CASCADE,  
     CONSTRAINT fk_ID_usuario FOREIGN KEY (ID_usuario) 
         REFERENCES usuario(ID_usuario),
     CONSTRAINT fk_vendedor FOREIGN KEY (ID_vendedor) 
@@ -101,6 +102,6 @@ CREATE TABLE IF NOT EXISTS user_tokens (
       FROM com_ventas cv
       JOIN usuario u ON cv.ID_usuario = u.ID_usuario
       LEFT JOIN com_ventas_fotos cf ON cv.ID_publicacion = cf.ID_publicacion
-      WHERE cv.ID_usuario = $1
+      WHERE cv.ID_usuario = 1
       GROUP BY cv.ID_publicacion, u.nombre, u.foto
       ORDER BY cv.ID_publicacion DESC;

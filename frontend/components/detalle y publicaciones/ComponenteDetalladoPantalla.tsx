@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  Alert,
-  FlatList,
-  ScrollView,
+  View, Text, TouchableOpacity, Dimensions, Image, StyleSheet, Alert, FlatList, ScrollView,
 } from "react-native";
 import { useRoute, useNavigation, RouteProp } from "@react-navigation/native";
 import { componentesData } from "../../components/detalle y publicaciones/ComponentesData";
@@ -16,6 +9,8 @@ import type { StackNavigationProp } from "@react-navigation/stack";
 import { URL } from "../../config/UrlApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 interface Publicacion {
   id: number;
@@ -38,6 +33,7 @@ type RouteParams = {
 };
 
 type ComponenteDetalleRouteProp = RouteProp<RouteParams, "ComponenteDetalle">;
+const { width, height } = Dimensions.get('window');
 
 const ComponenteDetallePantalla = () => {
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
@@ -48,6 +44,14 @@ const ComponenteDetallePantalla = () => {
   const [tab, setTab] = useState<"colocar" | "info" | "tienda">("colocar");
   const [refreshing, setRefreshing] = useState(false);
   const [articulos, setPublicaciones] = useState<Publicacion[]>([]);
+  
+  // Estado nuevo para controlar los pasos abiertos
+const [expandedStep, setExpandedStep] = useState<number | null>(null);
+
+const toggleStep = (index: number) => {
+  setExpandedStep(expandedStep === index ? null : index);
+};
+
 
   const AgregarCarrito = async (publicacion: Publicacion) => {
     try {
@@ -125,6 +129,7 @@ const ComponenteDetallePantalla = () => {
   const renderItem = ({ item }: { item: Publicacion }) => {
     const portada = item.fotos && item.fotos.length > 0 ? item.fotos[0] : ""; // ✅ usar primera foto
     return (
+       
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("DetallePublicacion", { publicacion: item });
@@ -152,6 +157,7 @@ const ComponenteDetallePantalla = () => {
           </View>
         </View>
       </TouchableOpacity>
+      
     );
   };
 
@@ -164,6 +170,12 @@ const ComponenteDetallePantalla = () => {
   }
 
   return (
+      <LinearGradient
+            colors={['#0c2b2aff', '#000000']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            style={{ flex: 1 }}
+          >
     <View style={styles.container}>
       <Text style={styles.title}>{componente.nombre}</Text>
 
@@ -192,58 +204,82 @@ const ComponenteDetallePantalla = () => {
           </Text>
         </TouchableOpacity>
       </View>
+        
+        {/* prueba */}
+        {tab === "colocar" && (
+  <ScrollView contentContainerStyle={styles.content}>
+    {componente.comoColocar.map((paso, index) => (
+      <View key={index} style={styles.stepBox}>
+        <TouchableOpacity
+          style={styles.stepButton}
+          onPress={() => toggleStep(index)}
+        >
+          <Text style={styles.stepTitle}>Paso {index + 1}</Text>
+          <Ionicons
+            name={expandedStep === index ? "chevron-up" : "chevron-down"}
+            size={20}
+            color="#3b82f6"
+          />
+        </TouchableOpacity>
 
-      {tab === "colocar" && (
-        <ScrollView contentContainerStyle={styles.content}>
-          {componente.comoColocar.map((paso, index) => (
-            <Text key={index} style={styles.step}>
-              <Text style={styles.bold}>{index + 1}. </Text> {paso}
-            </Text>
-          ))}
-
-          <View style={styles.toolsBox}>
-            <Text style={styles.bold}>Herramientas necesarias:</Text>
-            {Array.isArray(componente.herramientas) ? (
-              componente.herramientas.map((herramienta, index) => (
-                <Text key={index}>• {herramienta}</Text>
-              ))
-            ) : (
-              <Text>No se especificaron herramientas.</Text>
-            )}
+        {expandedStep === index && (
+          <View style={styles.stepContent}>
+            <Text style={styles.stepText}>{paso}</Text>
           </View>
+        )}
+      </View>
+    ))}
 
-          <Text>¿Necesitas más información?</Text>
-          <TouchableOpacity
-            style={styles.botonIa}
-            onPress={() => navigation.navigate("ChatGPT")}
-          >
-            <Text>🤖 Pregúntale a la AI</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      )}
+  <View style={styles.toolsBox}>
+  <Text style={styles.toolsTitle}>🔧 Herramientas necesarias</Text>
+  {Array.isArray(componente.herramientas) && componente.herramientas.length > 0 ? (
+    componente.herramientas.map((herramienta, index) => (
+      <View key={index} style={styles.toolItem}>
+        <Ionicons name="construct-outline" size={18} color="#3b82f6" />
+        <Text style={styles.toolText}>{herramienta}</Text>
+      </View>
+    ))
+  ) : (
+    <Text style={styles.noTools}>No se especificaron herramientas.</Text>
+  )}
+</View>
 
-      {tab === "info" && (
-        <ScrollView contentContainerStyle={styles.content}>
-          <View style={styles.infoBox}>
-            <Text style={styles.bold}>¿Para qué sirve?</Text>
-            <Text>{componente.informacion.utilidad}</Text>
-          </View>
-          <View style={styles.infoBox}>
-            <Text style={styles.bold}>Mantenimiento</Text>
-            <Text>{componente.informacion.mantenimiento}</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.botonIa}
-            onPress={() => navigation.navigate("ChatGPT")}
-          >
-            <Text>🤖 Pregúntale a la AI</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      )}
+
+    <TouchableOpacity
+      style={styles.botonIa}
+      onPress={() => navigation.navigate("ChatGPT")}
+    >
+      <Text style={styles.botonIaText}>🤖 Pregúntale a la AI</Text>
+    </TouchableOpacity>
+  </ScrollView>
+)}
+
+     
+{tab === "info" && (
+  <ScrollView contentContainerStyle={styles.content}>
+    <View style={styles.infoBox}>
+      <Text style={styles.infoTitle}>📌 ¿Para qué sirve?</Text>
+      <Text style={styles.infoText}>{componente.informacion.utilidad}</Text>
+    </View>
+
+    <View style={styles.infoBox}>
+      <Text style={styles.infoTitle}>🛠️ Mantenimiento</Text>
+      <Text style={styles.infoText}>{componente.informacion.mantenimiento}</Text>
+    </View>
+
+    <TouchableOpacity
+      style={styles.botonIa}
+      onPress={() => navigation.navigate("ChatGPT")}
+    >
+      <Text style={styles.botonIaText}>🤖 Pregúntale a la AI</Text>
+    </TouchableOpacity>
+  </ScrollView>
+)}
+
 
       {tab === "tienda" &&
         (articulos.length === 0 ? (
-          <Text style={{ textAlign: "center", marginTop: 20 }}>
+          <Text style={{ textAlign: "center", marginTop: 20, color:'#fff' }}>
             No hay publicaciones disponibles.
           </Text>
         ) : (
@@ -257,77 +293,237 @@ const ComponenteDetallePantalla = () => {
           />
         ))}
     </View>
+    </LinearGradient>
   );
 };
 
 export default ComponenteDetallePantalla;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: "#fff" },
+  container: { 
+    flex: 1, 
+  }, 
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 10,
-    marginTop: "10%",
+    marginBottom: 15,
+    marginTop: "12%",
+    color: "#ffffffff", 
   },
-  image: { width: "100%", height: 180, marginBottom: 10 },
+  image: {
+    width: "100%",
+    height: 200,
+    marginBottom: 15,
+    borderRadius: 16,
+    backgroundColor:'#fff'
+  },
+  stepBox: {
+  marginBottom: 12,
+  borderRadius: 10,
+  backgroundColor: "#fff",
+  shadowColor: "#000",
+  shadowOpacity: 0.05,
+  shadowRadius: 4,
+  shadowOffset: { width: 0, height: 2 },
+  elevation: 2,
+},
+stepButton: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  padding: 14,
+  borderRadius: 10,
+  backgroundColor: "#b9c0c5ff",
+},
+stepTitle: {
+  fontSize: 16,
+  fontWeight: "600",
+  color: "#1e293b",
+},
+stepContent: {
+  padding: 12,
+  borderTopWidth: 1,
+  borderTopColor: "#e2e8f0",
+},
+stepText: {
+  fontSize: 14,
+  color: "#475569",
+  lineHeight: 20,
+},
+
+  // -------------------- Tabs --------------------
   tabContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
     marginVertical: 15,
+    paddingHorizontal: 10,
   },
-  tab: { fontSize: 16, color: "#888" },
+  tab: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    backgroundColor: "#e2e8f0",
+    fontSize: 15,
+    color: "#475569",
+    overflow: "hidden",
+  },
   activeTab: {
-    color: "#007bff",
+    backgroundColor: "#3b82f6", // azul
+    color: "#fff",
     fontWeight: "bold",
-    textDecorationLine: "underline",
   },
-  content: { marginTop: 10, paddingBottom: 20 },
-  step: { marginBottom: 8 },
-  bold: { fontWeight: "bold" },
-  toolsBox: {
+  // -------------------- Secciones --------------------
+  content: { 
     marginTop: 15,
-    padding: 10,
-    backgroundColor: "#f1f1f1",
-    borderRadius: 10,
+    paddingBottom: 30, 
+    paddingHorizontal: 12, 
+    margin:10, 
   },
-  infoBox: {
-    marginBottom: 15,
-    padding: 10,
-    backgroundColor: "#f1f1f1",
-    borderRadius: 10,
+  step: { 
+    marginBottom: 10, 
+    fontSize: 15, 
+    color: "#334155" 
   },
+  bold: { 
+    fontWeight: "bold",  
+    fontSize: 20, 
+    color: "#0f172a" 
+  },
+
+  
+  
+  // -------------------- Botón IA --------------------
   botonIa: {
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: "#79b9bbee",
-    width: 200,
-    margin: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    backgroundColor: "#06b6d4", // turquesa
+    marginTop: 20,
     alignItems: "center",
     alignSelf: "center",
-  },
-  card: {
-    flexDirection: "row",
-    marginBottom: 20,
-    backgroundColor: "#ffffff",
-    padding: 12,
-    borderRadius: 12,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.15,
     shadowRadius: 6,
     elevation: 4,
   },
+  botonIaText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  // -------------------- Cards tienda --------------------
+  card: {
+    flexDirection: "row",
+    marginBottom: 18,
+    backgroundColor: "#ffffff",
+    padding: 14,
+    borderRadius: 14,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
   imagen: {
-    width: 110,
-    height: 110,
-    borderRadius: 10,
+    width: 120,
+    height: 120,
+    borderRadius: 12,
     backgroundColor: "#e0e0e0",
   },
-  info: { flex: 1, marginLeft: 15, justifyContent: "space-around" },
-  nombre: { fontSize: 18, fontWeight: "bold", color: "#333" },
-  descripcion: { fontSize: 14, color: "#666" },
-  precio: { fontSize: 16, fontWeight: "600", color: "#2c7a7b" },
-  tipo: { fontSize: 14, color: "#666" },
+  info: { 
+    flex: 1, 
+    marginLeft: 15, 
+    justifyContent: "space-between" 
+  },
+  nombre: { 
+    fontSize: 18, 
+    fontWeight: "bold", 
+    color: "#1e293b" 
+  },
+  descripcion: { 
+    fontSize: 14, 
+    color: "#64748b" 
+  },
+  precio: { 
+    fontSize: 16, 
+    fontWeight: "700", 
+    color: "#16a34a" 
+  },
+  tipo: { 
+    fontSize: 14, 
+    color: "#475569" 
+  },
+  carritoBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 6,
+    alignSelf: "flex-start",
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: "#3b82f6",
+  },
+  toolsBox: {
+  marginTop: 20,
+  padding: 16,
+  borderRadius: 12,
+  backgroundColor: "#f8fafc", // gris muy claro
+  shadowColor: "#000",
+  shadowOpacity: 0.05,
+  shadowRadius: 4,
+  shadowOffset: { width: 0, height: 2 },
+  elevation: 2,
+},
+toolsTitle: {
+  fontSize: 16,
+  fontWeight: "700",
+  marginBottom: 10,
+  color: "#1e293b",
+},
+toolItem: {
+  flexDirection: "row",
+  alignItems: "center",
+  marginBottom: 8,
+},
+toolText: {
+  marginLeft: 8,
+  fontSize: 14,
+  color: "#475569",
+},
+noTools: {
+  fontSize: 14,
+  color: "#64748b",
+  fontStyle: "italic",
+},
+
+infoBox: {
+  marginBottom: 16,
+  padding: 16,
+  borderRadius: 12,
+  backgroundColor: "#f8fafc", // gris claro
+  shadowColor: "#000",
+  shadowOpacity: 0.05,
+  shadowRadius: 4,
+  shadowOffset: { width: 0, height: 2 },
+  elevation: 2,
+},
+infoTitle: {
+  fontSize: 16,
+  fontWeight: "700",
+  marginBottom: 8,
+  color: "#1e293b",
+},
+infoText: {
+  fontSize: 14,
+  color: "#475569",
+  lineHeight: 20,
+},
+
+  
+  carritoText: { 
+    marginLeft: 5, 
+    color: "#fff", 
+    fontWeight: "600" },
 });
+
