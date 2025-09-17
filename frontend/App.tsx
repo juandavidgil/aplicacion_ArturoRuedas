@@ -25,12 +25,14 @@ import DetallePublicacionAdmin from './components/administrador/DetallePublicaci
 
 import PerfilPantalla from './components/perfil/perfil';
 import EditarPerfil from './components/perfil/EditarPerfil';
+import CambiarContrasena from './components/perfil/CambiarContraseña'
 import PublicacionesUsuarioLogueado from './components/perfil/PublicacionesUsuarioLogueadoPantalla';
 import DetallePublicacionLogueado from './components/perfil/DetallePublicacionLogueado';
 
 import ChatGPT from './components/detalle y publicaciones/ChatgptPantalla';
 import DetallePublicacion from './components/detalle y publicaciones/DetallePublicacion';
 import ComponenteDetallePantalla from './components/detalle y publicaciones/ComponenteDetalladoPantalla';
+
 
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -71,6 +73,7 @@ const App = () => {
         
         <Stack.Screen name='Perfil' component={PerfilPantalla}/>
         <Stack.Screen name='EditarPerfil' component={EditarPerfil}/>
+        <Stack.Screen name='CambiarContrasena' component={CambiarContrasena}/>
         <Stack.Screen name='PublicacionesUsuarioLogueado' component={PublicacionesUsuarioLogueado}/>
         <Stack.Screen name='DetallePublicacionLogueado' component={DetallePublicacionLogueado}/>
         
