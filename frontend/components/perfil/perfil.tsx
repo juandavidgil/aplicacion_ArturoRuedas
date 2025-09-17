@@ -74,6 +74,15 @@ const PerfilPantalla: React.FC = () => {
 
   return (
     <LinearGradient colors={['#0c2b2a', '#000']} style={styles.gradient}>
+       {/* 🔹 Header */}
+    <View style={styles.header}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Ionicons name="chevron-back" size={28} color="#fff" />
+      </TouchableOpacity>
+      <Text style={styles.headerTitle}>Perfil</Text>
+      <View style={{ width: 28 }} /> 
+      {/* espacio para balancear el ícono */}
+    </View>
       <View style={styles.container}>
         
         {/* Tarjeta central */}
@@ -159,6 +168,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
+
+  header: {
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between",
+  paddingHorizontal: 15,
+  paddingTop: 50, // margen superior (útil para notch en iOS)
+  paddingBottom: 15,
+  backgroundColor: "#004f4d",
+  borderBottomLeftRadius: 10,
+  borderBottomRightRadius: 10,
+  shadowColor: "#000",
+  shadowOpacity: 0.2,
+  shadowOffset: { width: 0, height: 2 },
+  shadowRadius: 4,
+  elevation: 5,
+},
+headerTitle: {
+  color: "#fff",
+  fontSize: 25,
+  fontWeight: "bold",
+},
+
   card: {
     backgroundColor: "rgba(255,255,255,0.05)",
     borderRadius: 20,

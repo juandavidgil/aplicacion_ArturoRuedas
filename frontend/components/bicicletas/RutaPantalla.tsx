@@ -189,7 +189,7 @@ const RutaPantalla: React.FC = () => {
                 ) : (
                   <View style={{ paddingHorizontal: 16, paddingBottom: 20 }}>
                     <Text style={{ textAlign: 'center', fontSize: 16, lineHeight: 22, color: '#fff', fontWeight: '500', paddingHorizontal: 16 }}>
-                      Las bicicletas de ruta son ligeras y veloces, ideales para largas distancias en carretera.
+                      Las bicicletas de ruta son ligeras y rápidas, ideales para recorrer largas distancias en carretera con mayor comodidad y eficiencia.
                     </Text>
                     <View style={styles.screen}>
                       <View
@@ -254,22 +254,36 @@ const RutaPantalla: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  containerMTB: { flex: 1, padding: 16, marginTop:0 },
-  headerWrapper: { width: '100%', paddingBottom: 20 },
+  containerMTB: { flex: 1, 
+    padding: 16, 
+    marginTop:0 
+  },
+  headerWrapper: { 
+    width: '100%', 
+    paddingBottom: 20 
+  },
   header: {
     backgroundColor: '#004f4d',
-    paddingVertical: height * 0.04,
+    paddingVertical: height * 0.02,
     paddingHorizontal: width * 0.2,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
     marginBottom: height * 0.02, 
   },
-  headerTitle: { fontSize: width * 0.06, fontWeight: 'bold', color: '#fff' },
+  headerTitle: { 
+    fontSize: width * 0.06, 
+    fontWeight: 'bold', 
+    color: '#fff',
+    marginTop:30, 
+  },
   searchContainer: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: '#fff', borderRadius: width * 0.08,
-    paddingHorizontal: width * 0.06, paddingVertical: height * 0.015,
+    flexDirection: 'row', 
+    alignItems: 'center',
+    backgroundColor: '#fff', 
+    borderRadius: width * 0.08,
+    paddingHorizontal: width * 0.06, 
+    paddingVertical: 20,
     elevation: 3, shadowColor: '#000', shadowOpacity: 0.15,
     shadowOffset: { width: 0, height: 0 }, shadowRadius: 6,
     width: '90%', alignSelf: 'center',

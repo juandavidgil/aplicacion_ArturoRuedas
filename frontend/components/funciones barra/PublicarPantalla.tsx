@@ -48,6 +48,20 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
     setTipoComponente('ruedas');
   };
 
+const formatPrice = (value: string) => {
+  // eliminar todo lo que no sea número
+  const cleanValue = value.replace(/\D/g, "");
+
+  if (!cleanValue) return "";
+
+  // formatear con separadores de miles estilo colombiano
+  const formatted = parseInt(cleanValue, 10).toLocaleString("es-CO");
+
+  return `$ ${formatted}`; // agregamos el símbolo
+};
+
+
+
   const PublicarBoton = async () => {
     if (!ID_usuario) {
       alert('Debes iniciar sesión para publicar artículos');
@@ -61,14 +75,15 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
 
     try {
       const formData = {
-        nombre_Articulo,
-        descripcion,
-        precio: parseFloat(precio),
-        tipo_bicicleta: tipoBicicleta,
-        tipo_componente: tipoComponente,
-        fotos, // se envía el array
-        ID_usuario
-      };
+  nombre_Articulo,
+  descripcion,
+  precio: parseFloat(precio.replace(/[^0-9]/g, "")), // aquí lo limpiamos
+  tipo_bicicleta: tipoBicicleta,
+  tipo_componente: tipoComponente,
+  fotos,
+  ID_usuario
+};
+
 
       const response = await fetch(`${URL}publicar_articulo`, {
         method: 'POST',
@@ -116,7 +131,7 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
       quality: 0.8,
       allowsEditing: true,
       aspect: [4, 3],
-      allowsMultipleSelection: true, // permite varias
+      allowsMultipleSelection: true, 
       selectionLimit: 5 // máximo 5 (ajústalo si quieres)
     });
 
@@ -160,15 +175,17 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
               onChangeText={setDescripcion}
               style={[styles.input, { height: 100 }]}
               multiline
-            />
-
+            /> 
             <TextInput
-              placeholder="Precio*"
-              value={precio}
-              onChangeText={setPrecio}
-              keyboardType="numeric"
-              style={styles.input}
-            />
+  placeholder="Precio*"
+  value={precio}
+  onChangeText={(text) => setPrecio(formatPrice(text))}
+  keyboardType="numeric"
+  style={styles.input}
+/>
+
+            
+
 
             <View style={styles.pickerContainer}>
               <Text style={styles.pickerLabel}>Tipo Bicicleta</Text>
@@ -258,14 +275,21 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 10 },
-  scrollContent: { paddingHorizontal: 16 },
+  container: { 
+    flex: 1, 
+    margin: 5, 
+    marginTop:10
+  },
+  scrollContent: { 
+    paddingHorizontal: 16 
+  },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 10,
     marginTop: Platform.OS === "android" ? 10 : 5,
+    marginBottom: Platform.OS === "android" ? 10 : 20,
   },
   backButton: {
     marginTop: Platform.OS === "android" ? 40 : 0,
@@ -343,8 +367,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
     shadowRadius: 6,
-    marginHorizontal: 20,
+    marginHorizontal: 9,
     marginBottom: 180,
+    
   },
   publishText: { color: 'white', fontWeight: 'bold', fontSize: 17, letterSpacing: 0.5 },
   modalContainer: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', padding: 20 },

@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
-import {URL} from '../../config/UrlApi'
+import { View, TextInput, TouchableOpacity, Text, Alert, StyleSheet } from 'react-native';
+import { URL } from '../../config/UrlApi';
 
 const RestablecerContraseñaPantalla: React.FC = () => {
   const [correo, setCorreo] = useState('');
   const [codigo, setCodigo] = useState('');
   const [nuevaContraseña, setNuevaContraseña] = useState('');
   const [codigoEnviado, setCodigoEnviado] = useState(false);
+
+  // 📧 Enviar código al correo
   const enviarCodigo = async () => {
+    if (!correo) {
+      Alert.alert('⚠️', 'Por favor ingresa tu correo');
+      return;
+    }
+
     try {
       const response = await fetch(`${URL}enviar-correo-reset`, {
         method: 'POST',
@@ -15,6 +22,7 @@ const RestablecerContraseñaPantalla: React.FC = () => {
         body: JSON.stringify({ correo }),
       });
       const data = await response.json();
+
       if (response.ok) {
         Alert.alert('✅', data.mensaje);
         setCodigoEnviado(true);
@@ -27,7 +35,13 @@ const RestablecerContraseñaPantalla: React.FC = () => {
     }
   };
 
+  // 🔄 Cambiar la contraseña
   const cambiarContraseña = async () => {
+    if (!codigo || !nuevaContraseña) {
+      Alert.alert('⚠️', 'Ingresa el código y la nueva contraseña');
+      return;
+    }
+
     try {
       const response = await fetch(`${URL}restablecer-contrasena`, {
         method: 'POST',
@@ -35,9 +49,11 @@ const RestablecerContraseñaPantalla: React.FC = () => {
         body: JSON.stringify({ correo, codigo, nuevaContraseña }),
       });
       const data = await response.json();
+
       if (response.ok) {
         Alert.alert('✅', data.mensaje);
-        // Redirige a login si usas React Navigation
+        // 👉 Aquí podrías redirigir al login si usas React Navigation
+        // navigation.navigate('Login');
       } else {
         Alert.alert('⚠️', data.mensaje);
       }
@@ -48,25 +64,42 @@ const RestablecerContraseñaPantalla: React.FC = () => {
   };
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>Restablecer Contraseña</Text>
-      <TextInput placeholder="Correo" value={correo} onChangeText={setCorreo} style={{ borderBottomWidth: 1 }} />
+    <View style={styles.container}>
+      <Text style={styles.title}>Restablecer Contraseña</Text>
+
+      <TextInput
+        placeholder="Correo"
+        value={correo}
+        onChangeText={setCorreo}
+        style={styles.input}
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
+
       {!codigoEnviado ? (
-        <TouchableOpacity onPress={enviarCodigo}>
-          <Text>Enviar código</Text>
+        <TouchableOpacity style={styles.button} onPress={enviarCodigo}>
+          <Text style={styles.buttonText}>Enviar código</Text>
         </TouchableOpacity>
       ) : (
         <>
-          <TextInput placeholder="Código" value={codigo} onChangeText={setCodigo} style={{ borderBottomWidth: 1 }} />
+          <TextInput
+            placeholder="Código"
+            value={codigo}
+            onChangeText={setCodigo}
+            style={styles.input}
+            keyboardType="numeric"
+          />
+
           <TextInput
             placeholder="Nueva contraseña"
             value={nuevaContraseña}
             onChangeText={setNuevaContraseña}
             secureTextEntry
-            style={{ borderBottomWidth: 1 }}
+            style={styles.input}
           />
-          <TouchableOpacity onPress={cambiarContraseña}>
-            <Text>Restablecer</Text>
+
+          <TouchableOpacity style={styles.button} onPress={cambiarContraseña}>
+            <Text style={styles.buttonText}>Restablecer</Text>
           </TouchableOpacity>
         </>
       )}
@@ -75,3 +108,38 @@ const RestablecerContraseñaPantalla: React.FC = () => {
 };
 
 export default RestablecerContraseñaPantalla;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'center',
+    backgroundColor: '#f8f9fa',
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 22,
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#004f4d',
+  },
+  input: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#004f4d',
+    marginBottom: 15,
+    paddingVertical: 8,
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#004f4d',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+});

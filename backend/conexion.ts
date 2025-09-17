@@ -5,6 +5,9 @@ import nodemailer from 'nodemailer';
 import axios from "axios";
 import dotenv from "dotenv";
 import { Expo } from "expo-server-sdk";
+import bcrypt from "bcryptjs";
+
+
 const expo = new Expo();
 
 
@@ -97,6 +100,9 @@ app.post('/registrar', validarCamposUsuario, async (req: Request, res: Response)
   }
 });
 
+// Guardar temporalmente los códigos de recuperación
+const codigosReset = new Map();
+
 // Ruta para iniciar sesión - Mejorada
 app.post('/iniciar-sesion', async (req: Request, res: Response) => {
   try {
@@ -129,58 +135,58 @@ app.post('/iniciar-sesion', async (req: Request, res: Response) => {
 
 
 
-// 📧 Envío de código de recuperación
-const codigosReset = new Map<string, string>();
-app.post('/enviar-correo-resetc', async (req, res) => {
+//prueba de restablecimiento de contraseña
+app.post("/enviar-correo-reset", async (req, res) => {
   const { correo } = req.body;
   try {
-    const result = await pool.query('SELECT * FROM usuario WHERE correo = $1', [correo]);
+    const result = await pool.query("SELECT * FROM usuario WHERE correo = $1", [correo]);
     if (result.rows.length === 0) {
-      return res.status(404).json({ mensaje: 'Correo no registrado' });
+      return res.status(404).json({ mensaje: "Correo no registrado" });
     }
-    
+
     const codigo = Math.floor(100000 + Math.random() * 900000).toString();
     codigosReset.set(correo, codigo);
-    console.log(`📩 Código generado para ${correo}: ${codigo}`);
-    
-    // 🛠️ Configura tu contraseña de aplicación aquí
+
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: "gmail",
       auth: {
-        user: 'juandavidgil0911@gmail.com',
-        pass: '123456',
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS, // Usa contraseña de aplicación
       },
     });
-    
+
     await transporter.sendMail({
-      from: '"Soporte Ruedas" <tucorreo@gmail.com>',
+      from: `"Soporte Ruedas" <${process.env.EMAIL_USER}>`,
       to: correo,
-      subject: 'Código para restablecer contraseña',
+      subject: "Código para restablecer contraseña",
       text: `Tu código es: ${codigo}`,
     });
-    
-    res.json({ mensaje: 'Código enviado al correo' });
+
+    res.json({ mensaje: "Código enviado al correo" });
   } catch (error) {
-    console.error('❌ Error enviando correo:', error);
-    res.status(500).json({ mensaje: 'Error del servidor' });
+    console.error("❌ Error enviando correo:", error);
+    res.status(500).json({ mensaje: "Error del servidor" });
   }
 });
 
 // 🔄 Restablecer contraseña
-app.post('/restablecer-contrasena', async (req, res) => {
+app.post("/restablecer-contrasena", async (req, res) => {
   const { correo, codigo, nuevaContraseña } = req.body;
   const codigoGuardado = codigosReset.get(correo);
+
   if (!codigoGuardado || codigoGuardado !== codigo) {
-    return res.status(400).json({ mensaje: 'Código incorrecto o expirado' });
+    return res.status(400).json({ mensaje: "Código incorrecto o expirado" });
   }
-  
+
   try {
-    await pool.query('UPDATE usuario SET contraseña = $1 WHERE correo = $2', [nuevaContraseña, correo]);
+    const hash = await bcrypt.hash(nuevaContraseña, 10);
+    await pool.query('UPDATE usuario SET "contraseña" = $1 WHERE correo = $2', [hash, correo]);
     codigosReset.delete(correo);
-    res.json({ mensaje: 'Contraseña actualizada correctamente' });
+
+    res.json({ mensaje: "Contraseña actualizada correctamente" });
   } catch (error) {
-    console.error('❌ Error actualizando contraseña:', error);
-    res.status(500).json({ mensaje: 'Error del servidor' });
+    console.error("❌ Error actualizando contraseña:", error);
+    res.status(500).json({ mensaje: "Error del servidor" });
   }
 });
 

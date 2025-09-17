@@ -92,7 +92,7 @@ const ChatGPT: React.FC = () => {
           source={image}
           resizeMode="cover"
           style={styles.image}
-          imageStyle={{ opacity: 0.5 }} // 🔹 Opacidad de la imagen
+          imageStyle={{ opacity: 0.5 }} // Opacidad de la imagen por si la queremos corregir 
         >
           {/* Lista de mensajes */}
           <FlatList
