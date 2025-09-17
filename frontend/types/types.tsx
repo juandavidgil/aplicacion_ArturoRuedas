@@ -31,7 +31,8 @@ export type StackParamList = {
   
   
   Perfil: undefined;
-  EditarPerfil: {usuario : Usuario };
+  EditarPerfil: { usuario: Usuario }; 
+  CambiarContrasena:  { usuario: Usuario }; 
   PublicacionesUsuarioLogueado: undefined;
   DetallePublicacionLogueado: { publicacion: Publicacion; id: number; };
 };

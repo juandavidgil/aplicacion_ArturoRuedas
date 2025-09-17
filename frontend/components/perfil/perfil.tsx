@@ -13,6 +13,7 @@ interface Usuario {
   correo: string;
   telefono: string;
   foto: string;
+  constraseña: string;
 }
 const { width, height } = Dimensions.get('window');
 
@@ -90,7 +91,9 @@ const PerfilPantalla: React.FC = () => {
           <Text style={styles.info}>Telefono: {usuario?.telefono}</Text>
 
           {/* Botones */}
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button}
+         onPress={() => navigation.navigate("EditarPerfil", { usuario: usuario })}
+          >
             <LinearGradient colors={['#64eb76ff', '#23bd15ff']} style={styles.buttonBg}>
               <Text style={styles.buttonText}> 🖋️ Editar mi información</Text>
             </LinearGradient>
@@ -105,7 +108,9 @@ const PerfilPantalla: React.FC = () => {
             </LinearGradient>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity 
+           onPress={() => navigation.navigate('CambiarContrasena', { usuario })}
+          style={styles.button}>
             <LinearGradient colors={['#15922aff', '#155206ff']} style={styles.buttonBg}>
               <Text style={styles.buttonText}>🔒 Cambiar contraseña</Text>
             </LinearGradient>

@@ -1,19 +1,5 @@
--- Crear tabla bicicleta
-CREATE TABLE bicicleta (
-    ID_bicicleta SERIAL PRIMARY KEY,
-    tipo VARCHAR(25) NOT NULL,
-    nombre_personalizado VARCHAR(25) NOT NULL,
-    fecha_creacion VARCHAR(25) NOT NULL
-);
 
--- Crear tabla componentes
-CREATE TABLE componentes (
-    ID_componentes SERIAL PRIMARY KEY,
-    tipo_bicicleta VARCHAR(25) NOT NULL,
-    nombre VARCHAR(25) NOT NULL,
-    categoria VARCHAR(25) NOT NULL,
-    imagen VARCHAR(25) NOT NULL
-);
+
 
 -- Crear tabla usuario
 CREATE TABLE usuario (
@@ -22,10 +8,8 @@ CREATE TABLE usuario (
     correo VARCHAR(50) NOT NULL,
     contraseña VARCHAR(25) NOT NULL,
     telefono VARCHAR(10) NOT NULL,
-    foto VARCHAR(1000) NOT NULL,
-    bicicletaID_bicicleta INT,
-    CONSTRAINT fk_bicicleta FOREIGN KEY (bicicletaID_bicicleta) REFERENCES bicicleta(ID_bicicleta)
-);
+    foto VARCHAR(1000) NOT NULL
+  );
 
 
 
@@ -90,18 +74,4 @@ CREATE TABLE IF NOT EXISTS user_tokens (
 );
 
 
- SELECT 
-        cv.ID_publicacion AS id,
-        cv.nombre_Articulo,
-        cv.descripcion,
-        cv.precio,
-        cv.tipo_bicicleta,
-        COALESCE(array_agg(cf.url_foto) FILTER (WHERE cf.url_foto IS NOT NULL), ARRAY[]::text[]) AS fotos, 
-        u.nombre AS nombre_vendedor,
-        u.foto
-      FROM com_ventas cv
-      JOIN usuario u ON cv.ID_usuario = u.ID_usuario
-      LEFT JOIN com_ventas_fotos cf ON cv.ID_publicacion = cf.ID_publicacion
-      WHERE cv.ID_usuario = 1
-      GROUP BY cv.ID_publicacion, u.nombre, u.foto
-      ORDER BY cv.ID_publicacion DESC;
+SELECT * FROM usuario

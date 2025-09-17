@@ -919,6 +919,34 @@ app.put("/EditarUsuario/:id", async (req, res) => {
   }
 });
 
+//cambiar contraseña
+app.put("/CambiarContrasena/:id", async (req, res) => {
+  const { id } = req.params;
+  const { passwordActual, passwordNueva } = req.body;
+
+  try {
+    // Verificar contraseña actual
+    const result = await pool.query("SELECT contraseña FROM usuario WHERE ID_usuario=$1", [id]);
+    if (result.rows.length === 0) return res.status(404).json({ error: "Usuario no encontrado" });
+
+    const contraseñaGuardada = result.rows[0].contraseña;
+
+
+
+    if (passwordActual !== contraseñaGuardada) {
+      return res.status(400).json({ error: "Contraseña actual incorrecta" });
+    }
+
+    // Actualizar con nueva contraseña
+    await pool.query("UPDATE usuario SET contraseña=$1 WHERE ID_usuario=$2", [passwordNueva, id]);
+
+    res.json({ message: "Contraseña actualizada correctamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al cambiar la contraseña" });
+  }
+});
+
 
 // Iniciar servidor con manejo de errores
 app.listen(PORT, () => {
