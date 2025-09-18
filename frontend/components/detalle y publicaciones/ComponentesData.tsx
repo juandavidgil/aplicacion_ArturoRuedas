@@ -1,5 +1,3 @@
-
-
 export const componentesData = {
 
   //los de mtb
@@ -198,13 +196,304 @@ export const componentesData = {
     },
 
   },
-  // los de ruta
+ // los de ruta
 
+
+  ruedasr: {
+    nombre: "Ruedas de ruta",
+    // imagen: require('../../iconos/rueda.png'),
+    comoColocar: [
+      "Paso 1: Desactiva los frenos (tipo caliper o de disco) para liberar la rueda.",
+      "Paso 2: Suelta el cierre rápido o afloja los ejes pasantes, dependiendo del tipo de rueda.",
+      "Paso 3: Retira la rueda delantera o trasera con cuidado.",
+      "Paso 4: Alinea la nueva rueda en la horquilla (delantera) o en el cuadro (trasera).",
+      "Paso 5: Ajusta y aprieta el cierre rápido o eje pasante. Verifica que esté centrada y gire libremente.",
+    ],
+    informacion: {
+      utilidad: "Las ruedas de ruta están diseñadas para minimizar la resistencia y maximizar la eficiencia en el pedaleo sobre superficies pavimentadas.",
+      mantenimiento: "Revisa la presión regularmente, inspecciona el aro por fisuras o golpes, y revisa la tensión de los radios y los rodamientos.",
+    },
+    herramientas: [
+      "Llave inglesa o llave Allen (para ejes pasantes)",
+      "Desmontadores de neumáticos",
+      "Bomba de aire o inflador de precisión",
+    ],
+  },
+
+  manubrior: {
+    nombre: "Manubrio de ruta",
+    // imagen: require('../../iconos/manubrior.jpeg'),
+    comoColocar: [
+      "Paso 1: Retira la tapa frontal de la potencia soltando los tornillos Allen.",
+      "Paso 2: Retira el manubrio antiguo y limpia la zona de contacto.",
+      "Paso 3: Coloca el nuevo manubrio de ruta (tipo drop bar) centrado en la potencia.",
+      "Paso 4: Ajusta la inclinación del manubrio a tu gusto.",
+      "Paso 5: Aprieta los tornillos de forma cruzada para una presión uniforme.",
+    ],
+    herramientas: [
+      "Llaves Allen (4 mm o 5 mm)",
+      "Grasa ligera (opcional)",
+      "Nivel o cinta métrica para centrar",
+    ],
+    informacion: {
+      utilidad: "El manubrio de ruta permite múltiples posiciones de agarre y mejora la aerodinámica del ciclista en terrenos planos o en competencia.",
+      mantenimiento: "Revisa que no tenga grietas, que esté bien apretado y que la cinta esté en buen estado.",
+    },
+  },
+
+  horquilla: {
+    nombre: "Horquilla",
+    // imagen: require('../../iconos/tenedor.png'),
+    comoColocar: [
+      "Paso 1: Retira la rueda delantera y desmonta el manubrio de la potencia.",
+      "Paso 2: Afloja los tornillos de la potencia y extrae la horquilla antigua.",
+      "Paso 3: Limpia la zona de dirección e instala rodamientos o pista nueva si es necesario.",
+      "Paso 4: Inserta la nueva horquilla y ajusta con los espaciadores adecuados.",
+      "Paso 5: Ajusta el tornillo superior de la tapa de dirección y luego los laterales de la potencia.",
+    ],
+    herramientas: [
+      "Llaves Allen (5 mm o 6 mm)",
+      "Grasa para dirección",
+      "Trapo de limpieza",
+    ],
+    informacion: {
+      utilidad: "La horquilla en bicicletas de ruta proporciona estabilidad, rigidez y precisión en la dirección.",
+      mantenimiento: "Debe mantenerse limpia. En caso de dirección integrada, revisar rodamientos y reemplazarlos si hay desgaste.",
+    },
+  },
+
+  pedalr: {
+    nombre: "Pedal de ruta",
+    // imagen: require('../../iconos/pedalr.png'),
+    comoColocar: [
+      "Paso 1: Usa una llave para pedales o una Allen (por la parte trasera de la biela).",
+      "Paso 2: Gira el pedal izquierdo en sentido horario y el derecho en sentido antihorario para retirarlos.",
+      "Paso 3: Limpia las roscas de las bielas.",
+      "Paso 4: Identifica 'L' y 'R' en los nuevos pedales.",
+      "Paso 5: Enrosca y aprieta los pedales correctamente según su lado.",
+    ],
+    herramientas: [
+      "Llave para pedales (15 mm) o Allen de 6/8 mm",
+      "Grasa para roscas",
+      "Guantes",
+    ],
+    informacion: {
+      utilidad: "Los pedales de ruta, a menudo automáticos, mejoran la eficiencia de pedaleo y permiten una conexión directa con el ciclista.",
+      mantenimiento: "Lubrica las roscas, revisa el mecanismo de enganche y limpia regularmente.",
+    },
+  },
+
+  cassette: {
+    nombre: "Cassette",
+    // imagen: require('../../iconos/casetter.png'),
+    comoColocar: [
+      "Paso 1: Retira la rueda trasera.",
+      "Paso 2: Usa un extractor de cassette y una llave de cadena para aflojar el seguro.",
+      "Paso 3: Retira el cassette viejo y limpia el núcleo.",
+      "Paso 4: Coloca el nuevo cassette alineando bien las estrías.",
+      "Paso 5: Aprieta con el extractor hasta que quede firme.",
+    ],
+    herramientas: [
+      "Extractor de cassette",
+      "Llave de cadena",
+      "Llave inglesa",
+    ],
+    informacion: {
+      utilidad: "El cassette permite cambiar la relación de pedaleo y adaptar la cadencia según el terreno.",
+      mantenimiento: "Limpieza frecuente con desengrasante. Si hay desgaste en los dientes o saltos, reemplazarlo.",
+    },
+  },
+
+  cadenilla: {
+    nombre: "Cadenilla",
+    // imagen: require('../../iconos/cadenilla.png'),
+    comoColocar: [
+      "Paso 1: Si hay cadena vieja, córtala con una herramienta adecuada.",
+      "Paso 2: Pasa la nueva cadena por el desviador trasero y delantero.",
+      "Paso 3: Alinea la longitud correcta (consulta con medidor de cadena o compara con la anterior).",
+      "Paso 4: Cierra con eslabón maestro o remache usando corta cadenas.",
+      "Paso 5: Revisa que se mueva suavemente al girar los pedales.",
+    ],
+    herramientas: [
+      "Corta cadenas",
+      "Eslabón maestro (opcional)",
+      "Guantes",
+    ],
+    informacion: {
+      utilidad: "La cadena transfiere la energía del ciclista al sistema de tracción de la bicicleta.",
+      mantenimiento: "Lubricar frecuentemente, limpiar con desengrasante, y reemplazar cuando esté elongada.",
+    },
+  },
+
+  platos: {
+    nombre: "Platos",
+    // imagen: require('../../iconos/plato.png'),
+    comoColocar: [
+      "Paso 1: Quita la cadena y asegúrate de tener acceso a los tornillos.",
+      "Paso 2: Usa llave Allen para retirar los tornillos del plato.",
+      "Paso 3: Instala el nuevo plato alineando los orificios.",
+      "Paso 4: Aprieta los tornillos de forma cruzada y pareja.",
+      "Paso 5: Vuelve a colocar la cadena y ajusta el desviador si es necesario.",
+    ],
+    herramientas: [
+      "Llaves Allen (5 mm o 6 mm)",
+      "Grasa ligera",
+      "Extractor de bielas (si es necesario)",
+    ],
+    informacion: {
+      utilidad: "Los platos determinan el desarrollo del pedaleo y su relación con el cassette trasero.",
+      mantenimiento: "Limpieza regular y cambio en caso de desgaste de dientes o deformaciones.",
+    },
+  },
+
+  cuadro: {
+    nombre: "Cuadro",
+    // imagen: require('../../iconos/marcor.png'),
+    comoColocar: [
+      "Paso 1: Desmonta todos los componentes del cuadro antiguo.",
+      "Paso 2: Limpia las piezas para asegurar compatibilidad.",
+      "Paso 3: Verifica que el nuevo cuadro sea compatible (dirección, frenos, eje de pedalier, etc.).",
+      "Paso 4: Instala primero la dirección, horquilla y potencia.",
+      "Paso 5: Monta la transmisión, frenos, ruedas y manillar.",
+      "Paso 6: Ajusta y revisa toda la configuración antes de usar.",
+    ],
+    herramientas: [
+      "Llaves Allen",
+      "Grasa para componentes",
+      "Extractor de bielas",
+      "Extractor de dirección (si es necesario)",
+      "Cortacables y ajustadores",
+    ],
+    informacion: {
+      utilidad: "El cuadro es la base estructural de la bicicleta y define su geometría, peso y rigidez.",
+      mantenimiento: "Inspección visual frecuente, limpieza, y revisión ante golpes o fisuras. Un cuadro dañado puede poner en riesgo al ciclista.",
+    },
+  },
 
   //los de fija 
+
+  ruedasf: {
+  // nombre: "Ruedas para fixie",
+  imagen: require('../../iconos/ruedaf.png'),
+  comoColocar: [
+    "Paso 1: Afloja el cierre rápido o tuercas del eje trasero y delantero.",
+    "Paso 2: Retira la rueda vieja con cuidado.",
+    "Paso 3: Coloca la rueda nueva alineándola en el cuadro y horquilla.",
+    "Paso 4: Ajusta y aprieta bien el cierre rápido o las tuercas.",
+    "Paso 5: Verifica que las ruedas estén centradas y giren libremente.",
+  ],
+  informacion: {
+    utilidad: "Las ruedas en fixie son robustas y diseñadas para ofrecer buena tracción en la ciudad.",
+    mantenimiento: "Revisa tensión de radios, presión de neumáticos y estado de rodamientos regularmente.",
+  },
+  herramientas: [
+    "Llave inglesa",
+    "Desmontadores de neumáticos",
+    "Bomba de aire",
+  ],
+},
+
+manubriof: {
+  nombre: "Manubrio para fixie",
+  // imagen: require('../../iconos/flatb.jpeg'),
+  comoColocar: [
+    "Paso 1: Afloja los tornillos de la potencia y retira el manubrio antiguo.",
+    "Paso 2: Limpia la zona de montaje.",
+    "Paso 3: Coloca el nuevo manubrio (puede ser tipo bullhorn, drop o flat) centrado en la potencia.",
+    "Paso 4: Ajusta la inclinación y posición a tu preferencia.",
+    "Paso 5: Aprieta los tornillos de forma cruzada y segura.",
+  ],
+  herramientas: [
+    "Llaves Allen (4 mm o 5 mm)",
+    "Grasa ligera",
+  ],
+  informacion: {
+    utilidad: "El manubrio en fixie puede variar según estilo, pero siempre busca comodidad y control en la ciudad.",
+    mantenimiento: "Revisa apriete y estado de la cinta o puños regularmente.",
+  },
+},
+
+piñonf: {
+  nombre: "Piñón fijo",
+  /* imagen: require('../../iconos/piñonf.png'), */
+  comoColocar: [
+    "Paso 1: Retira la rueda trasera de la bicicleta.",
+    "Paso 2: Desmonta el piñón viejo con una llave adecuada o extractor si es necesario.",
+    "Paso 3: Limpia el núcleo de la rueda donde se monta el piñón.",
+    "Paso 4: Enrosca el piñón fijo nuevo con firmeza, asegurándote de la orientación correcta.",
+    "Paso 5: Vuelve a montar la rueda en la bicicleta y ajusta la tensión de la cadena.",
+  ],
+  herramientas: [
+    "Llave inglesa",
+    "Extractor de piñón (si es necesario)",
+  ],
+  informacion: {
+    utilidad: "El piñón fijo conecta directamente la fuerza del pedaleo con la rueda trasera, sin posibilidad de rueda libre.",
+    mantenimiento: "Asegura que esté bien apretado y limpio para evitar desgastes.",
+  },
+},
+
+cadenaf: {
+  nombre: "Cadena para fixie",
+  // imagen: require('../../iconos/cadenaf.jpeg'),
+  comoColocar: [
+    "Paso 1: Retira la cadena vieja si es necesario.",
+    "Paso 2: Coloca la cadena nueva asegurándote que la longitud sea correcta para evitar tensión o flojedad excesiva.",
+    "Paso 3: Usa un eslabón maestro o remache para cerrar la cadena.",
+    "Paso 4: Revisa que la cadena se mueva suavemente y sin saltos.",
+  ],
+  herramientas: [
+    "Corta cadenas",
+    "Eslabón maestro (opcional)",
+    "Guantes",
+  ],
+  informacion: {
+    utilidad: "La cadena transmite la fuerza directamente del plato al piñón fijo, siendo crucial para el funcionamiento.",
+    mantenimiento: "Lubrica y limpia con frecuencia para evitar desgaste y alargamiento.",
+  },
+},
+
+platof: {
+  nombre: "Plato para fixie",
+  // imagen: require('../../iconos/plato.png'),
+  comoColocar: [
+    "Paso 1: Retira la cadena del plato.",
+    "Paso 2: Afloja los tornillos del plato con una llave Allen.",
+    "Paso 3: Retira el plato viejo.",
+    "Paso 4: Coloca el nuevo plato y ajusta los tornillos de forma uniforme.",
+    "Paso 5: Vuelve a colocar la cadena y ajusta la tensión si es necesario.",
+  ],
+  herramientas: [
+    "Llave Allen (5 mm o 6 mm)",
+    "Grasa ligera",
+  ],
+  informacion: {
+    utilidad: "El plato transmite el pedaleo directamente al piñón fijo en fixie, siendo clave para el movimiento.",
+    mantenimiento: "Mantén limpio y revisa desgaste en los dientes para evitar saltos de cadena.",
+  },
+},
+
+cuadrof: {
+  nombre: "Cuadro para fixie",
+  // imagen: require('../../iconos/marcof.png'),
+  comoColocar: [
+    "Paso 1: Desmonta todos los componentes del cuadro antiguo.",
+    "Paso 2: Limpia las piezas para verificar compatibilidad.",
+    "Paso 3: Verifica compatibilidad con dirección, ejes y frenos (si tiene).",
+    "Paso 4: Instala dirección, potencia y horquilla.",
+    "Paso 5: Monta transmisión, ruedas, manubrio y demás componentes.",
+    "Paso 6: Ajusta y revisa todo antes de rodar.",
+  ],
+  herramientas: [
+    "Llaves Allen",
+    "Grasa para componentes",
+    "Extractor de bielas",
+    "Extractor de dirección (si es necesario)",
+  ],
+  informacion: {
+    utilidad: "El cuadro para fixie es sencillo, rígido y ligero, pensado para la ciudad y la velocidad constante.",
+    mantenimiento: "Limpieza regular, inspección visual para evitar fisuras o golpes peligrosos.",
+  },
+},
 };
-
-
-
-
 

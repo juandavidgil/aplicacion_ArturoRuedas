@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 
-export type ComponenteId = 'ruedas' | 'suspension' |'frenos' | 'marco' | 'sillin' | 'manubrio' | 'pedal' | 'piñon'|'cadena' | 'plato';
+export type ComponenteId = 'ruedas' | 'suspension' |'frenos' | 'marco' | 'sillin' | 'manubrio' | 'pedal' | 'piñon'|'cadena' | 'plato'| 'ruedasr' |'manubrior' | 'horquilla' | 'pedalr' | 'cassette' | 'cadenilla' | 'platos'|'cuadro' | 'manubriof' | 'ruedasf' |'piñonf' | 'cadenaf' | 'platof'|'cuadrof';
 export type ComponenteData = {nombre: string; imagen: any; comoColocar: string[]; informacion: { utilidad: string; mantenimiento: string; }; herramientas: string[]; };
 export type StackParamList = {
   

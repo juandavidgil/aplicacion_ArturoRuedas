@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#911414ff',
+    color: '#0f971aff',
   },
   seccion: {
     marginBottom: 20,
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
-    color: '#555',
+    color: '#ffffffff',
   },
   texto: {
     fontSize: 16,
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   precioDetalle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#ec2314ff',
+    color: '#2dec14ff',
   },
 });
 
