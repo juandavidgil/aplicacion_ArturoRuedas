@@ -5,6 +5,7 @@ import * as Device from "expo-device";
 import Constants from "expo-constants";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {URL} from '../../config/UrlApi'
 
 // Configuración del handler para que muestre notificaciones
 Notifications.setNotificationHandler({
@@ -63,7 +64,7 @@ const NotificacionesPantalla: React.FC = () => {
 
         // ✅ Guardar token en el backend
         if (usuario?.ID_usuario) {
-          await axios.post("http://192.168.100.6:3001/guardar-token", {
+          await axios.post(`${URL}guardar-token`, {
             ID_usuario: usuario?.ID_usuario ?? 1,
             token,
           });
@@ -108,7 +109,7 @@ const NotificacionesPantalla: React.FC = () => {
       return;
     }
     try {
-      await axios.post("http://192.168.100.6:3001/test-notification", {
+      await axios.post(`${URL}test-notification`, {
         ID_usuario: usuario?.ID_usuario ?? 1,
         token: expoPushToken,
       });

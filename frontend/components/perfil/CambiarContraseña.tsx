@@ -14,7 +14,7 @@ interface Props {
 
 const CambiarContrasena: React.FC<Props> = ({ route }) => {
   const navigation = useNavigation<CambiarPassNavProp>();
-  const { usuario } = route.params; // 👈 usuario recibido desde Perfil
+  const { usuario } = route.params; 
 
   const [passwordActual, setPasswordActual] = useState("");
   const [passwordNueva, setPasswordNueva] = useState("");

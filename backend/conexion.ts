@@ -5,7 +5,7 @@ import nodemailer from 'nodemailer';
 import axios from "axios";
 import dotenv from "dotenv";
 import { Expo } from "expo-server-sdk";
-import bcrypt from "bcryptjs";
+/* import bcrypt from "bcryptjs"; */
 
 
 const expo = new Expo();
@@ -151,7 +151,7 @@ app.post("/enviar-correo-reset", async (req, res) => {
       service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS, // Usa contraseña de aplicación
+        pass: process.env.EMAIL_PASS,
       },
     });
 
@@ -179,8 +179,8 @@ app.post("/restablecer-contrasena", async (req, res) => {
   }
 
   try {
-    const hash = await bcrypt.hash(nuevaContraseña, 10);
-    await pool.query('UPDATE usuario SET "contraseña" = $1 WHERE correo = $2', [hash, correo]);
+    // Guardar la contraseña tal cual, sin encriptarla
+    await pool.query('UPDATE usuario SET "contraseña" = $1 WHERE correo = $2', [nuevaContraseña, correo]);
     codigosReset.delete(correo);
 
     res.json({ mensaje: "Contraseña actualizada correctamente" });
@@ -189,6 +189,7 @@ app.post("/restablecer-contrasena", async (req, res) => {
     res.status(500).json({ mensaje: "Error del servidor" });
   }
 });
+
 
 //buscar 
 // 🔍 Buscar publicaciones por nombre
@@ -879,7 +880,7 @@ app.get("/publicaciones", async (req: Request, res: Response) => {
         -- Primera foto (para compatibilidad con tu frontend actual)
         COALESCE(
           (ARRAY_AGG(cvf.url_foto ORDER BY cvf.id_foto ASC))[1], NULL
-        ) AS foto
+        )
       FROM com_ventas cv
       JOIN usuario u ON cv.ID_usuario = u.ID_usuario
       LEFT JOIN com_ventas_fotos cvf ON cv.ID_publicacion = cvf.ID_publicacion

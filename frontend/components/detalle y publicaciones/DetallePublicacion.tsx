@@ -82,7 +82,7 @@ const DetallePublicacion: React.FC<Props> = ({ route }) => {
 
           {/* Sección Vendedor con foto al lado del nombre */}
           <View style={styles.seccion}>
-            <Text style={styles.subtitulo}>Vendedor</Text>
+            <Text style={styles.subtitulo}>Vendedorrrr</Text>
             <View style={styles.vendedorContainer}>
               <Image
                 source={publicacion?.foto ? { uri: publicacion.foto } : require('../../img/avatar.png')}

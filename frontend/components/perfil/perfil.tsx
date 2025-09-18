@@ -101,7 +101,7 @@ const PerfilPantalla: React.FC = () => {
 
           {/* Botones */}
           <TouchableOpacity style={styles.button}
-        //  onPress={() => navigation.navigate("EditarPerfil", { usuario: usuario })}
+         onPress={() => navigation.navigate("EditarPerfil", { usuario: usuario })}
           >
             <LinearGradient colors={['#64eb76ff', '#23bd15ff']} style={styles.buttonBg}>
               <Text style={styles.buttonText}> 🖋️ Editar mi información</Text>
@@ -118,7 +118,7 @@ const PerfilPantalla: React.FC = () => {
           </TouchableOpacity>
 
           <TouchableOpacity 
-          //  onPress={() => navigation.navigate('CambiarContrasena', { usuario })}
+          onPress={() => navigation.navigate('CambiarContrasena', { usuario })}
           style={styles.button}>
             <LinearGradient colors={['#15922aff', '#155206ff']} style={styles.buttonBg}>
               <Text style={styles.buttonText}>🔒 Cambiar contraseña</Text>
