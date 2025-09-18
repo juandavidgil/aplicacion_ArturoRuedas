@@ -373,8 +373,8 @@ export const componentesData = {
   //los de fija 
 
   ruedasf: {
-  // nombre: "Ruedas para fixie",
-  imagen: require('../../iconos/ruedaf.png'),
+   nombre: "Ruedas para fixie",
+/*   imagen: require('../../iconos/ruedaf.png'), */
   comoColocar: [
     "Paso 1: Afloja el cierre rápido o tuercas del eje trasero y delantero.",
     "Paso 2: Retira la rueda vieja con cuidado.",

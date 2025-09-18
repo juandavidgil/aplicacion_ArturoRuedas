@@ -56,4 +56,4 @@ export default function FixieBike(props: GroupProps) {
   )
 }
 
-useGLTF.preload('../../assets/modelos/fija.glb')
+useGLTF.preload(Asset.fromModule(require('../../assets/modelos/fija.glb')).uri);

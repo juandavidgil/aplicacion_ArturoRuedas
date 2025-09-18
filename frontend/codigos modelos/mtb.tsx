@@ -226,4 +226,5 @@
 //   )
 // }
 
-// useGLTF.preload('../../assets/modelos/mtb.glb')
+
+//useGLTF.preload(Asset.fromModule(require('../../assets/modelos/mtb.glb')).uri);

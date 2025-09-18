@@ -476,4 +476,5 @@
 //   );
 // }
 
-// useGLTF.preload('../../assets/modelos/ruta.glb');
+
+//useGLTF.preload(Asset.fromModule(require('../../assets/modelos/ruta.glb')).uri);
