@@ -45,7 +45,7 @@ const PublicacionesAdmin: React.FC<Props> = ({ route }) => {
   const obtenerPublicaciones = async () => {
     try {
       setRefreshing(true);
-      const response = await fetch(`${URL}obtener-publicaciones/${ID_usuario}`);
+      const response = await fetch(`${URL}/obtener-publicaciones/${ID_usuario}`);
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Error ${response.status}: ${errorText}`);

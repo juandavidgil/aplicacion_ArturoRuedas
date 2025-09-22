@@ -44,7 +44,7 @@ const CambiarContrasena: React.FC<Props> = ({ route }) => {
 
     try {
       const response = await fetch(
-        `${URL}CambiarContrasena/${usuario.id_usuario}`,
+        `${URL}/CambiarContrasena/${usuario.id_usuario}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -58,7 +58,7 @@ const CambiarContrasena: React.FC<Props> = ({ route }) => {
       if (!response.ok) throw new Error("Error al cambiar la contraseña");
 
       Alert.alert("Éxito", "Tu contraseña ha sido actualizada.");
-      navigation.goBack();
+      navigation.navigate('InicioSesion');
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "No se pudo cambiar la contraseña.");

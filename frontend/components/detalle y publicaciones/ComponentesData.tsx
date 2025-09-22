@@ -198,7 +198,7 @@ export const componentesData = {
   },
  // los de ruta
 
-
+/* 
   ruedasr: {
     nombre: "Ruedas de ruta",
     // imagen: require('../../iconos/rueda.png'),
@@ -374,7 +374,7 @@ export const componentesData = {
 
   ruedasf: {
    nombre: "Ruedas para fixie",
-/*   imagen: require('../../iconos/ruedaf.png'), */
+   imagen: require('../../iconos/ruedaf.png'), 
   comoColocar: [
     "Paso 1: Afloja el cierre rápido o tuercas del eje trasero y delantero.",
     "Paso 2: Retira la rueda vieja con cuidado.",
@@ -415,7 +415,7 @@ manubriof: {
 
 piñonf: {
   nombre: "Piñón fijo",
-  /* imagen: require('../../iconos/piñonf.png'), */
+   imagen: require('../../iconos/piñonf.png'), 
   comoColocar: [
     "Paso 1: Retira la rueda trasera de la bicicleta.",
     "Paso 2: Desmonta el piñón viejo con una llave adecuada o extractor si es necesario.",
@@ -494,6 +494,6 @@ cuadrof: {
     utilidad: "El cuadro para fixie es sencillo, rígido y ligero, pensado para la ciudad y la velocidad constante.",
     mantenimiento: "Limpieza regular, inspección visual para evitar fisuras o golpes peligrosos.",
   },
-},
+}, */
 };
 

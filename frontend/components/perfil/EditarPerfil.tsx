@@ -24,8 +24,8 @@ const EditarPerfil: React.FC<Props> = ({ route }) => {
 
   const ActualizarInformacion = async () => {
     try {
-        console.log(usuario.id_usuario)
-      const response = await fetch(`${URL}EditarUsuario/${usuario.id_usuario}`, {
+      
+      const response = await fetch(`${URL}/EditarUsuario/${usuario.id_usuario}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nombre, correo, telefono }),
@@ -40,7 +40,7 @@ const EditarPerfil: React.FC<Props> = ({ route }) => {
       await AsyncStorage.setItem("usuario", JSON.stringify(data));
 
       Alert.alert("Éxito", "Tu información ha sido actualizada.");
-      navigation.goBack();
+      navigation.navigate('InicioSesion');
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "No se pudo actualizar la información.");

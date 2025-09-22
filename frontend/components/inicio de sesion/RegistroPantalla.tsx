@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { 
   ImageBackground, Image, View, Text, TextInput, TouchableOpacity, 
-  StyleSheet, SafeAreaView, Alert, ActivityIndicator, ScrollView, Platform 
+  StyleSheet, SafeAreaView, Alert, ActivityIndicator, ScrollView 
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system/legacy';
+import * as ImageManipulator from 'expo-image-manipulator';
 import { StackParamList } from '../../types/types';
 import { URL } from '../../config/UrlApi';
 
@@ -20,7 +22,21 @@ const RegistroPantalla: React.FC = () => {
   const [foto, setFoto] = useState<string | null>(null);
   const [cargando, setCargando] = useState(false);
 
-  // Función para tomar foto
+  const limpiarFormulario = () => {
+    setNombre("");
+    setCorreo("");
+    setContraseña("");
+    setTelefono("");
+    setFoto("");
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      limpiarFormulario();
+    }, [])
+  );
+
+  // ----------------- FOTO -----------------
   const tomarFoto = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') return alert('Permiso de cámara denegado');
@@ -33,11 +49,20 @@ const RegistroPantalla: React.FC = () => {
     });
 
     if (!result.canceled && result.assets.length > 0) {
-      setFoto(result.assets[0].uri);
+      let uri = result.assets[0].uri;
+
+      // Copiar content:// a cache si es necesario
+      if (uri.startsWith('content://')) {
+        const nombreArchivo = uri.split('/').pop();
+        const cacheUri = `${FileSystem.cacheDirectory}${nombreArchivo}`;
+        await FileSystem.copyAsync({ from: uri, to: cacheUri });
+        uri = cacheUri;
+      }
+
+      setFoto(uri);
     }
   };
 
-  // Función para seleccionar foto de galería
   const seleccionarFoto = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') return alert('Permiso de galería denegado');
@@ -50,8 +75,24 @@ const RegistroPantalla: React.FC = () => {
     });
 
     if (!result.canceled && result.assets.length > 0) {
-      setFoto(result.assets[0].uri);
+      let uri = result.assets[0].uri;
+
+      // Copiar content:// a cache si es necesario
+      if (uri.startsWith('content://')) {
+        const nombreArchivo = uri.split('/').pop();
+        const cacheUri = `${FileSystem.cacheDirectory}${nombreArchivo}`;
+        await FileSystem.copyAsync({ from: uri, to: cacheUri });
+        uri = cacheUri;
+      }
+
+      setFoto(uri);
     }
+  };
+  // ----------------- FIN FOTO -----------------
+
+  const validarCorreo = (correo: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(correo);
   };
 
   const handleRegistro = async () => {
@@ -60,18 +101,40 @@ const RegistroPantalla: React.FC = () => {
       return;
     }
 
+    if (!validarCorreo(correo)) {
+      Alert.alert('Error', 'Por favor ingresa un correo electrónico válido');
+      return;
+    }
+
     setCargando(true);
+
     try {
-      const response = await fetch(`${URL}registrar`, {
+      let fotoBase64: string | null = null;
+
+      if (foto) {
+        // Convertir a JPEG y base64
+        const manipResult = await ImageManipulator.manipulateAsync(
+          foto,
+          [{ resize: { width: 800 } }],
+          { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+        );
+
+        if (!manipResult.base64) throw new Error('No se pudo generar Base64');
+
+        fotoBase64 = `data:image/jpeg;base64,${manipResult.base64}`;
+      }
+
+      const response = await fetch(`${URL}/registrar`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre, correo, contraseña, telefono, foto }),
+        body: JSON.stringify({ nombre, correo, contraseña, telefono, foto: fotoBase64 }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
         Alert.alert('Éxito', 'Registro completado correctamente');
+        limpiarFormulario();
         navigation.navigate('InicioSesion');
       } else {
         Alert.alert('Error', data.error || 'Error en el registro');
@@ -87,7 +150,12 @@ const RegistroPantalla: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-        <ScrollView contentContainerStyle={{ paddingBottom: 180 }} keyboardShouldPersistTaps="handled">
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: 180 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.holi}>
             <Image source={require('../../img/logo1.png')} style={styles.logo} />
           </View>
@@ -96,7 +164,6 @@ const RegistroPantalla: React.FC = () => {
             <Text style={styles.title}>Crear Cuenta</Text>
             <Text style={styles.subtitle}>Completa tus datos para registrarte</Text>
 
-            {/* Foto del usuario */}
             {foto && (
               <Image 
                 source={{ uri: foto }} 
@@ -104,7 +171,6 @@ const RegistroPantalla: React.FC = () => {
               />
             )}
 
-            {/* Botones para tomar o seleccionar foto */}
             <View style={styles.photoButtonContainer}>
               <TouchableOpacity onPress={tomarFoto} style={styles.photoButton}>
                 <Text style={styles.buttonText}>Tomar Foto</Text>
@@ -202,15 +268,16 @@ const styles = StyleSheet.create({
   loginLink: { marginTop: 18, paddingVertical: 6, alignItems: 'center' },
   linkText: { color: '#b4b0b0ff', fontSize: 14 },
   linkBold: { color: '#006D77', fontWeight: 'bold' },
-  photoButtonContainer: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 15 },
+  photoButtonContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 15 },
   photoButton: {
     flex: 1,
-    flexDirection: 'row',
-    paddingVertical: 12,
-    borderRadius: 30,
+    paddingVertical: 15,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 6,
+    marginHorizontal: 5,
+    borderWidth: 2,
+    borderColor: '#006D77',
     backgroundColor: '#4a90e2',
   },
 });

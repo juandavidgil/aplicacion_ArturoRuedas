@@ -40,7 +40,7 @@ const PublicacionesUsuarioLogueado: React.FC = () => {
 
     try {
       setRefreshing(true);
-      const response = await fetch(`${URL}obtener-publicaciones-usuario-logueado/${ID_usuario}`);
+      const response = await fetch(`${URL}/obtener-publicaciones-usuario-logueado/${ID_usuario}`);
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Error ${response.status}: ${errorText}`);

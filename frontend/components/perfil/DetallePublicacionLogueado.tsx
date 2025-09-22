@@ -1,23 +1,32 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Alert, FlatList, Dimensions } from 'react-native';
-import { StackParamList } from '../../types/types';
-import { RouteProp } from '@react-navigation/native';
-import { CheckBox } from 'react-native-elements';
-import { URL } from '../../config/UrlApi';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
-import type { StackNavigationProp } from '@react-navigation/stack';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  FlatList,
+  Dimensions,
+} from "react-native";
+import { StackParamList } from "../../types/types";
+import { RouteProp } from "@react-navigation/native";
+import { CheckBox } from "react-native-elements";
+import { URL } from "../../config/UrlApi";
+import { LinearGradient } from "expo-linear-gradient";
+import { useNavigation } from "@react-navigation/native";
+import type { StackNavigationProp } from "@react-navigation/stack";
 
 type DetallePublicacionLogueadoRouteProp = RouteProp<
   StackParamList,
-  'DetallePublicacionLogueado'
+  "DetallePublicacionLogueado"
 >;
 
 interface Props {
   route: DetallePublicacionLogueadoRouteProp;
 }
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const DetallePublicacionLogueado: React.FC<Props> = ({ route }) => {
   const { publicacion, id } = route.params;
@@ -31,26 +40,28 @@ const DetallePublicacionLogueado: React.FC<Props> = ({ route }) => {
 
     if (nuevoValor) {
       Alert.alert(
-        'Se eliminará la publicación',
-        '¿Deseas continuar?',
+        "Se eliminará la publicación",
+        "¿Deseas continuar?",
         [
-          { text: 'Rechazar', onPress: () => setIsChecked(false), style: 'cancel' },
+          { text: "Rechazar", onPress: () => setIsChecked(false), style: "cancel" },
           {
-            text: 'Aceptar',
+            text: "Aceptar",
             onPress: async () => {
               try {
-                const response = await fetch(`${URL}marcar-vendido/${id}`, { method: 'DELETE' });
+                const response = await fetch(`${URL}/marcar-vendido/${id}`, {
+                  method: "DELETE",
+                });
                 if (!response.ok) {
                   const errorText = await response.text();
                   throw new Error(`Error ${response.status}: ${errorText}`);
                 }
-                Alert.alert('Éxito', 'La publicación fue marcada como vendida ✅');
+                Alert.alert("Éxito", "La publicación fue marcada como vendida ✅");
                 navigation.goBack();
               } catch (error) {
-                console.error('Error al marcar como vendida:', error);
+                console.error("Error al marcar como vendida:", error);
                 Alert.alert(
-                  'Error',
-                  'No se pudo marcar como vendida. Verifica la conexión al servidor.'
+                  "Error",
+                  "No se pudo marcar como vendida. Verifica la conexión al servidor."
                 );
                 setIsChecked(false);
               }
@@ -63,17 +74,21 @@ const DetallePublicacionLogueado: React.FC<Props> = ({ route }) => {
   };
 
   const renderFoto = ({ item }: { item: string }) => (
-    <Image source={{ uri: item }} style={styles.imagenCarrusel} resizeMode="contain" />
+    <Image
+      source={{ uri: item }}
+      style={styles.imagenCarrusel}
+      resizeMode="cover"
+    />
   );
 
   return (
     <LinearGradient
-      colors={['#0c2b2aff', '#000000']}
+      colors={["#0c2b2aff", "#000000"]}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
       style={{ flex: 1 }}
     >
-      <ScrollView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         {publicacion.fotos && publicacion.fotos.length > 0 && (
           <FlatList
             data={publicacion.fotos}
@@ -86,8 +101,10 @@ const DetallePublicacionLogueado: React.FC<Props> = ({ route }) => {
           />
         )}
 
-        <View style={styles.detalleContainer}>
-          <Text style={styles.tituloDetalle}>{publicacion.nombre_articulo}</Text>
+        <View style={styles.detalleCard}>
+          <Text style={styles.tituloDetalle}>
+            {publicacion.nombre_articulo}
+          </Text>
 
           <View style={styles.seccion}>
             <Text style={styles.subtitulo}>Descripción</Text>
@@ -104,7 +121,14 @@ const DetallePublicacionLogueado: React.FC<Props> = ({ route }) => {
             <Text style={styles.texto}>{publicacion.tipo_bicicleta}</Text>
           </View>
 
-          <CheckBox title="Vendido" checked={isChecked} onPress={presionCheckBox} />
+          <CheckBox
+            title="Marcar como vendido"
+            checked={isChecked}
+            onPress={presionCheckBox}
+            containerStyle={styles.checkboxContainer}
+            textStyle={styles.checkboxText}
+            checkedColor="#20eb4ca4"
+          />
         </View>
       </ScrollView>
     </LinearGradient>
@@ -113,41 +137,64 @@ const DetallePublicacionLogueado: React.FC<Props> = ({ route }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    padding: 20,
+    alignItems: "center",
   },
   carrusel: {
-    maxHeight: 300,
+    maxHeight: 280,
+    marginBottom: 20,
   },
   imagenCarrusel: {
-    width: width,
-    height: 300,
+    width: width * 0.9,
+    height: 250,
+    borderRadius: 12,
+    marginHorizontal: 10,
   },
-  detalleContainer: {
+  detalleCard: {
+    width: "100%",
+    backgroundColor: "rgba(255,255,255,0.05)",
+    borderRadius: 16,
     padding: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
   },
   tituloDetalle: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 26,
+    fontWeight: "bold",
     marginBottom: 20,
-    color: '#0f971aff',
+    color: "#20eb4ca4",
+    textAlign: "center",
   },
   seccion: {
-    marginBottom: 20,
+    marginBottom: 15,
   },
   subtitulo: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 15,
+    fontWeight: "bold",
     marginBottom: 5,
-    color: '#ffffffff',
+    color: "#bbb",
   },
   texto: {
     fontSize: 16,
-    color: '#666',
+    color: "#eee",
   },
   precioDetalle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#2dec14ff',
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#1adc00ff",
+  },
+  checkboxContainer: {
+    backgroundColor: "transparent",
+    borderWidth: 0,
+    paddingLeft: 0,
+    marginLeft: 0,
+    marginTop: 15,
+  },
+  checkboxText: {
+    color: "#fff",
+    fontWeight: "600",
   },
 });
 

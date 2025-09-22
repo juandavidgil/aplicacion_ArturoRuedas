@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, Alert, StyleSheet } from 'react-native';
 import { URL } from '../../config/UrlApi';
+import { StackParamList } from '../../types/types';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const RestablecerContraseñaPantalla: React.FC = () => {
+   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [correo, setCorreo] = useState('');
   const [codigo, setCodigo] = useState('');
   const [nuevaContraseña, setNuevaContraseña] = useState('');
@@ -16,7 +20,8 @@ const RestablecerContraseñaPantalla: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`${URL}enviar-correo-reset`, {
+      
+      const response = await fetch(`${URL}/enviar-correo-reset`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo }),
@@ -43,7 +48,7 @@ const RestablecerContraseñaPantalla: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`${URL}restablecer-contrasena`, {
+      const response = await fetch(`${URL}/restablecer-contrasena`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo, codigo, nuevaContraseña }),
@@ -52,8 +57,7 @@ const RestablecerContraseñaPantalla: React.FC = () => {
 
       if (response.ok) {
         Alert.alert('✅', data.mensaje);
-        // 👉 Aquí podrías redirigir al login si usas React Navigation
-        // navigation.navigate('Login');
+       navigation.navigate('InicioSesion');
       } else {
         Alert.alert('⚠️', data.mensaje);
       }

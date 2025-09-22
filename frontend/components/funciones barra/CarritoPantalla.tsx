@@ -22,6 +22,7 @@ interface Articulo {
   nombre_vendedor: string;
   id_vendedor: number;
   telefono: string;
+  foto:string;
 }
 
 const { width, height } = Dimensions.get('window');
@@ -47,13 +48,13 @@ const CarritoPantalla: React.FC = () => {
       const ID_usuario = usuario.ID_usuario;
       if (!ID_usuario) throw new Error('No se pudo obtener el ID de usuario');
 
-      console.log(`🔄 Obteniendo carrito para usuario: ${ID_usuario}`);
+    
       
-      const response = await fetch(`${URL}carrito/${ID_usuario}`);
+      const response = await fetch(`${URL}/carrito/${ID_usuario}`);
       if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
 
       const data = await response.json();
-      console.log('📦 Datos recibidos:', data);
+     
 
       setArticulos(data);
 
@@ -82,7 +83,7 @@ const CarritoPantalla: React.FC = () => {
       const ID_usuario = usuario.ID_usuario || usuario.id_usuario || usuario.id;
       if (!ID_usuario) throw new Error('No se pudo obtener el ID de usuario');
 
-      const response = await fetch(`${URL}eliminar-carrito`, {
+      const response = await fetch(`${URL}/eliminar-carrito`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ID_usuario, ID_publicacion: id }),
@@ -100,21 +101,21 @@ const CarritoPantalla: React.FC = () => {
       Alert.alert('No se pudo eliminar el artículo');
     }
   };
+const enviarWhatsApp = (numero: string, mensaje: string) => {
+  // Limpiamos el número: solo dígitos
+  const numeroFormateado = numero.replace(/\D/g, ''); 
+  const url = `whatsapp://send?phone=57${numeroFormateado}&text=${encodeURIComponent(mensaje)}`;
 
-  const enviarWhatsApp = (numero: string, mensaje: string) => {
-    const numeroFormateado = numero.replace(/\D/g, '');
-    const url = `https://wa.me/57${numeroFormateado}?text=${encodeURIComponent(mensaje)}`;
+  // Intentamos abrir WhatsApp directamente
+  Linking.openURL(url).catch(() => {
+    // Si falla, usamos WhatsApp Web como fallback
+    const urlWeb = `https://wa.me/57${numeroFormateado}?text=${encodeURIComponent(mensaje)}`;
+    Linking.openURL(urlWeb).catch(() => {
+      Alert.alert('Error', 'No se pudo abrir WhatsApp ni WhatsApp Web');
+    });
+  });
+};
 
-    Linking.canOpenURL(url)
-      .then((soporta) => {
-        if (!soporta) {
-          Alert.alert('Error', 'Parece que WhatsApp no está instalado');
-        } else {
-          return Linking.openURL(url);
-        }
-      })
-      .catch((err) => console.error('❌ Error al abrir WhatsApp:', err));
-  };
  
   useEffect(() => {
     obtenerCarrito();

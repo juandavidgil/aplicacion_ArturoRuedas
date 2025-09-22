@@ -30,7 +30,7 @@ const Administrador: React.FC = () => {
   const obtenerUsuarios = async () => {     
     try {
       setRefreshing(true);
-      const response = await fetch(`${URL}obtener-usuarios`);
+      const response = await fetch(`${URL}/obtener-usuarios`);
 
     
       
@@ -76,7 +76,7 @@ const Administrador: React.FC = () => {
         {
           text: "Eliminar",
           onPress: async () => {
-            const response = await fetch(`${URL}eliminar-usuario/${id}`, {
+            const response = await fetch(`${URL}/eliminar-usuario/${id}`, {
               method: 'DELETE'
             });
 

@@ -7,7 +7,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {URL} from '../../config/UrlApi'
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 const FiltroAdminPantalla : React.FC = () =>{
      const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
@@ -16,7 +17,17 @@ const FiltroAdminPantalla : React.FC = () =>{
     const [contraseña, setContraseña] = useState('')
     const [contraseña2, setContraseña2] = useState('')
     const [cargando, setCargando] = useState(false);
-
+    const limpiarFormulario = () => {
+      setUsuario("");
+      setContraseña("");
+      setContraseña2("");
+ 
+    };
+    useFocusEffect(
+  useCallback(() => {
+    limpiarFormulario();
+  }, [])
+);
     const ingresarAdmin = async()=> {
         if(!usuario || !contraseña || !contraseña2){
             Alert.alert('Error', 'por favor ingrese correo y contraseña');
@@ -24,7 +35,7 @@ const FiltroAdminPantalla : React.FC = () =>{
         }
         setCargando(true);
         try{
-            const response = await fetch(`${URL}iniciar-administrador`,{
+            const response = await fetch(`${URL}/iniciar-administrador`,{
                 method: 'POST',
                 headers:{
                     'Content-Type': 'application/json',
@@ -38,6 +49,7 @@ const FiltroAdminPantalla : React.FC = () =>{
                 await AsyncStorage.setItem('usuario', JSON.stringify(data.usuario));
                 
                 Alert.alert('Incio de sesion correcto');
+                 limpiarFormulario();
                 navigation.navigate('Administrador')
             } else{
                 Alert.alert('Error', data.error ||'credenciales incorrectas')

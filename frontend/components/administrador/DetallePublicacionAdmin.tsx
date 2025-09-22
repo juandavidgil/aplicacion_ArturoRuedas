@@ -28,7 +28,7 @@ const DetallePublicacionAdmin: React.FC<Props> = ({ route }) => {
           text: 'Aceptar',
           onPress: async () => {
             try {
-              const response = await fetch(`${URL}eliminar-publicaciones-admin/${id}`, {
+              const response = await fetch(`${URL}/eliminar-publicaciones-admin/${id}`, {
                 method: 'DELETE',
               });
               if (!response.ok) {

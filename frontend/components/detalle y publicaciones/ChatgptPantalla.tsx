@@ -22,7 +22,7 @@ type ChatMessage = {
 
 const enviarMensajeAlBackend = async (message: string) => {
   try {
-    const response = await axios.post(`${URL}chat`, { message });
+    const response = await axios.post(`${URL}/chat`, { message });
     return response.data.reply;
   } catch (error: any) {
     console.error("Error al conectar con el backend:", error.message);

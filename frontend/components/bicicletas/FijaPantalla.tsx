@@ -1,8 +1,17 @@
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import {
-  View, Text, TextInput, FlatList, Image,
-  TouchableOpacity, StyleSheet, ActivityIndicator,
-  SafeAreaView, Alert, Dimensions, ScrollView
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+  SafeAreaView,
+  Alert,
+  Dimensions,
+  ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -10,12 +19,11 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackParamList } from '../../types/types';
 import type { StackNavigationProp } from '@react-navigation/stack';
-import { ResizeMode } from 'expo-av';
 import { URL } from '../../config/UrlApi';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Canvas } from '@react-three/fiber';
-import Model from '../../codigos modelos/Fija';
-import useControls from 'r3f-native-orbitcontrols';
+
+import { Modelo3D } from './Modelo3D';
+import { cargarFixie } from './Modelos3D';
 
 interface Articulo {
   id: number;
@@ -26,7 +34,7 @@ interface Articulo {
   fotos: string[];
   nombre_vendedor: string;
   telefono: string;
-  foto:string;
+  foto: string;
 }
 
 type RouteParams = {
@@ -39,7 +47,7 @@ const FijaPantalla: React.FC = () => {
   const [busqueda, setBusqueda] = useState('');
   const [articulos, setArticulos] = useState<Articulo[]>([]);
   const [cargando, setCargando] = useState(false);
-  const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false); 
+  const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false);
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
   const route = useRoute();
   const { tipoBicicleta } = route.params as RouteParams;
@@ -52,7 +60,6 @@ const FijaPantalla: React.FC = () => {
         setArticulos([]);
       }
     }, 500);
-
     return () => clearTimeout(delayDebounce);
   }, [busqueda]);
 
@@ -60,12 +67,15 @@ const FijaPantalla: React.FC = () => {
     setCargando(true);
     try {
       const response = await fetch(
-        `${URL}buscar?nombre=${encodeURIComponent(texto)}&tipo=${tipoBicicleta}`
+        `${URL}/buscar?nombre=${encodeURIComponent(texto)}&tipo=${tipoBicicleta}`
       );
       if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
       const data = await response.json();
-      const resultados: Articulo[] = Array.isArray(data) ? data 
-        : (Array.isArray(data.articulos) ? data.articulos : []);
+      const resultados: Articulo[] = Array.isArray(data)
+        ? data
+        : Array.isArray(data.articulos)
+        ? data.articulos
+        : [];
       const articulosValidos = resultados.filter(
         (articulo) =>
           articulo.id &&
@@ -92,7 +102,7 @@ const FijaPantalla: React.FC = () => {
       const ID_usuario = usuario.ID_usuario;
       if (!ID_usuario) throw new Error('No se pudo obtener el ID de usuario');
       if (!articulo.id) throw new Error('El artículo no tiene ID definido');
-      const response = await fetch(`${URL}agregar-carrito`, {
+      const response = await fetch(`${URL}/agregar-carrito`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ID_usuario, ID_publicacion: articulo.id }),
@@ -105,8 +115,6 @@ const FijaPantalla: React.FC = () => {
       Alert.alert('Error al agregar al carrito');
     }
   };
-
-  const [OrbitControls, events ] = useControls();
 
   return (
     <LinearGradient
@@ -143,12 +151,16 @@ const FijaPantalla: React.FC = () => {
                     keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
                     contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }}
                     renderItem={({ item }) => (
-                      <TouchableOpacity onPress={() => navigation.navigate('DetallePublicacion', { publicacion: item })}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate('DetallePublicacion', { publicacion: item })
+                        }
+                      >
                         <View style={styles.cardMTB}>
-                          <Image 
-                            source={{ uri: item.fotos?.[0] || '' }} 
-                            style={styles.imagenMTB} 
-                            resizeMode="cover" 
+                          <Image
+                            source={{ uri: item.fotos?.[0] || '' }}
+                            style={styles.imagenMTB}
+                            resizeMode="cover"
                           />
                           <View style={styles.infoMTB}>
                             <Text style={styles.nombreMTB}>{item.nombre_articulo}</Text>
@@ -158,8 +170,11 @@ const FijaPantalla: React.FC = () => {
                             <Text style={styles.precioMTB}>Precio: ${item.precio}</Text>
                             <Text style={styles.precioMTB}>Tipo: {item.tipo_bicicleta}</Text>
                             <Text style={styles.descripcionMTB}>Vendedor: {item.nombre_vendedor}</Text>
-                            <TouchableOpacity onPress={() => AgregarCarrito(item)} style={{ marginTop: 8 }}>
-                              <Ionicons name='cart-outline' size={25} color="#004f4d" />
+                            <TouchableOpacity
+                              onPress={() => AgregarCarrito(item)}
+                              style={{ marginTop: 8 }}
+                            >
+                              <Ionicons name="cart-outline" size={25} color="#004f4d" />
                             </TouchableOpacity>
                           </View>
                         </View>
@@ -167,22 +182,29 @@ const FijaPantalla: React.FC = () => {
                     )}
                   />
                 ) : busqueda.trim() !== '' ? (
-                  <Text style={{ marginTop: 20, textAlign: 'center', color: "#fff" }}>
+                  <Text style={{ marginTop: 20, textAlign: 'center', color: '#fff' }}>
                     No se encontraron artículos
                   </Text>
                 ) : (
                   <View style={{ paddingHorizontal: 16, paddingBottom: 20 }}>
-                    <Text style={{ textAlign: 'center', fontSize: 16, lineHeight: 22, color: '#fff', fontWeight: '500', paddingHorizontal: 16 }}>
-                      La bicicleta de piñón fijo o fixie es ligera y minimalista, sin piñón libre, lo que obliga a un pedaleo continuo. Su diseño simple la hace ideal para la ciudad.
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        fontSize: 16,
+                        lineHeight: 22,
+                        color: '#fff',
+                        fontWeight: '500',
+                        paddingHorizontal: 16,
+                      }}
+                    >
+                      La bicicleta de piñón fijo o fixie es ligera y minimalista, sin piñón libre, lo
+                      que obliga a un pedaleo continuo. Su diseño simple la hace ideal para la ciudad.
                     </Text>
                     <View style={styles.screen}>
-                      <View
-                        style={styles.card}
-                        {...events}
-                        onStartShouldSetResponder={() => true}
-                        pointerEvents="box-none"
-                      >
-                        {/* Modelo 3D */}
+                      <View style={styles.card}>
+                        <Suspense fallback={null}>
+                          <Modelo3D cargar={cargarFixie} scale={7} position={[0, -3.5, 0]} />
+                        </Suspense>
                       </View>
                     </View>
                   </View>
@@ -195,20 +217,26 @@ const FijaPantalla: React.FC = () => {
         {/* Barra inferior */}
         <View style={styles.iconBar}>
           <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
-            <Ionicons name='storefront-outline' size={28} color="#fff" />
+            <Ionicons name="storefront-outline" size={28} color="#fff" />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Carrito')}>
-            <Ionicons name='cart-outline' size={28} color="#fff" />
+            <Ionicons name="cart-outline" size={28} color="#fff" />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
-            <Ionicons name='notifications-outline' size={28} color="#fff" />
+            <Ionicons name="notifications-outline" size={28} color="#fff" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=> navigation.navigate('Perfil')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Perfil')}>
             <Ionicons name="person-circle-outline" size={28} color="#fff" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}>
-            <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#fff" />
-          </TouchableOpacity> 
+          <TouchableOpacity
+            onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}
+          >
+            <Ionicons
+              name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'}
+              size={28}
+              color="#fff"
+            />
+          </TouchableOpacity>
         </View>
 
         {/* Barra de componentes deslizable */}
@@ -219,17 +247,45 @@ const FijaPantalla: React.FC = () => {
             style={styles.barraComponentes}
             contentContainerStyle={{ paddingHorizontal: 10 }}
           >
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas', tipoBicicleta })}>
-              <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../../iconos/rueda.png')} />
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas', tipoBicicleta })
+              }
+            >
+              <Image
+                style={styles.iconoComponentes}
+                source={require('../../iconos/rueda.png')}
+              />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio', tipoBicicleta })}>
-              <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../../iconos/manubrio.png')} />
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio', tipoBicicleta })
+              }
+            >
+              <Image
+                style={styles.iconoComponentes}
+                source={require('../../iconos/manubrio.png')}
+              />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension', tipoBicicleta })}>
-              <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../../iconos/suspension.png')} />
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('ComponenteDetalle', { componenteId: 'suspension', tipoBicicleta })
+              }
+            >
+              <Image
+                style={styles.iconoComponentes}
+                source={require('../../iconos/suspension.png')}
+              />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal', tipoBicicleta })}>
-              <Image style={styles.iconoComponentes} resizeMode={ResizeMode.COVER} source={require('../../iconos/pedal.jpeg')} />
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('ComponenteDetalle', { componenteId: 'pedal', tipoBicicleta })
+              }
+            >
+              <Image
+                style={styles.iconoComponentes}
+                source={require('../../iconos/pedal.jpeg')}
+              />
             </TouchableOpacity>
           </ScrollView>
         )}
@@ -239,15 +295,8 @@ const FijaPantalla: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  containerMTB: { 
-    flex: 1, 
-    padding: 16, 
-    marginTop:0 
-  },
-  headerWrapper: 
-  { width: '100%', 
-    paddingBottom: 20 
-  },
+  containerMTB: { flex: 1, padding: 16, marginTop: 0 },
+  headerWrapper: { width: '100%', paddingBottom: 20 },
   header: {
     backgroundColor: '#004f4d',
     paddingVertical: height * 0.02,
@@ -255,35 +304,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
-    marginBottom: height * 0.02, 
+    marginBottom: height * 0.02,
   },
-  headerTitle: { 
-    fontSize: width * 0.06, 
-    fontWeight: 'bold', 
-    color: '#fff',
-    marginTop:30,
-  },
+  headerTitle: { fontSize: width * 0.06, fontWeight: 'bold', color: '#fff', marginTop: 30 },
   searchContainer: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff', 
+    backgroundColor: '#fff',
     borderRadius: width * 0.08,
-    paddingHorizontal: width * 0.06, 
+    paddingHorizontal: width * 0.06,
     paddingVertical: 20,
-    elevation: 3, 
-    shadowColor: '#000', 
+    elevation: 3,
+    shadowColor: '#000',
     shadowOpacity: 0.15,
-    shadowOffset: { width: 0, height: 0 }, 
+    shadowOffset: { width: 0, height: 0 },
     shadowRadius: 6,
-    width: '90%', 
+    width: '90%',
     alignSelf: 'center',
   },
   searchInput: { flex: 1, paddingHorizontal: 16, fontSize: 16, color: '#333' },
   cardMTB: {
-    flexDirection: 'row', marginBottom: 20, backgroundColor: '#fff',
-    padding: 12, borderRadius: 12, shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1,
-    shadowRadius: 6, elevation: 4,
+    flexDirection: 'row',
+    marginBottom: 20,
+    backgroundColor: '#fff',
+    padding: 12,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4,
   },
   imagenMTB: { width: 110, height: 110, borderRadius: 10, backgroundColor: '#e0e0e0' },
   infoMTB: { flex: 1, marginLeft: 15, justifyContent: 'space-around' },
@@ -292,25 +342,47 @@ const styles = StyleSheet.create({
   precioMTB: { fontSize: 16, fontWeight: '600', color: '#2c7a7b' },
   screen: { justifyContent: 'center', alignItems: 'center', padding: 16 },
   card: {
-    backgroundColor: '#fff', borderRadius: 16,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1, shadowRadius: 6, elevation: 4,
-    width: '100%', maxWidth: 350, aspectRatio: 10 / 12,
-    overflow: 'hidden', marginTop: 15,
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4,
+    width: '100%',
+    maxWidth: 350,
+    aspectRatio: 10 / 12,
+    overflow: 'hidden',
+    marginTop: 15,
   },
   iconBar: {
-    flexDirection: 'row', justifyContent: 'space-around',
-    paddingVertical: height * 0.015, backgroundColor: '#004f4d',
-    borderTopLeftRadius: 10, borderTopRightRadius: 10,
-    position: 'absolute', bottom: 0, left: 0, right: 0,
-    shadowOpacity: 0.1, shadowOffset: { width: 0, height: -2 },
-    shadowRadius: 6, paddingBottom:"7%",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: height * 0.015,
+    backgroundColor: '#004f4d',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: -2 },
+    shadowRadius: 6,
+    paddingBottom: '7%',
   },
-  iconoComponentes:{ width: 35, height: 35, marginHorizontal: 15 },
+  iconoComponentes: { width: 35, height: 35, marginHorizontal: 15 },
   barraComponentes: {
-    flexDirection: 'row', paddingVertical: 12, backgroundColor: '#fff',
-    borderWidth: 1, borderColor:  '#004f4d', borderRadius: 30,
-    position: 'absolute', bottom: 80, left: 16, right: 16,
+    flexDirection: 'row',
+    paddingVertical: 12,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#004f4d',
+    borderRadius: 30,
+    position: 'absolute',
+    bottom: 80,
+    left: 16,
+    right: 16,
   },
 });
 

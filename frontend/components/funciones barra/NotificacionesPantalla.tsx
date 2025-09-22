@@ -3,6 +3,7 @@ import { View, Text, Button, Platform, StyleSheet, Alert } from "react-native";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Constants from "expo-constants";
+import appConfig from "../../../app.json"; // 👈 importa tu app.json
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {URL} from '../../config/UrlApi'
@@ -55,23 +56,25 @@ const NotificacionesPantalla: React.FC = () => {
         return;
       }
 
-      try {
-        const token = (await Notifications.getExpoPushTokenAsync({
-          projectId: Constants.expoConfig?.extra?.eas?.projectId,
-        })).data;
+    try {
+const projectId = appConfig.expo.extra.eas.projectId;
+const token = (await Notifications.getExpoPushTokenAsync({
+  projectId,
+})).data;
 
-        setExpoPushToken(token);
+  console.log("✅ Token generado:", token);
+  setExpoPushToken(token);
 
-        // ✅ Guardar token en el backend
-        if (usuario?.ID_usuario) {
-          await axios.post(`${URL}guardar-token`, {
-            ID_usuario: usuario?.ID_usuario ?? 1,
-            token,
-          });
-        }
-      } catch (error) {
-        console.error("Error obteniendo token de Expo:", error);
-      }
+  if (usuario?.ID_usuario) {
+    await axios.post(`${URL}/guardar-token`, {
+      ID_usuario: usuario?.ID_usuario ?? 1,
+      token,
+    });
+  }
+} catch (error) {
+  console.error("Error obteniendo token de Expo:", error);
+}
+
     };
 
     registrarNotificaciones();
@@ -89,11 +92,11 @@ const NotificacionesPantalla: React.FC = () => {
   // ✅ Listeners de notificaciones
   useEffect(() => {
     const subscription = Notifications.addNotificationReceivedListener(notification => {
-      console.log("📩 Notificación recibida:", notification);
+      
     });
 
     const responseSubscription = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log("👆 Usuario interactuó con la notificación:", response);
+      
     });
 
     return () => {
@@ -109,7 +112,7 @@ const NotificacionesPantalla: React.FC = () => {
       return;
     }
     try {
-      await axios.post(`${URL}test-notification`, {
+      await axios.post(`${URL}/test-notification`, {
         ID_usuario: usuario?.ID_usuario ?? 1,
         token: expoPushToken,
       });

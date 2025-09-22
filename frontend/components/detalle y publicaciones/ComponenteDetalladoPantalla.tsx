@@ -68,7 +68,7 @@ const toggleStep = (index: number) => {
       if (!ID_usuario) throw new Error("No se pudo obtener el ID de usuario");
       if (!publicacion.id) throw new Error("El artículo no tiene ID definido");
 
-      const response = await fetch(`${URL}agregar-carrito`, {
+      const response = await fetch(`${URL}/agregar-carrito`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -89,14 +89,12 @@ const toggleStep = (index: number) => {
   };
 
   const obtenerPublicaciones = async () => {
-    console.log("👉 Parámetros recibidos:", tipoBicicleta, componenteId);
     try {
       setRefreshing(true);
-      const url = `${URL}publicaciones?tipo=${encodeURIComponent(
+      const url = `${URL}/publicaciones?tipo=${encodeURIComponent(
         tipoBicicleta
       )}&componente=${encodeURIComponent(componenteId)}`;
-      console.log("se envio al backend", tipoBicicleta, componenteId);
-
+      
       const response = await fetch(url);
 
       if (!response.ok) {

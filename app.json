@@ -1,43 +1,38 @@
 {
   "expo": {
-    "name": "aplicacion-arturoRuedas",
+    "name": "Arturo Ruedas",
     "slug": "aplicacion-arturoRuedas",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon.jpg",
     "userInterfaceStyle": "light",
     "newArchEnabled": false,
     "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "package": "com.anonymous.aplicacionarturoRuedas",
-      "versionCode": 1,
-      "permissions": [
-        "CAMERA",
-        "READ_MEDIA_IMAGES"
-      ],
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+      "image": "./assets/icon.jpg",
+      "resizeMode": "cover",
+      "backgroundColor": "#0c2b2a"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icon.jpg"
     },
     "extra": {
       "eas": {
         "projectId": "8a0b0f97-c440-42f9-afaf-b0c781f4a2fd"
       }
     },
-    "plugins": [
-      "expo-video",
-      "expo-asset"
-    ]
+    "android": {
+      "package": "com.juandavidgil.aplicacionarturoRuedas",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "whatsapp"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    }
   }
 }

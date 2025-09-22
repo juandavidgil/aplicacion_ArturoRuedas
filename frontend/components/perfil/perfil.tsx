@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 interface Usuario {
-  Id_usuario: number;
+  id_usuario: number;
   nombre: string;
   correo: string;
   telefono: string;
@@ -21,6 +21,7 @@ const { width, height } = Dimensions.get('window');
 const PerfilPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [usuario, setUsuario] = useState<Usuario | null>(null);
+
   const [loading, setLoading] = useState(true);
    const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false);
 
@@ -53,7 +54,7 @@ const PerfilPantalla: React.FC = () => {
         throw new Error('No se pudo obtener el ID de usuario');
       }
       try {
-        const response = await fetch(`${URL}usuario/${ID_usuario}`);
+        const response = await fetch(`${URL}/usuario/${ID_usuario}`);
         const data = await response.json();
         setUsuario(data);
       } catch (error) {
@@ -100,13 +101,17 @@ const PerfilPantalla: React.FC = () => {
           <Text style={styles.info}>Telefono: {usuario?.telefono}</Text>
 
           {/* Botones */}
-          <TouchableOpacity style={styles.button}
-         onPress={() => navigation.navigate("EditarPerfil", { usuario: usuario })}
-          >
-            <LinearGradient colors={['#64eb76ff', '#23bd15ff']} style={styles.buttonBg}>
-              <Text style={styles.buttonText}> 🖋️ Editar mi información</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+         {usuario && (
+  <TouchableOpacity
+    style={styles.button}
+    onPress={() => navigation.navigate("EditarPerfil", { usuario })}
+  >
+    <LinearGradient colors={['#64eb76ff', '#23bd15ff']} style={styles.buttonBg}>
+      <Text style={styles.buttonText}> 🖋️ Editar mi información</Text>
+    </LinearGradient>
+  </TouchableOpacity>
+)}
+
 
           <TouchableOpacity
             style={styles.button}
@@ -117,13 +122,16 @@ const PerfilPantalla: React.FC = () => {
             </LinearGradient>
           </TouchableOpacity>
 
-          <TouchableOpacity 
-          onPress={() => navigation.navigate('CambiarContrasena', { usuario })}
-          style={styles.button}>
-            <LinearGradient colors={['#15922aff', '#155206ff']} style={styles.buttonBg}>
-              <Text style={styles.buttonText}>🔒 Cambiar contraseña</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+          {usuario && (
+  <TouchableOpacity 
+    onPress={() => navigation.navigate("CambiarContrasena", { usuario })}
+    style={styles.button}
+  >
+    <LinearGradient colors={['#15922aff', '#155206ff']} style={styles.buttonBg}>
+      <Text style={styles.buttonText}>🔒 Cambiar contraseña</Text>
+    </LinearGradient>
+  </TouchableOpacity>
+)}
         </View>
 
         {/* Botón cerrar sesión */}
@@ -172,6 +180,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    marginBottom:100
   },
 
   header: {

@@ -13,19 +13,20 @@ interface Props {
 const { width, height } = Dimensions.get('window');
 
 const enviarWhatsApp = (numero: string, mensaje: string) => {
-  const numeroFormateado = numero.replace(/\D/g, '');
-  const url = `https://wa.me/57${numeroFormateado}?text=${encodeURIComponent(mensaje)}`;
+  // Limpiamos el número: solo dígitos
+  const numeroFormateado = numero.replace(/\D/g, ''); 
+  const url = `whatsapp://send?phone=57${numeroFormateado}&text=${encodeURIComponent(mensaje)}`;
 
-  Linking.canOpenURL(url)
-    .then((soporta) => {
-      if (!soporta) {
-        Alert.alert('Error', 'Parece que WhatsApp no está instalado');
-      } else {
-        return Linking.openURL(url);
-      }
-    })
-    .catch((err) => console.error('❌ Error al abrir WhatsApp:', err));
+  // Intentamos abrir WhatsApp directamente
+  Linking.openURL(url).catch(() => {
+    // Si falla, usamos WhatsApp Web como fallback
+    const urlWeb = `https://wa.me/57${numeroFormateado}?text=${encodeURIComponent(mensaje)}`;
+    Linking.openURL(urlWeb).catch(() => {
+      Alert.alert('Error', 'No se pudo abrir WhatsApp ni WhatsApp Web');
+    });
+  });
 };
+
 
 const DetallePublicacion: React.FC<Props> = ({ route }) => {
   const { publicacion } = route.params;
@@ -82,7 +83,7 @@ const DetallePublicacion: React.FC<Props> = ({ route }) => {
 
           {/* Sección Vendedor con foto al lado del nombre */}
           <View style={styles.seccion}>
-            <Text style={styles.subtitulo}>Vendedorrrr</Text>
+            <Text style={styles.subtitulo}>Vendedor</Text>
             <View style={styles.vendedorContainer}>
               <Image
                 source={publicacion?.foto ? { uri: publicacion.foto } : require('../../img/avatar.png')}
