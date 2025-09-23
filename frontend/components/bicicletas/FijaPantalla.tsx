@@ -239,56 +239,82 @@ const FijaPantalla: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Barra de componentes deslizable */}
-        {mostrarBarraComponentes && (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.barraComponentes}
-            contentContainerStyle={{ paddingHorizontal: 10 }}
-          >
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas', tipoBicicleta })
-              }
-            >
-              <Image
-                style={styles.iconoComponentes}
-                source={require('../../iconos/rueda.png')}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio', tipoBicicleta })
-              }
-            >
-              <Image
-                style={styles.iconoComponentes}
-                source={require('../../iconos/manubrio.png')}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ComponenteDetalle', { componenteId: 'suspension', tipoBicicleta })
-              }
-            >
-              <Image
-                style={styles.iconoComponentes}
-                source={require('../../iconos/suspension.png')}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ComponenteDetalle', { componenteId: 'pedal', tipoBicicleta })
-              }
-            >
-              <Image
-                style={styles.iconoComponentes}
-                source={require('../../iconos/pedal.jpeg')}
-              />
-            </TouchableOpacity>
-          </ScrollView>
-        )}
+       {/* Barra de componentes deslizable */}
+ 
+{mostrarBarraComponentes && (
+  <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    style={styles.barraComponentes}
+    contentContainerStyle={{ paddingHorizontal: 10 }}
+  >
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'ruedasFixie', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_ruedas.jpeg')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'manubrioFixie', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_manubrio.png')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'cuadroFixie', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_marco.png')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'piñonFixie', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_piñon.png')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'cadenaFixie', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_cadena.png')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'platoFixie', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_plato.png')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'pedalesFixie', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_pedal.png')} />
+    </TouchableOpacity>
+
+    
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'sillinFixie', tipoBicicleta })
+      }
+    >
+      { <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_sillin.png')} /> }
+    </TouchableOpacity>
+
+  </ScrollView>
+)}
       </SafeAreaProvider>
     </LinearGradient>
   );

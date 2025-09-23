@@ -169,22 +169,89 @@ const RutaPantalla: React.FC = () => {
           </TouchableOpacity> 
         </View>
 
-        {mostrarBarraComponentes && (
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.barraComponentes} contentContainerStyle={{ paddingHorizontal: 10 }}>
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas', tipoBicicleta })}>
-              <Image style={styles.iconoComponentes} source={require('../../iconos/rueda.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio', tipoBicicleta })}>
-              <Image style={styles.iconoComponentes} source={require('../../iconos/manubrio.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'suspension', tipoBicicleta })}>
-              <Image style={styles.iconoComponentes} source={require('../../iconos/suspension.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedal', tipoBicicleta })}>
-              <Image style={styles.iconoComponentes} source={require('../../iconos/pedal.jpeg')} />
-            </TouchableOpacity>
-          </ScrollView>
-        )}
+        {/* Barra de componentes deslizable  */}
+{mostrarBarraComponentes && (
+  <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    style={styles.barraComponentes}
+    contentContainerStyle={{ paddingHorizontal: 10 }}
+  >
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'ruedasRuta', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_rueda.png')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'manubrioRuta', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_manubrio.png')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'marcoRuta', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_marco.png')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'piñonRuta', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_piñon.png')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'cadenaRuta', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_cadena.png')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'platoRuta', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_plato.png')} />
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'pedalesRuta', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_pedal.png')} />
+    </TouchableOpacity>
+
+    {/* No tienes sillin.png */}
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'sillinRuta', tipoBicicleta })
+      }
+    >
+      { <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_sillin.png')} /> }
+    </TouchableOpacity>
+
+    {/* No tienes frenos.png */}
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'frenosRuta', tipoBicicleta })
+      }
+    >
+      {<Image style={styles.iconoComponentes} source={require('../../iconos/ruta_frenos.png')} /> }
+    </TouchableOpacity>
+  </ScrollView>
+)}
       </SafeAreaProvider>
     </LinearGradient>
   );

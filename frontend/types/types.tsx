@@ -1,6 +1,43 @@
 import { RouteProp } from '@react-navigation/native';
 
-export type ComponenteId = 'ruedas' | 'suspension' |'frenos' | 'marco' | 'sillin' | 'manubrio' | 'pedal' | 'piñon'|'cadena' | 'plato'| 'ruedasr' |'manubrior' | 'horquilla' | 'pedalr' | 'cassette' | 'cadenilla' | 'platos'|'cuadro' | 'manubriof' | 'ruedasf' |'piñonf' | 'cadenaf' | 'platof'|'cuadrof';
+export type ComponenteId =
+  // 🔹 MTB
+  | 'marcoMtb'
+  | 'ruedasMtb'
+  | 'manubrioMtb'
+  | 'suspensionMtb'
+  | 'pedalesMtb'
+  | 'pachaMtb'
+  | 'sillinMtb'
+  | 'frenosMtb'
+  | 'cadenaMtb'
+  | 'platoMtb'
+  | 'pedalMtb'
+  
+
+  // 🔹 Ruta
+  | 'marcoRuta'
+  | 'ruedasRuta'
+  | 'manubrioRuta'
+  | 'horquillaRuta'
+  | 'pedalesRuta'
+  | 'pinonesRuta'
+  | 'cadenaRuta'
+  | 'platoRuta'
+  | 'sillinRuta'
+  | 'frenosRuta'
+  | 'piñonRuta'
+
+  // 🔹 Fixie
+  | 'cuadroFixie'
+  | 'ruedasFixie'
+  | 'manubrioFixie'
+  | 'pedalesFixie'
+  | 'piñonFixie'
+  | 'cadenaFixie'
+  | 'platoFixie'
+  | 'sillinFixie'
+  | 'frenosFixie';
 export type ComponenteData = {nombre: string; imagen: any; comoColocar: string[]; informacion: { utilidad: string; mantenimiento: string; }; herramientas: string[]; };
 export type StackParamList = {
   

@@ -240,44 +240,106 @@ const MtbPantalla: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Barra de componentes deslizable */}
-        {mostrarBarraComponentes && (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.barraComponentes}
-            contentContainerStyle={{ paddingHorizontal: 10 }}
-          >
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas', tipoBicicleta })
-              }
-            >
-              <Image style={styles.iconoComponentes} source={require('../../iconos/rueda.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio', tipoBicicleta })
-              }
-            >
-              <Image style={styles.iconoComponentes} source={require('../../iconos/manubrio.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ComponenteDetalle', { componenteId: 'suspension', tipoBicicleta })
-              }
-            >
-              <Image style={styles.iconoComponentes} source={require('../../iconos/suspension.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('ComponenteDetalle', { componenteId: 'pedal', tipoBicicleta })
-              }
-            >
-              <Image style={styles.iconoComponentes} source={require('../../iconos/pedal.jpeg')} />
-            </TouchableOpacity>
-          </ScrollView>
-        )}
+        {/* Barra de componentes deslizable MTB */}
+{mostrarBarraComponentes && (
+  <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    style={styles.barraComponentes}
+    contentContainerStyle={{ paddingHorizontal: 10 }}
+  >
+    {/* Marco MTB */}
+    <TouchableOpacity
+      onPress={() => 
+  navigation.navigate('ComponenteDetalle', { componenteId: 'marcoMtb', tipoBicicleta })
+}
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_marco.png')} />
+    </TouchableOpacity>
+
+    {/* Ruedas MTB */}
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'ruedasMtb', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../img/mtb_rueda.webp')} />
+    </TouchableOpacity>
+
+    {/* Manubrio MTB */}
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'manubrioMtb', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../img/mtb_manub.webp')} />
+    </TouchableOpacity>
+
+    {/* Suspensión MTB */}
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'suspensionMtb', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../img/mtb_suspe.webp')} />
+    </TouchableOpacity>
+
+    {/* Pedales MTB */}
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'pedalMtb', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../img/mtb_pedal.jpg')} />
+    </TouchableOpacity>
+
+    {/* Pacha MTB */}
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'pachaMtb', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_piñon.png')} />
+    </TouchableOpacity>
+
+    {/* Sillín MTB */}
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'sillinMtb', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_sillin.png')} />
+    </TouchableOpacity>
+
+    {/* Frenos MTB */}
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'frenosMtb', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_frenos.png')} />
+    </TouchableOpacity>
+
+    {/* Cadena MTB */}
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'cadenaMtb', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_cadena.png')} />
+    </TouchableOpacity>
+
+    {/* Plato MTB */}
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('ComponenteDetalle', { componenteId: 'platoMtb', tipoBicicleta })
+      }
+    >
+      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_plato.png')} />
+    </TouchableOpacity>
+  </ScrollView>
+)}
+
       </SafeAreaProvider>
     </LinearGradient>
   );
