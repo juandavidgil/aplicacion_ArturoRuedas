@@ -23,6 +23,7 @@ interface Publicacion {
   nombre_vendedor: string;
   telefono: string;
   foto:string;
+  id_vendedor: number;
 }
 
 type RouteParams = {
@@ -130,7 +131,7 @@ const toggleStep = (index: number) => {
        
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("DetallePublicacion", { publicacion: item });
+          navigation.navigate("DetallePublicacion", { publicacion: item, id_vendedor: item.id_vendedor });
         }}
       >
         <View style={styles.card}>

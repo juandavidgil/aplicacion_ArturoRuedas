@@ -62,9 +62,10 @@ export type StackParamList = {
   PublicacionesAdmin: {ID_usuario : number};
   DetallePublicacionAdmin: { publicacion: Publicacion; id: number; }
   
-  DetallePublicacion: { publicacion: Publicacion };
+  DetallePublicacion: { publicacion: Publicacion, id_vendedor: number };
   ComponenteDetalle: { componenteId: ComponenteId, tipoBicicleta: string };
-  ChatGPT: undefined
+  ChatGPT: undefined;
+  PublicacionesRelacionadasVendedor: { id_vendedor: number };
   
   
   Perfil: undefined;
@@ -81,7 +82,7 @@ export interface Articulo {
   precio: string;
   foto: string;
   tipo_bicicleta: string;
-  ID_usuario: number;
+  id_vendedor: number;
 }
 export interface Usuario {
   id_usuario: number;
@@ -103,6 +104,7 @@ export interface Publicacion {
   nombre_vendedor: string;
   telefono: string
   foto:string;
+  id_vendedor: number;
 
 }
 
@@ -119,16 +121,17 @@ export type NotificacionesScreenNavigationProp = RouteProp<StackParamList, 'Noti
 export type CarritoScreenNavigationProp = RouteProp<StackParamList, 'Carrito'>;
 
 export type ChatGPTScreenNavigationProp = RouteProp<StackParamList, 'ChatGPT'>;
-export type DetallePublicacioncreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacion'>;
+export type DetallePublicacionScreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacion'>;
 export type ComponenteDetalleScreenNavigationProp = RouteProp<StackParamList, 'ComponenteDetalle'>;
 
 export type FiltroAdminScreenNavigationProp = RouteProp<StackParamList, 'FiltroAdmin'>
 export type AdministradorScreenNavigationProp = RouteProp<StackParamList, 'Administrador'>;
 export type InformacionUsuarioAdminScreenNavigationProp = RouteProp<StackParamList, 'InformacionUsuarioAdmin'>;
 export type PublicacionesAdminScreenNavigationProp = RouteProp<StackParamList, 'PublicacionesAdmin'>;
-export type DetallePublicacionAdmincreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacionAdmin'>;
+export type DetallePublicacionAdminScreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacionAdmin'>;
+export type PublicacionesRelacionadasVendedoScreenNavigationProp = RouteProp<StackParamList, 'PublicacionesRelacionadasVendedor'>;
 
 export type PerfilScreenNavigationProp = RouteProp<StackParamList, 'Perfil'>;
 export type EditarPerfilScreenNavigationProp = RouteProp<StackParamList, 'EditarPerfil'>;
 export type PublicacionesUsuarioLogueadoScreenNavigationProp = RouteProp<StackParamList, 'PublicacionesUsuarioLogueado'>;
-export type DetallePublicacionLogueadocreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacionLogueado'>;
+export type DetallePublicacionLogueadoScreenNavigationProp = RouteProp<StackParamList, 'DetallePublicacionLogueado'>;

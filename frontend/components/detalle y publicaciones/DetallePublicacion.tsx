@@ -4,8 +4,12 @@ import { StackParamList } from '../../types/types';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
 
 type DetallePublicacionRouteProp = RouteProp<StackParamList, 'DetallePublicacion'>;
+
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
 
 interface Props {
   route: DetallePublicacionRouteProp;
@@ -29,8 +33,9 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
 
 
 const DetallePublicacion: React.FC<Props> = ({ route }) => {
-  const { publicacion } = route.params;
-  const navigation = useNavigation(); 
+  const { publicacion, id_vendedor } = route.params;
+  console.log('se recibio el id del vendedor' , id_vendedor)
+ 
 
   return (
     <LinearGradient
@@ -83,6 +88,10 @@ const DetallePublicacion: React.FC<Props> = ({ route }) => {
 
           {/* Sección Vendedor con foto al lado del nombre */}
           <View style={styles.seccion}>
+            <TouchableOpacity 
+           onPress={() => navigation.navigate('PublicacionesRelacionadasVendedor', {id_vendedor })}
+           >
+
             <Text style={styles.subtitulo}>Vendedor</Text>
             <View style={styles.vendedorContainer}>
               <Image
@@ -91,6 +100,7 @@ const DetallePublicacion: React.FC<Props> = ({ route }) => {
               />
               <Text style={styles.textoVendedor}>{publicacion.nombre_vendedor}</Text>
             </View>
+            </TouchableOpacity>
           </View>
 
           {/* Botón WhatsApp */}

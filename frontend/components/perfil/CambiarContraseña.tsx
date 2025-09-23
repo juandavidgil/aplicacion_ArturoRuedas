@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,8 @@ import { RouteProp, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "../../types/types";
 import { URL } from "../../config/UrlApi";
-import { LinearGradient } from 'expo-linear-gradient';
+import { LinearGradient } from "expo-linear-gradient";
+import { UserContext } from "../inicio de sesion/userContext";
 
 type CambiarPassRouteProp = RouteProp<StackParamList, "CambiarContrasena">;
 type CambiarPassNavProp = NativeStackNavigationProp<
@@ -30,6 +31,8 @@ const CambiarContrasena: React.FC<Props> = ({ route }) => {
   const [passwordActual, setPasswordActual] = useState("");
   const [passwordNueva, setPasswordNueva] = useState("");
   const [passwordConfirmar, setPasswordConfirmar] = useState("");
+
+  const { logout } = useContext(UserContext);
 
   const handleCambiarContrasena = async () => {
     if (!passwordActual || !passwordNueva || !passwordConfirmar) {
@@ -57,8 +60,19 @@ const CambiarContrasena: React.FC<Props> = ({ route }) => {
 
       if (!response.ok) throw new Error("Error al cambiar la contraseña");
 
-      Alert.alert("Éxito", "Tu contraseña ha sido actualizada.");
-      navigation.navigate('InicioSesion');
+      Alert.alert(
+        "Éxito",
+        "Tu contraseña ha sido actualizada. Vuelve a iniciar sesión."
+      );
+
+      // Cerrar sesión por seguridad
+      await logout();
+
+      // Redirigir a la pantalla de presentación
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Presentacion" }],
+      });
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "No se pudo cambiar la contraseña.");
@@ -66,55 +80,55 @@ const CambiarContrasena: React.FC<Props> = ({ route }) => {
   };
 
   return (
-     <LinearGradient
-          colors={['#0c2b2aff', '#000000']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={{ flex: 1 }}
-        >
-    <View style={styles.container}>
-      <Text style={styles.header}>Cambiar Contraseña</Text>
+    <LinearGradient
+      colors={["#0c2b2aff", "#000000"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      style={{ flex: 1 }}
+    >
+      <View style={styles.container}>
+        <Text style={styles.header}>Cambiar Contraseña</Text>
 
-      <View style={styles.card}>
-        <Text style={styles.label}>Contraseña actual</Text>
-        <TextInput
-          style={styles.input}
-          value={passwordActual}
-          onChangeText={setPasswordActual}
-          secureTextEntry
-          placeholder="Ingresa tu contraseña actual"
-          placeholderTextColor="#888"
-        />
+        <View style={styles.card}>
+          <Text style={styles.label}>Contraseña actual</Text>
+          <TextInput
+            style={styles.input}
+            value={passwordActual}
+            onChangeText={setPasswordActual}
+            secureTextEntry
+            placeholder="Ingresa tu contraseña actual"
+            placeholderTextColor="#888"
+          />
 
-        <Text style={styles.label}>Nueva contraseña</Text>
-        <TextInput
-          style={styles.input}
-          value={passwordNueva}
-          onChangeText={setPasswordNueva}
-          secureTextEntry
-          placeholder="Ingresa tu nueva contraseña"
-          placeholderTextColor="#888"
-        />
+          <Text style={styles.label}>Nueva contraseña</Text>
+          <TextInput
+            style={styles.input}
+            value={passwordNueva}
+            onChangeText={setPasswordNueva}
+            secureTextEntry
+            placeholder="Ingresa tu nueva contraseña"
+            placeholderTextColor="#888"
+          />
 
-        <Text style={styles.label}>Confirmar nueva contraseña</Text>
-        <TextInput
-          style={styles.input}
-          value={passwordConfirmar}
-          onChangeText={setPasswordConfirmar}
-          secureTextEntry
-          placeholder="Confirma tu nueva contraseña"
-          placeholderTextColor="#888"
-        />
+          <Text style={styles.label}>Confirmar nueva contraseña</Text>
+          <TextInput
+            style={styles.input}
+            value={passwordConfirmar}
+            onChangeText={setPasswordConfirmar}
+            secureTextEntry
+            placeholder="Confirma tu nueva contraseña"
+            placeholderTextColor="#888"
+          />
 
-        <TouchableOpacity
-          style={styles.button}
-          activeOpacity={0.8}
-          onPress={handleCambiarContrasena}
-        >
-          <Text style={styles.buttonText}>Cambiar contraseña</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            activeOpacity={0.8}
+            onPress={handleCambiarContrasena}
+          >
+            <Text style={styles.buttonText}>Cambiar contraseña</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
     </LinearGradient>
   );
 };
