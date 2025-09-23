@@ -182,7 +182,7 @@ const RutaPantalla: React.FC = () => {
         navigation.navigate('ComponenteDetalle', { componenteId: 'ruedasRuta', tipoBicicleta })
       }
     >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_rueda.png')} />
+      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_ruedas.jpeg')} />
     </TouchableOpacity>
 
     <TouchableOpacity
@@ -190,7 +190,7 @@ const RutaPantalla: React.FC = () => {
         navigation.navigate('ComponenteDetalle', { componenteId: 'manubrioRuta', tipoBicicleta })
       }
     >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_manubrio.png')} />
+      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_manubrio.jpeg')} />
     </TouchableOpacity>
 
     <TouchableOpacity
@@ -222,7 +222,7 @@ const RutaPantalla: React.FC = () => {
         navigation.navigate('ComponenteDetalle', { componenteId: 'platoRuta', tipoBicicleta })
       }
     >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_plato.png')} />
+      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_plato.jpeg')} />
     </TouchableOpacity>
 
     <TouchableOpacity
@@ -230,7 +230,7 @@ const RutaPantalla: React.FC = () => {
         navigation.navigate('ComponenteDetalle', { componenteId: 'pedalesRuta', tipoBicicleta })
       }
     >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_pedal.png')} />
+      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_pedal.jpeg')} />
     </TouchableOpacity>
 
     {/* No tienes sillin.png */}
@@ -243,13 +243,13 @@ const RutaPantalla: React.FC = () => {
     </TouchableOpacity>
 
     {/* No tienes frenos.png */}
-    <TouchableOpacity
+    {/* <TouchableOpacity
       onPress={() =>
         navigation.navigate('ComponenteDetalle', { componenteId: 'frenosRuta', tipoBicicleta })
       }
     >
       {<Image style={styles.iconoComponentes} source={require('../../iconos/ruta_frenos.png')} /> }
-    </TouchableOpacity>
+    </TouchableOpacity> */}
   </ScrollView>
 )}
       </SafeAreaProvider>

@@ -254,7 +254,7 @@ const MtbPantalla: React.FC = () => {
   navigation.navigate('ComponenteDetalle', { componenteId: 'marcoMtb', tipoBicicleta })
 }
     >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_marco.png')} />
+      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_marco.jpeg')} />
     </TouchableOpacity>
 
     {/* Ruedas MTB */}
@@ -263,7 +263,7 @@ const MtbPantalla: React.FC = () => {
         navigation.navigate('ComponenteDetalle', { componenteId: 'ruedasMtb', tipoBicicleta })
       }
     >
-      <Image style={styles.iconoComponentes} source={require('../../img/mtb_rueda.webp')} />
+      <Image style={styles.iconoComponentes} source={require('../../img/rueda.webp')} />
     </TouchableOpacity>
 
     {/* Manubrio MTB */}
@@ -272,7 +272,7 @@ const MtbPantalla: React.FC = () => {
         navigation.navigate('ComponenteDetalle', { componenteId: 'manubrioMtb', tipoBicicleta })
       }
     >
-      <Image style={styles.iconoComponentes} source={require('../../img/mtb_manub.webp')} />
+      <Image style={styles.iconoComponentes} source={require('../../img/manub.webp')} />
     </TouchableOpacity>
 
     {/* Suspensión MTB */}
@@ -281,7 +281,7 @@ const MtbPantalla: React.FC = () => {
         navigation.navigate('ComponenteDetalle', { componenteId: 'suspensionMtb', tipoBicicleta })
       }
     >
-      <Image style={styles.iconoComponentes} source={require('../../img/mtb_suspe.webp')} />
+      <Image style={styles.iconoComponentes} source={require('../../img/suspe.webp')} />
     </TouchableOpacity>
 
     {/* Pedales MTB */}
@@ -290,7 +290,7 @@ const MtbPantalla: React.FC = () => {
         navigation.navigate('ComponenteDetalle', { componenteId: 'pedalMtb', tipoBicicleta })
       }
     >
-      <Image style={styles.iconoComponentes} source={require('../../img/mtb_pedal.jpg')} />
+      <Image style={styles.iconoComponentes} source={require('../../img/pedal.jpg')} />
     </TouchableOpacity>
 
     {/* Pacha MTB */}
@@ -299,7 +299,7 @@ const MtbPantalla: React.FC = () => {
         navigation.navigate('ComponenteDetalle', { componenteId: 'pachaMtb', tipoBicicleta })
       }
     >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_piñon.png')} />
+      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_piñon.jpeg')} />
     </TouchableOpacity>
 
     {/* Sillín MTB */}
@@ -308,7 +308,7 @@ const MtbPantalla: React.FC = () => {
         navigation.navigate('ComponenteDetalle', { componenteId: 'sillinMtb', tipoBicicleta })
       }
     >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_sillin.png')} />
+      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_sillin.jpeg')} />
     </TouchableOpacity>
 
     {/* Frenos MTB */}
@@ -317,7 +317,7 @@ const MtbPantalla: React.FC = () => {
         navigation.navigate('ComponenteDetalle', { componenteId: 'frenosMtb', tipoBicicleta })
       }
     >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_frenos.png')} />
+      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_frenos.jpeg')} />
     </TouchableOpacity>
 
     {/* Cadena MTB */}

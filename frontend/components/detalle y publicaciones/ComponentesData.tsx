@@ -2,7 +2,7 @@ export const componentesData = {
   // 🔹 MTB
   marcoMtb: {
     nombre: "Marco MTB",
-    imagen: require('../../iconos/marco.png'),
+    imagen: require('../../iconos/mtb_marco.jpeg'),
     comoColocar: [
       "Paso 1: Desmonta todos los componentes del marco viejo.",
       "Paso 2: Limpia y prepara el nuevo marco, revisando compatibilidad con suspensión, ruedas y frenos de disco.",
@@ -78,7 +78,7 @@ export const componentesData = {
 
   pachaMtb: {
     nombre: "Pacha MTB",
-    imagen: require('../../iconos/piñon.png'),
+    imagen: require('../../iconos/mtb_piñon.jpeg'),
     comoColocar: [
       "Paso 1: Quita la rueda trasera de la bicicleta.",
       "Paso 2: Usa una llave de cadena y una llave para bloqueo de cassette (o extractor de cassette) para aflojar y retirar la pacha/cassette antiguo.",
@@ -100,7 +100,7 @@ export const componentesData = {
 
   sillinMtb: {
     nombre: "Sillín MTB",
-    imagen: require('../../iconos/sillin.png'),
+    imagen: require('../../iconos/mtb_sillin.jpeg'),
     comoColocar: [
       "Paso 1: Afloja la abrazadera de la tija del sillín (seatpost clamp).",
       "Paso 2: Coloca la tija a la altura aproximada y ajusta el retroceso del sillín (fore/aft) según tu posición.",
@@ -121,7 +121,7 @@ export const componentesData = {
 
   frenosMtb: {
     nombre: "Frenos MTB",
-    imagen: require('../../iconos/frenos.png'),
+    imagen: require('../../iconos/mtb_frenos.jpeg'),
     comoColocar: [
       "Paso 1: Monta los rotores (si aplica) en las llantas verificando el sentido y el apriete correcto.",
       "Paso 2: Fija las pinzas/calipers al cuadro y horquilla en sus puntos de anclaje.",
@@ -143,7 +143,7 @@ export const componentesData = {
 
   cadenaMtb: {
     nombre: "Cadena MTB",
-    imagen: require('../../iconos/cadena.png'),
+    imagen: require('../../iconos/mtb_cadena.png'),
     comoColocar: [
       "Paso 1: Coloca la bicicleta en caballete o voltéala para trabajar cómodo.",
       "Paso 2: Selecciona una cadena compatible con el número de velocidades del grupo (anchura correcta).",
@@ -165,7 +165,7 @@ export const componentesData = {
 
   platoMtb: {
     nombre: "Plato MTB",
-    imagen: require('../../iconos/plato.png'),
+    imagen: require('../../iconos/mtb_plato.png'),
     comoColocar: [
       "Paso 1: Si es necesario, retira la cadena y/o desmonta la biela para acceder al plato.",
       "Paso 2: Afloja los tornillos del plato o extrae la corona según el sistema (bolts o direct mount).",
@@ -188,7 +188,7 @@ export const componentesData = {
   // 🔹 Ruta
   marcoRuta: {
     nombre: "Marco Ruta",
-    imagen: require('../../iconos/marcor.png'),
+    imagen: require('../../iconos/ruta_marco.png'),
     comoColocar: [
       "Paso 1: Desmonta componentes del marco viejo.",
       "Paso 2: Instala horquilla rígida y dirección ligera.",
@@ -255,7 +255,7 @@ export const componentesData = {
 
   pinonesRuta: {
     nombre: "Piñones Ruta",
-    imagen: require('../../iconos/piñon.png'),
+    imagen: require('../../iconos/ruta_piñon.png'),
     comoColocar: [
       "Paso 1: Retira la rueda trasera.",
       "Paso 2: Usa extractor de cassette y llave de cadena para aflojar el anillo de bloqueo.",
@@ -276,7 +276,7 @@ export const componentesData = {
 
   cadenaRuta: {
     nombre: "Cadena Ruta",
-    imagen: require('../../iconos/cadena.png'),
+    imagen: require('../../iconos/ruta_cadena.png'),
     comoColocar: [
       "Paso 1: Verifica el número de velocidades del grupo y compra cadena compatible (anchura correcta).",
       "Paso 2: Mide longitud adecuada (según método recomendado) y corta con corta-cadenas.",
@@ -296,7 +296,7 @@ export const componentesData = {
 
   platoRuta: {
     nombre: "Plato Ruta",
-    imagen: require('../../iconos/plato.png'),
+    imagen: require('../../iconos/ruta_plato.jpeg'),
     comoColocar: [
       "Paso 1: Retira la cadena o posiciona la transmisión en plato pequeño para liberar tornillos.",
       "Paso 2: Afloja los tornillos del plato (o desmonta el conjunto de platos/bielas si hace falta).",
@@ -317,7 +317,7 @@ export const componentesData = {
 
   sillinRuta: {
     nombre: "Sillín_Ruta",
-    imagen: require('../../iconos/sillin.png'),
+    imagen: require('../../iconos/ruta_sillin.png'),
     comoColocar: [
       "Paso 1: Afloja la abrazadera de la tija y coloca la altura aproximada según tu medida de entrepierna.",
       "Paso 2: Ajusta el ángulo (ligeramente hacia abajo si prefieres aerodinámica) y el retroceso del sillín.",
@@ -334,31 +334,31 @@ export const componentesData = {
     },
   },
 
-  frenosRuta: {
-    nombre: "Frenos Ruta",
-    imagen: require('../../iconos/frenos.png'),
-    comoColocar: [
-      "Paso 1: Si son frenos de llanta (caliper), monta la pinza en la horquilla y el tirante trasero, centrándola sobre la llanta.",
-      "Paso 2: Si son discos, instala rotores y pinzas como en frenos MTB (ajuste y sangrado si hidráulicos).",
-      "Paso 3: Ajusta la tensión del cable (mecánicos) o revisa sistema hidráulico y palancas.",
-      "Paso 4: Comprueba que las pastillas no rozan y que la respuesta sea progresiva.",
-    ],
-    herramientas: [
-      "Llaves Allen / Torx",
-      "Kit de sangrado (si hidráulicos)",
-      "Limpieza de frenos (isopropanol)",
-    ],
-    informacion: {
-      utilidad: "En ruta tradicionalmente se usaban frenos de llanta (caliper) por aerodinámica; hoy día los discos de carretera ofrecen mejor rendimiento en mojado y mayor consistencia.",
-      mantenimiento: "Revisar pastillas y discos/rasgadas de llanta, ajustar y sangrar cuando sea necesario.",
-    },
-  },
+  // frenosRuta: {
+  //   nombre: "Frenos Ruta",
+  //   imagen: require('../../iconos/frenos.png'),
+  //   comoColocar: [
+  //     "Paso 1: Si son frenos de llanta (caliper), monta la pinza en la horquilla y el tirante trasero, centrándola sobre la llanta.",
+  //     "Paso 2: Si son discos, instala rotores y pinzas como en frenos MTB (ajuste y sangrado si hidráulicos).",
+  //     "Paso 3: Ajusta la tensión del cable (mecánicos) o revisa sistema hidráulico y palancas.",
+  //     "Paso 4: Comprueba que las pastillas no rozan y que la respuesta sea progresiva.",
+  //   ],
+  //   herramientas: [
+  //     "Llaves Allen / Torx",
+  //     "Kit de sangrado (si hidráulicos)",
+  //     "Limpieza de frenos (isopropanol)",
+  //   ],
+  //   informacion: {
+  //     utilidad: "En ruta tradicionalmente se usaban frenos de llanta (caliper) por aerodinámica; hoy día los discos de carretera ofrecen mejor rendimiento en mojado y mayor consistencia.",
+  //     mantenimiento: "Revisar pastillas y discos/rasgadas de llanta, ajustar y sangrar cuando sea necesario.",
+  //   },
+  // },
 
 
   // 🔹 Fixie
   marcoFixie: {
     nombre: "Marco Fixie",
-    imagen: require('../../iconos/marcof.png'),
+    imagen: require('../../iconos/fixie_marco.png'),
     comoColocar: [
       "Paso 1: Desmonta el cuadro viejo.",
       "Paso 2: Prepara nuevo marco verificando compatibilidad con piñón fijo.",
@@ -425,7 +425,7 @@ export const componentesData = {
 
   cadenaFixie: {
     nombre: "Cadena Fixie",
-    imagen: require('../../iconos/cadena.png'),
+    imagen: require('../../iconos/fixie_cadena.jpeg'),
     comoColocar: [
       "Paso 1: Determina si tu fixie usa cadena 1/8\" (track) o 3/32\" (más común en conversiones).",
       "Paso 2: Mide la longitud adecuada (mueve la rueda trasera para lograr la tensión correcta si el cuadro tiene dropouts horizontales).",
@@ -445,7 +445,7 @@ export const componentesData = {
 
   platoFixie: {
     nombre: "Plato Fixie (Chainring)",
-    imagen: require('../../iconos/plato.png'),
+    imagen: require('../../iconos/fixie_plato.jpeg'),
     comoColocar: [
       "Paso 1: Afloja los tornillos de la biela o corona y retira la corona vieja si aplica.",
       "Paso 2: Coloca el nuevo plato asegurándote de que las estrías/BCD coincidan y la orientación sea correcta.",
@@ -465,7 +465,7 @@ export const componentesData = {
 
   sillinFixie: {
     nombre: "Sillín Fixie",
-    imagen: require('../../iconos/sillin.png'),
+    imagen: require('../../iconos/fixie_sillin.png'),
     comoColocar: [
       "Paso 1: Afloja la abrazadera de la tija y coloca la altura deseada.",
       "Paso 2: Ajusta el ángulo y el retroceso para comodidad en ciudad.",
@@ -482,24 +482,24 @@ export const componentesData = {
     },
   },
 
-  tenedorFixie: {
-    nombre: "Tenedor (Horquilla) Fixie",
-    imagen: require('../../iconos/tenedor.png'),
-    comoColocar: [
-      "Paso 1: Retira la rueda delantera y afloja la potencia para liberar la horquilla antigua si la hay.",
-      "Paso 2: Inserta la horquilla nueva en la dirección (asegurando rodamientos y espaciadores correctos).",
-      "Paso 3: Ajusta la tapa de dirección y aprieta la potencia a su par, asegurando alineación con la rueda.",
-      "Paso 4: Monta la rueda delantera y ajusta tuercas o cierre rápido; verifica que gire libremente sin juego.",
-    ],
-    herramientas: [
-      "Llaves Allen",
-      "Extractor de dirección (si es necesario)",
-      "Grasa para rodamientos",
-    ],
-    informacion: {
-      utilidad: "La horquilla en fixie suele ser rígida y simple para uso urbano; debe ser ligera y compatible con el eje delantero seleccionado.",
-      mantenimiento: "Comprobar rodamientos de dirección, mantener limpia y verificar que no haya juego en la dirección.",
-    },
-  },
+  // tenedorFixie: {
+  //   nombre: "Tenedor (Horquilla) Fixie",
+  //   imagen: require('../../iconos/tenedor.png'),
+  //   comoColocar: [
+  //     "Paso 1: Retira la rueda delantera y afloja la potencia para liberar la horquilla antigua si la hay.",
+  //     "Paso 2: Inserta la horquilla nueva en la dirección (asegurando rodamientos y espaciadores correctos).",
+  //     "Paso 3: Ajusta la tapa de dirección y aprieta la potencia a su par, asegurando alineación con la rueda.",
+  //     "Paso 4: Monta la rueda delantera y ajusta tuercas o cierre rápido; verifica que gire libremente sin juego.",
+  //   ],
+  //   herramientas: [
+  //     "Llaves Allen",
+  //     "Extractor de dirección (si es necesario)",
+  //     "Grasa para rodamientos",
+  //   ],
+  //   informacion: {
+  //     utilidad: "La horquilla en fixie suele ser rígida y simple para uso urbano; debe ser ligera y compatible con el eje delantero seleccionado.",
+  //     mantenimiento: "Comprobar rodamientos de dirección, mantener limpia y verificar que no haya juego en la dirección.",
+  //   },
+  // },
 
 };

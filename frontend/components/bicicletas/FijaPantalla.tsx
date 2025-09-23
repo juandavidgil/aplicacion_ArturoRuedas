@@ -253,7 +253,7 @@ const FijaPantalla: React.FC = () => {
         navigation.navigate('ComponenteDetalle', { componenteId: 'ruedasFixie', tipoBicicleta })
       }
     >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_ruedas.jpeg')} />
+      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_rueda.jpeg')} />
     </TouchableOpacity>
 
     <TouchableOpacity
@@ -285,7 +285,7 @@ const FijaPantalla: React.FC = () => {
         navigation.navigate('ComponenteDetalle', { componenteId: 'cadenaFixie', tipoBicicleta })
       }
     >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_cadena.png')} />
+      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_cadena.jpeg')} />
     </TouchableOpacity>
 
     <TouchableOpacity
@@ -293,16 +293,16 @@ const FijaPantalla: React.FC = () => {
         navigation.navigate('ComponenteDetalle', { componenteId: 'platoFixie', tipoBicicleta })
       }
     >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_plato.png')} />
+      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_plato.jpeg')} />
     </TouchableOpacity>
 
-    <TouchableOpacity
+    {/* <TouchableOpacity
       onPress={() =>
         navigation.navigate('ComponenteDetalle', { componenteId: 'pedalesFixie', tipoBicicleta })
       }
     >
       <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_pedal.png')} />
-    </TouchableOpacity>
+    </TouchableOpacity> */}
 
     
     <TouchableOpacity
