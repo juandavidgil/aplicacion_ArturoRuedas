@@ -202,6 +202,7 @@ export const componentesData = {
   },
   ruedasRuta: {
     nombre: "Ruedas Ruta",
+     imagen: require("../../iconos/ruta_ruedas.jpeg"),
     comoColocar: [
       "Paso 1: Suelta frenos caliper o disco.",
       "Paso 2: Retira la rueda y coloca la nueva con cierre rápido.",
@@ -215,6 +216,7 @@ export const componentesData = {
   },
   manubrioRuta: {
     nombre: "Manubrio Ruta",
+     imagen: require("../../iconos/ruta_manubrio.jpeg"),
     comoColocar: [
       "Paso 1: Afloja potencia y retira manubrio antiguo.",
       "Paso 2: Coloca drop bar y ajusta inclinación.",
@@ -226,21 +228,23 @@ export const componentesData = {
       mantenimiento: "Revisar cinta y que no tenga grietas.",
     },
   },
-  horquillaRuta: {
-    nombre: "Horquilla Ruta",
-    comoColocar: [
-      "Paso 1: Desmonta la horquilla vieja.",
-      "Paso 2: Limpia zona de dirección e instala nueva horquilla rígida.",
-      "Paso 3: Ajusta espaciadores y aprieta tornillos de la potencia.",
-    ],
-    herramientas: ["Llaves Allen", "Grasa"],
-    informacion: {
-      utilidad: "Ligera y rígida para precisión en carretera.",
-      mantenimiento: "Revisar rodamientos de dirección.",
-    },
-  },
+  // horquillaRuta: {
+  //   nombre: "Horquilla Ruta",
+  //   comoColocar: [
+  //     "Paso 1: Desmonta la horquilla vieja.",
+  //     "Paso 2: Limpia zona de dirección e instala nueva horquilla rígida.",
+  //     "Paso 3: Ajusta espaciadores y aprieta tornillos de la potencia.",
+  //   ],
+  //   herramientas: ["Llaves Allen", "Grasa"],
+  //   informacion: {
+  //     utilidad: "Ligera y rígida para precisión en carretera.",
+  //     mantenimiento: "Revisar rodamientos de dirección.",
+  //   },
+  // },
+
   pedalRuta: {
     nombre: "Pedales Ruta",
+    imagen: require("../../iconos/ruta_pedal.jpeg"),
     comoColocar: [
       "Paso 1: Retira los pedales viejos.",
       "Paso 2: Instala pedales automáticos según lado.",
@@ -334,25 +338,25 @@ export const componentesData = {
     },
   },
 
-  // frenosRuta: {
-  //   nombre: "Frenos Ruta",
-  //   imagen: require('../../iconos/frenos.png'),
-  //   comoColocar: [
-  //     "Paso 1: Si son frenos de llanta (caliper), monta la pinza en la horquilla y el tirante trasero, centrándola sobre la llanta.",
-  //     "Paso 2: Si son discos, instala rotores y pinzas como en frenos MTB (ajuste y sangrado si hidráulicos).",
-  //     "Paso 3: Ajusta la tensión del cable (mecánicos) o revisa sistema hidráulico y palancas.",
-  //     "Paso 4: Comprueba que las pastillas no rozan y que la respuesta sea progresiva.",
-  //   ],
-  //   herramientas: [
-  //     "Llaves Allen / Torx",
-  //     "Kit de sangrado (si hidráulicos)",
-  //     "Limpieza de frenos (isopropanol)",
-  //   ],
-  //   informacion: {
-  //     utilidad: "En ruta tradicionalmente se usaban frenos de llanta (caliper) por aerodinámica; hoy día los discos de carretera ofrecen mejor rendimiento en mojado y mayor consistencia.",
-  //     mantenimiento: "Revisar pastillas y discos/rasgadas de llanta, ajustar y sangrar cuando sea necesario.",
-  //   },
-  // },
+  frenosRuta: {
+    nombre: "Frenos Ruta",
+    imagen: require('../../img/frenos.webp'),
+    comoColocar: [
+      "Paso 1: Si son frenos de llanta (caliper), monta la pinza en la horquilla y el tirante trasero, centrándola sobre la llanta.",
+      "Paso 2: Si son discos, instala rotores y pinzas como en frenos MTB (ajuste y sangrado si hidráulicos).",
+      "Paso 3: Ajusta la tensión del cable (mecánicos) o revisa sistema hidráulico y palancas.",
+      "Paso 4: Comprueba que las pastillas no rozan y que la respuesta sea progresiva.",
+    ],
+    herramientas: [
+      "Llaves Allen / Torx",
+      "Kit de sangrado (si hidráulicos)",
+      "Limpieza de frenos (isopropanol)",
+    ],
+    informacion: {
+      utilidad: "En ruta tradicionalmente se usaban frenos de llanta (caliper) por aerodinámica; hoy día los discos de carretera ofrecen mejor rendimiento en mojado y mayor consistencia.",
+      mantenimiento: "Revisar pastillas y discos/rasgadas de llanta, ajustar y sangrar cuando sea necesario.",
+    },
+  },
 
 
   // 🔹 Fixie
@@ -372,6 +376,7 @@ export const componentesData = {
   },
   ruedasFixie: {
     nombre: "Ruedas Fixie",
+    imagen: require("../../iconos/fixie_rueda.jpeg"),
     comoColocar: [
       "Paso 1: Afloja tuercas del eje.",
       "Paso 2: Retira la rueda vieja y coloca la nueva.",
@@ -385,6 +390,7 @@ export const componentesData = {
   },
   manubrioFixie: {
     nombre: "Manubrio Fixie",
+    imagen: require("../../iconos/fixie_manubrio.png"),
     comoColocar: [
       "Paso 1: Afloja potencia.",
       "Paso 2: Coloca nuevo manubrio (flat o bullhorn).",
@@ -398,6 +404,7 @@ export const componentesData = {
   },
   piñonFixie: {
     nombre: "Piñón Fijo",
+    imagen: require("../../iconos/fixie_piñon.png"),
     comoColocar: [
       "Paso 1: Retira rueda trasera.",
       "Paso 2: Desmonta piñón viejo y coloca el nuevo enroscado.",
@@ -411,6 +418,7 @@ export const componentesData = {
   },
   pedalFixie: {
     nombre: "Pedales Fixie",
+    imagen: require("../../img/fixie_pedal.webp"),
     comoColocar: [
       "Paso 1: Retira pedales viejos.",
       "Paso 2: Coloca nuevos pedales (planos o con straps).",
@@ -482,24 +490,24 @@ export const componentesData = {
     },
   },
 
-  // tenedorFixie: {
-  //   nombre: "Tenedor (Horquilla) Fixie",
-  //   imagen: require('../../iconos/tenedor.png'),
-  //   comoColocar: [
-  //     "Paso 1: Retira la rueda delantera y afloja la potencia para liberar la horquilla antigua si la hay.",
-  //     "Paso 2: Inserta la horquilla nueva en la dirección (asegurando rodamientos y espaciadores correctos).",
-  //     "Paso 3: Ajusta la tapa de dirección y aprieta la potencia a su par, asegurando alineación con la rueda.",
-  //     "Paso 4: Monta la rueda delantera y ajusta tuercas o cierre rápido; verifica que gire libremente sin juego.",
-  //   ],
-  //   herramientas: [
-  //     "Llaves Allen",
-  //     "Extractor de dirección (si es necesario)",
-  //     "Grasa para rodamientos",
-  //   ],
-  //   informacion: {
-  //     utilidad: "La horquilla en fixie suele ser rígida y simple para uso urbano; debe ser ligera y compatible con el eje delantero seleccionado.",
-  //     mantenimiento: "Comprobar rodamientos de dirección, mantener limpia y verificar que no haya juego en la dirección.",
-  //   },
-  // },
+  tenedorFixie: {
+    nombre: "Tenedor (Horquilla) Fixie",
+    imagen: require('../../img/tenedor.webp'),
+    comoColocar: [
+      "Paso 1: Retira la rueda delantera y afloja la potencia para liberar la horquilla antigua si la hay.",
+      "Paso 2: Inserta la horquilla nueva en la dirección (asegurando rodamientos y espaciadores correctos).",
+      "Paso 3: Ajusta la tapa de dirección y aprieta la potencia a su par, asegurando alineación con la rueda.",
+      "Paso 4: Monta la rueda delantera y ajusta tuercas o cierre rápido; verifica que gire libremente sin juego.",
+    ],
+    herramientas: [
+      "Llaves Allen",
+      "Extractor de dirección (si es necesario)",
+      "Grasa para rodamientos",
+    ],
+    informacion: {
+      utilidad: "La horquilla en fixie suele ser rígida y simple para uso urbano; debe ser ligera y compatible con el eje delantero seleccionado.",
+      mantenimiento: "Comprobar rodamientos de dirección, mantener limpia y verificar que no haya juego en la dirección.",
+    },
+  },
 
 };
