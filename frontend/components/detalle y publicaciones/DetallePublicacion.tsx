@@ -9,7 +9,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type DetallePublicacionRouteProp = RouteProp<StackParamList, 'DetallePublicacion'>;
 
-  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
+  
 
 interface Props {
   route: DetallePublicacionRouteProp;
@@ -34,6 +34,7 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
 
 const DetallePublicacion: React.FC<Props> = ({ route }) => {
   const { publicacion, id_vendedor } = route.params;
+  const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   console.log('se recibio el id del vendedor' , id_vendedor)
  
 

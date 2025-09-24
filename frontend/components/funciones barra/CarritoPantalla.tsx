@@ -122,7 +122,7 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
   }, []);
 
   const renderItem = ({ item }: { item: Articulo }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('DetallePublicacion', { publicacion: item })}>
+    <TouchableOpacity onPress={() => navigation.navigate('DetallePublicacion', { publicacion: item, id_vendedor : item.id_vendedor })}>
       <View style={styles.card}>
         {/* ✅ Mostrar solo la primera foto */}
         <Image 
