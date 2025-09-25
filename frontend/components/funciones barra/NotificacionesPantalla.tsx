@@ -1,41 +1,44 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, Platform, StyleSheet, Alert } from "react-native";
+import { View, Text, FlatList, Button, StyleSheet, Alert, Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Constants from "expo-constants";
-import appConfig from "../../../app.json"; // 👈 importa tu app.json
-import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {URL} from '../../config/UrlApi'
+import axios from "axios";
+import { URL } from "../../config/UrlApi";
 
-// Configuración del handler para que muestre notificaciones
+// Configuración para mostrar notificaciones cuando la app está en foreground
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: false,
-    shouldShowBanner: true, 
+    shouldShowBanner: true,
     shouldShowList: true,
-
   }),
 });
+
+interface Notificacion {
+  id: number;
+  titulo: string;
+  cuerpo: string;
+}
 
 const NotificacionesPantalla: React.FC = () => {
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
   const [usuario, setUsuario] = useState<any>(null);
+  const [notificaciones, setNotificaciones] = useState<Notificacion[]>([]);
 
-  // ✅ Cargar usuario logueado desde AsyncStorage
+  // Cargar usuario logueado
   useEffect(() => {
     const cargarUsuario = async () => {
       const usuarioData = await AsyncStorage.getItem("usuario");
-      if (usuarioData) {
-        setUsuario(JSON.parse(usuarioData));
-      }
+      if (usuarioData) setUsuario(JSON.parse(usuarioData));
     };
     cargarUsuario();
   }, []);
 
-  // ✅ Registrar notificaciones
+  // Registrar notificaciones y obtener token
   useEffect(() => {
     const registrarNotificaciones = async () => {
       if (!Device.isDevice) {
@@ -56,25 +59,21 @@ const NotificacionesPantalla: React.FC = () => {
         return;
       }
 
-    try {
-const projectId = appConfig.expo.extra.eas.projectId;
-const token = (await Notifications.getExpoPushTokenAsync({
-  projectId,
-})).data;
+      try {
+        const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+        const token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+        setExpoPushToken(token);
 
-  console.log("✅ Token generado:", token);
-  setExpoPushToken(token);
-
-  if (usuario?.ID_usuario) {
-    await axios.post(`${URL}/guardar-token`, {
-      ID_usuario: usuario?.ID_usuario ?? 1,
-      token,
-    });
-  }
-} catch (error) {
-  console.error("Error obteniendo token de Expo:", error);
-}
-
+        // Guardar token en backend
+        if (usuario?.ID_usuario) {
+          await axios.post(`${URL}/guardar-token`, {
+            ID_usuario: usuario.ID_usuario,
+            token,
+          });
+        }
+      } catch (err) {
+        console.error("Error obteniendo token de Expo:", err);
+      }
     };
 
     registrarNotificaciones();
@@ -89,36 +88,55 @@ const token = (await Notifications.getExpoPushTokenAsync({
     }
   }, [usuario]);
 
-  // ✅ Listeners de notificaciones
+  // Listeners para notificaciones
   useEffect(() => {
-    const subscription = Notifications.addNotificationReceivedListener(notification => {
-      
+    const subscription1 = Notifications.addNotificationReceivedListener(notification => {
+      const { title, body } = notification.request.content;
+      setNotificaciones(prev => [
+        { id: Date.now(), titulo: title || "", cuerpo: body || "" },
+        ...prev,
+      ]);
     });
 
-    const responseSubscription = Notifications.addNotificationResponseReceivedListener(response => {
-      
+    const subscription2 = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log("Notificación interactuada:", response);
     });
 
     return () => {
-      subscription.remove();
-      responseSubscription.remove();
+      subscription1.remove();
+      subscription2.remove();
     };
   }, []);
 
-  // ✅ Botón para probar notificación
+  // Obtener notificaciones guardadas en DB
+  const cargarNotificacionesDB = async () => {
+    try {
+      if (!usuario?.ID_usuario) return;
+      const res = await axios.get(`${URL}/notificaciones/${usuario.ID_usuario}`);
+      setNotificaciones(res.data || []);
+    } catch (err) {
+      console.error("Error cargando notificaciones:", err);
+    }
+  };
+
+  useEffect(() => {
+    cargarNotificacionesDB();
+  }, [usuario]);
+
+  // Enviar notificación de prueba
   const enviarNotificacionPrueba = async () => {
-    if (!expoPushToken) {
+    if (!expoPushToken || !usuario?.ID_usuario) {
       Alert.alert("Error", "No se encontró token de notificación.");
       return;
     }
     try {
       await axios.post(`${URL}/test-notification`, {
-        ID_usuario: usuario?.ID_usuario ?? 1,
+        ID_usuario: usuario.ID_usuario,
         token: expoPushToken,
       });
       Alert.alert("Éxito", "Notificación de prueba enviada 🚀");
-    } catch (error) {
-      console.error("Error enviando notificación de prueba:", error);
+    } catch (err) {
+      console.error(err);
       Alert.alert("Error", "No se pudo enviar la notificación de prueba.");
     }
   };
@@ -127,11 +145,18 @@ const token = (await Notifications.getExpoPushTokenAsync({
     <View style={styles.container}>
       <Text style={styles.title}>Notificaciones</Text>
       <Button title="Probar Notificación" onPress={enviarNotificacionPrueba} />
-      {expoPushToken && (
-        <Text style={styles.token}>
-          Token: {expoPushToken.substring(0, 30)}...
-        </Text>
-      )}
+      <FlatList
+        data={notificaciones}
+        keyExtractor={item => item.id.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.notificacion}>
+            <Text style={styles.titulo}>{item.titulo}</Text>
+            <Text style={styles.cuerpo}>{item.cuerpo}</Text>
+          </View>
+        )}
+        ListEmptyComponent={<Text style={styles.empty}>No hay notificaciones</Text>}
+        contentContainerStyle={{ paddingBottom: 100 }}
+      />
     </View>
   );
 };
@@ -139,23 +164,10 @@ const token = (await Notifications.getExpoPushTokenAsync({
 export default NotificacionesPantalla;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#000",
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#fff",
-  },
-  token: {
-    marginTop: 20,
-    fontSize: 12,
-    color: "#bbb",
-    textAlign: "center",
-    paddingHorizontal: 10,
-  },
+  container: { flex: 1, backgroundColor: "#000", padding: 10 },
+  title: { fontSize: 22, fontWeight: "bold", color: "#fff", marginBottom: 20, textAlign: "center" },
+  notificacion: { backgroundColor: "#111", padding: 10, borderRadius: 8, marginBottom: 10 },
+  titulo: { fontWeight: "bold", color: "#fff", fontSize: 16 },
+  cuerpo: { color: "#ccc", marginTop: 5 },
+  empty: { color: "#888", textAlign: "center", marginTop: 50 },
 });
