@@ -14,8 +14,8 @@ const { width, height } = Dimensions.get('window');
 
 
 
-const PublicacionesRelacionadasVendedor: React.FC<Props> = ({ route }) => {
-  const { publicacion } = route.params;
+const PublicacionesRelacionadasVendedor = ()=> {
+ /*  const { publicacion } = route.params; */
   const navigation = useNavigation(); 
 
   return (

@@ -26,6 +26,7 @@ interface Articulo {
   nombre_vendedor: string;
   telefono: string;
   foto: string;
+  id_vendedor: number;
 }
 
 type RouteParams = { tipoBicicleta: string };
@@ -123,7 +124,7 @@ const RutaPantalla: React.FC = () => {
                 keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
                 contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }}
                 renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => navigation.navigate('DetallePublicacion', { publicacion: item })}>
+                  <TouchableOpacity onPress={() => navigation.navigate('DetallePublicacion', { publicacion: item, id_vendedor: item.id_vendedor })}>
                     <View style={styles.cardMTB}>
                       <Image source={{ uri: item.fotos?.[0] || '' }} style={styles.imagenMTB} resizeMode="cover" />
                       <View style={styles.infoMTB}>

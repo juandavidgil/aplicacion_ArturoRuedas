@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -6,6 +6,7 @@ import { StackParamList } from "../../types/types";
 import { URL } from "../../config/UrlApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from 'expo-linear-gradient';
+import { UserContext } from "../inicio de sesion/userContext";
 
 type EditarPerfilRouteProp = RouteProp<StackParamList, "EditarPerfil">;
 type EditarPerfilNavProp = NativeStackNavigationProp<StackParamList, "EditarPerfil">;
@@ -17,7 +18,7 @@ interface Props {
 const EditarPerfil: React.FC<Props> = ({ route }) => {
   const navigation = useNavigation<EditarPerfilNavProp>();
   const { usuario } = route.params;
-
+  const { logout } = useContext(UserContext);
   const [nombre, setNombre] = useState(usuario.nombre);
   const [correo, setCorreo] = useState(usuario.correo);
   const [telefono, setTelefono] = useState(usuario.telefono);
@@ -40,7 +41,13 @@ const EditarPerfil: React.FC<Props> = ({ route }) => {
       await AsyncStorage.setItem("usuario", JSON.stringify(data));
 
       Alert.alert("Éxito", "Tu información ha sido actualizada.");
-      navigation.navigate('InicioSesion');
+      await logout();
+
+      // Redirigir a la pantalla de presentación
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Presentacion" }],
+      });
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "No se pudo actualizar la información.");

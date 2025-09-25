@@ -33,6 +33,7 @@ import DetallePublicacionLogueado from './components/perfil/DetallePublicacionLo
 import ChatGPT from './components/detalle y publicaciones/ChatgptPantalla';
 import DetallePublicacion from './components/detalle y publicaciones/DetallePublicacion';
 import ComponenteDetallePantalla from './components/detalle y publicaciones/ComponenteDetalladoPantalla';
+import PublicacionesRelacionadasVendedor from './components/detalle y publicaciones/PublicacionesRelacionadasVendedor'
 
 const Stack = createNativeStackNavigator<StackParamList>();
 
@@ -64,6 +65,7 @@ const MainNavigator = () => {
       <Stack.Screen name="ChatGPT" component={ChatGPT} />
       <Stack.Screen name="DetallePublicacion" component={DetallePublicacion} />
       <Stack.Screen name="ComponenteDetalle" component={ComponenteDetallePantalla} />
+      <Stack.Screen name="PublicacionesRelacionadasVendedor" component={PublicacionesRelacionadasVendedor}/>
 
       <Stack.Screen name="FiltroAdmin" component={FiltroAdminPantalla} />
       <Stack.Screen name="Administrador" component={Administrador} />

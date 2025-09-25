@@ -7,6 +7,9 @@ import { URL } from '../../config/UrlApi';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import { UserContext } from "../inicio de sesion/userContext"; // 👈 ajusta la ruta
+import { useContext } from "react";
+
 interface Usuario {
   id_usuario: number;
   nombre: string;
@@ -21,20 +24,24 @@ const { width, height } = Dimensions.get('window');
 const PerfilPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [usuario, setUsuario] = useState<Usuario | null>(null);
-
   const [loading, setLoading] = useState(true);
-   const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false);
+  const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false);
+  const { logout } = useContext(UserContext);
 
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("userToken"); 
       await AsyncStorage.removeItem("userData");  
-
+      
       Alert.alert("Sesión cerrada", "Has cerrado sesión correctamente.");
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "Presentacion" }], 
-      });
+       await logout();
+
+    // 👇 resetea la pila de navegación y vuelve a Presentacion
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Presentacion" }],
+    });
+
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
@@ -101,7 +108,17 @@ const PerfilPantalla: React.FC = () => {
           <Text style={styles.info}>Telefono: {usuario?.telefono}</Text>
 
           {/* Botones */}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('PublicacionesUsuarioLogueado')}
+          >
+            <LinearGradient colors={['#23bd15ff', '#15922aff']} style={styles.buttonBg}>
+              <Text style={styles.buttonText}>📄 Ver mis publicaciones</Text>
+            </LinearGradient>
+          </TouchableOpacity>
          {usuario && (
+  
+  
   <TouchableOpacity
     style={styles.button}
     onPress={() => navigation.navigate("EditarPerfil", { usuario })}
@@ -113,14 +130,6 @@ const PerfilPantalla: React.FC = () => {
 )}
 
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('PublicacionesUsuarioLogueado')}
-          >
-            <LinearGradient colors={['#23bd15ff', '#15922aff']} style={styles.buttonBg}>
-              <Text style={styles.buttonText}>📄 Ver mis publicaciones</Text>
-            </LinearGradient>
-          </TouchableOpacity>
 
           {usuario && (
   <TouchableOpacity 

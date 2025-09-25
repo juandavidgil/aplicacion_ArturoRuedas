@@ -268,7 +268,7 @@ app.get('/buscar', async (req: Request, res: Response) => {
         cv.precio, 
         cv.tipo_bicicleta, 
         cv.tipo_componente,
-        cv.ID_usuario,
+        cv.ID_usuario as id_vendedor,
         u.nombre as nombre_vendedor,
         u.telefono,
         u.foto,
@@ -938,6 +938,7 @@ app.get("/publicaciones", async (req: Request, res: Response) => {
         cv.precio,
         cv.tipo_bicicleta,
         cv.tipo_componente,
+        cv.ID_vendedor as id_vendedor,
         u.nombre AS nombre_vendedor,
         u.telefono,
         u.foto,
@@ -954,7 +955,7 @@ app.get("/publicaciones", async (req: Request, res: Response) => {
       LEFT JOIN com_ventas_fotos cvf ON cv.ID_publicacion = cvf.ID_publicacion
       WHERE LOWER(cv.tipo_bicicleta) = LOWER($1)
         AND LOWER(cv.tipo_componente) = LOWER($2)
-      GROUP BY cv.ID_publicacion, u.nombre, u.telefono, u.foto, cv.nombre_Articulo, cv.descripcion, cv.precio, cv.tipo_bicicleta, cv.tipo_componente
+      GROUP BY cv.ID_publicacion, u.nombre, u.telefono, u.foto, cv.nombre_Articulo, cv.descripcion, cv.precio, cv.tipo_bicicleta,cv.ID_usuario, cv.tipo_componente
       ORDER BY cv.ID_publicacion DESC`,
       [tipo, componente]
     );

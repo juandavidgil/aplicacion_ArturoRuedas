@@ -18,6 +18,7 @@ interface Publicacion {
   nombre_vendedor: string;
   telefono: string;
   foto:string;
+   id_vendedor: number;
 }
 
 const PublicacionesUsuarioLogueado: React.FC = () => {
