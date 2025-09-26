@@ -2,7 +2,7 @@ export const componentesData = {
   // 🔹 MTB
   marcoMtb: {
     nombre: "Marco MTB",
-    imagen: require('../../iconos/mtb_marco.jpeg'),
+    imagen: "https://bikehouse.co/cdn/shop/products/HerofrontR-team.png?v=1669646231",
     comoColocar: [
       "Paso 1: Desmonta todos los componentes del marco viejo.",
       "Paso 2: Limpia y prepara el nuevo marco, revisando compatibilidad con suspensión, ruedas y frenos de disco.",
@@ -19,7 +19,7 @@ export const componentesData = {
 
   ruedasMtb: {
     nombre: "Ruedas MTB",
-    imagen: require('../../img/rueda.webp'),
+    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS83xGr01YdnVfr7Pq5_a7gyKeVijRc4b6J4Q&s",
     comoColocar: [
       "Paso 1: Suelta el freno de disco o ejes pasantes.",
       "Paso 2: Retira la rueda y coloca la nueva alineándola en el cuadro.",
@@ -34,7 +34,7 @@ export const componentesData = {
   },
   manubrioMtb: {
     nombre: "Manubrio MTB",
-    imagen: require('../../img/manub.webp'),
+      imagen: "https://giant-bicycles.com.co/pub/media/catalog/product/cache/7a8f5b56e46e9009957f5cc3fe54a0bd/k/p/kpbrovicmpppeimtv1ee6bnmu_dfurzvjj9uusi7zx.jpg",
     comoColocar: [
       "Paso 1: Afloja los tornillos de la potencia.",
       "Paso 2: Coloca el nuevo manubrio ancho para mejor control.",
@@ -48,7 +48,7 @@ export const componentesData = {
   },
   suspensionMtb: {
     nombre: "Suspensión MTB",
-    imagen: require('../../img/suspe.webp'),
+      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBe9n_J1ETHG12vx8UKDm7F5F0KVKJgjn9og&s",
     comoColocar: [
       "Paso 1: Retira la horquilla vieja aflojando la potencia.",
       "Paso 2: Lubrica rodamientos de dirección.",
@@ -63,7 +63,7 @@ export const componentesData = {
   },
   pedalMtb: {
     nombre: "Pedales MTB",
-    imagen: require('../../img/pedal.jpg'),
+      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCpC1j5-MJ06dM_FOoo9EM0_N-yxyRW8FsaQ&s",
     comoColocar: [
       "Paso 1: Retira los pedales viejos con llave de 15 mm.",
       "Paso 2: Coloca grasa en las roscas.",
@@ -78,7 +78,7 @@ export const componentesData = {
 
   pachaMtb: {
     nombre: "Pacha MTB",
-    imagen: require('../../iconos/mtb_piñon.jpeg'),
+      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZmgfQLVJ5rEZbRqj2dMO4KRhLMlZMCM3iQg&s",
     comoColocar: [
       "Paso 1: Quita la rueda trasera de la bicicleta.",
       "Paso 2: Usa una llave de cadena y una llave para bloqueo de cassette (o extractor de cassette) para aflojar y retirar la pacha/cassette antiguo.",
@@ -100,7 +100,7 @@ export const componentesData = {
 
   sillinMtb: {
     nombre: "Sillín MTB",
-    imagen: require('../../iconos/mtb_sillin.jpeg'),
+      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3uY1diciN7f5OTJxPlUPEiOZRISbjuZDh5g&s",
     comoColocar: [
       "Paso 1: Afloja la abrazadera de la tija del sillín (seatpost clamp).",
       "Paso 2: Coloca la tija a la altura aproximada y ajusta el retroceso del sillín (fore/aft) según tu posición.",
@@ -121,7 +121,7 @@ export const componentesData = {
 
   frenosMtb: {
     nombre: "Frenos MTB",
-    imagen: require('../../iconos/mtb_frenos.jpeg'),
+      imagen: "https://m.media-amazon.com/images/I/71jc76EHLUL._UF894,1000_QL80_.jpg",
     comoColocar: [
       "Paso 1: Monta los rotores (si aplica) en las llantas verificando el sentido y el apriete correcto.",
       "Paso 2: Fija las pinzas/calipers al cuadro y horquilla en sus puntos de anclaje.",
@@ -143,7 +143,7 @@ export const componentesData = {
 
   cadenaMtb: {
     nombre: "Cadena MTB",
-    imagen: require('../../iconos/mtb_cadena.png'),
+      imagen: "https://http2.mlstatic.com/D_NQ_NP_2X_925706-MCO51698503489_092022-T.webp",
     comoColocar: [
       "Paso 1: Coloca la bicicleta en caballete o voltéala para trabajar cómodo.",
       "Paso 2: Selecciona una cadena compatible con el número de velocidades del grupo (anchura correcta).",
@@ -165,7 +165,7 @@ export const componentesData = {
 
   platoMtb: {
     nombre: "Plato MTB",
-    imagen: require('../../iconos/mtb_plato.png'),
+      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzkjYbb7D26rjx-5wkg-E-M95IMdUvldaJUg&s",
     comoColocar: [
       "Paso 1: Si es necesario, retira la cadena y/o desmonta la biela para acceder al plato.",
       "Paso 2: Afloja los tornillos del plato o extrae la corona según el sistema (bolts o direct mount).",
@@ -188,7 +188,7 @@ export const componentesData = {
   // 🔹 Ruta
   marcoRuta: {
     nombre: "Marco Ruta",
-    imagen: require('../../iconos/ruta_marco.png'),
+      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8_uD2zJxm0kLom2NxCp_qoXkGWDe16zOtSw&s",
     comoColocar: [
       "Paso 1: Desmonta componentes del marco viejo.",
       "Paso 2: Instala horquilla rígida y dirección ligera.",
@@ -202,7 +202,7 @@ export const componentesData = {
   },
   ruedasRuta: {
     nombre: "Ruedas Ruta",
-     imagen: require("../../iconos/ruta_ruedas.jpeg"),
+    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVUp46wu_pIHIb1pVMmGSO81LIikh18XRyJA&s",
     comoColocar: [
       "Paso 1: Suelta frenos caliper o disco.",
       "Paso 2: Retira la rueda y coloca la nueva con cierre rápido.",
@@ -214,9 +214,10 @@ export const componentesData = {
       mantenimiento: "Mantener alta presión y revisar fisuras.",
     },
   },
+
   manubrioRuta: {
     nombre: "Manubrio Ruta",
-     imagen: require("../../iconos/ruta_manubrio.jpeg"),
+    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCGhszD_jPQEA8oxPG1eskyzvDi7S5lWdImpSI8rB1x0gCJKrSctAhcvfBZnosc6qPFcc&usqp=CAU",
     comoColocar: [
       "Paso 1: Afloja potencia y retira manubrio antiguo.",
       "Paso 2: Coloca drop bar y ajusta inclinación.",
@@ -228,23 +229,25 @@ export const componentesData = {
       mantenimiento: "Revisar cinta y que no tenga grietas.",
     },
   },
-  // horquillaRuta: {
-  //   nombre: "Horquilla Ruta",
-  //   comoColocar: [
-  //     "Paso 1: Desmonta la horquilla vieja.",
-  //     "Paso 2: Limpia zona de dirección e instala nueva horquilla rígida.",
-  //     "Paso 3: Ajusta espaciadores y aprieta tornillos de la potencia.",
-  //   ],
-  //   herramientas: ["Llaves Allen", "Grasa"],
-  //   informacion: {
-  //     utilidad: "Ligera y rígida para precisión en carretera.",
-  //     mantenimiento: "Revisar rodamientos de dirección.",
-  //   },
-  // },
+
+  horquillaRuta: {
+    nombre: "Horquilla Ruta",
+    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDzMR9W0LTp_aWDPV4Pu5jU1SOoY8p-nS_58Bvx6rIOhO5vPseJ4n7CGSOw6-NYAff3c0&usqp=CAU",
+    comoColocar: [
+      "Paso 1: Desmonta la horquilla vieja.",
+      "Paso 2: Limpia zona de dirección e instala nueva horquilla rígida.",
+      "Paso 3: Ajusta espaciadores y aprieta tornillos de la potencia.",
+    ],
+    herramientas: ["Llaves Allen", "Grasa"],
+    informacion: {
+      utilidad: "Ligera y rígida para precisión en carretera.",
+      mantenimiento: "Revisar rodamientos de dirección.",
+    },
+  },
 
   pedalRuta: {
     nombre: "Pedales Ruta",
-    imagen: require("../../iconos/ruta_pedal.jpeg"),
+    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFC_od4ySpZi_SwFkVomlCY13Y4F2eN24Vs_cZUkwp17w9HeKEGGhRUOOAn_yA9EXOBCc&usqp=CAU",
     comoColocar: [
       "Paso 1: Retira los pedales viejos.",
       "Paso 2: Instala pedales automáticos según lado.",
@@ -259,7 +262,7 @@ export const componentesData = {
 
   pinonesRuta: {
     nombre: "Piñones Ruta",
-    imagen: require('../../iconos/ruta_piñon.png'),
+      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9lMeccJkVb_4yzYqYWHhZnPVkKNM2rLSjrUoxBpm9sOm3zUMIhUudJduCNmb7BbG7wsk&usqp=CAU",
     comoColocar: [
       "Paso 1: Retira la rueda trasera.",
       "Paso 2: Usa extractor de cassette y llave de cadena para aflojar el anillo de bloqueo.",
@@ -280,7 +283,7 @@ export const componentesData = {
 
   cadenaRuta: {
     nombre: "Cadena Ruta",
-    imagen: require('../../iconos/ruta_cadena.png'),
+      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQulyiUtmP4GiFWnoVYY-5Zqmni0BjFBYMJEJCaMA4zOxgTFpIAer6_KM8qLwFoRvwDsyU&usqp=CAU",
     comoColocar: [
       "Paso 1: Verifica el número de velocidades del grupo y compra cadena compatible (anchura correcta).",
       "Paso 2: Mide longitud adecuada (según método recomendado) y corta con corta-cadenas.",
@@ -300,7 +303,7 @@ export const componentesData = {
 
   platoRuta: {
     nombre: "Plato Ruta",
-    imagen: require('../../iconos/ruta_plato.jpeg'),
+      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuHNZ17Vl-g2JHqCjW3j1nTNeGVU4HrINvTQ&s",
     comoColocar: [
       "Paso 1: Retira la cadena o posiciona la transmisión en plato pequeño para liberar tornillos.",
       "Paso 2: Afloja los tornillos del plato (o desmonta el conjunto de platos/bielas si hace falta).",
@@ -321,7 +324,7 @@ export const componentesData = {
 
   sillinRuta: {
     nombre: "Sillín_Ruta",
-    imagen: require('../../iconos/ruta_sillin.png'),
+      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROiJ_UTwL6U_rcb2LXqQ1THQVXpzxibkXGjA&s",
     comoColocar: [
       "Paso 1: Afloja la abrazadera de la tija y coloca la altura aproximada según tu medida de entrepierna.",
       "Paso 2: Ajusta el ángulo (ligeramente hacia abajo si prefieres aerodinámica) y el retroceso del sillín.",
@@ -340,7 +343,7 @@ export const componentesData = {
 
   frenosRuta: {
     nombre: "Frenos Ruta",
-    imagen: require('../../img/frenos.webp'),
+      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgWLfu1upCOp2tlvfmsYPJJS53ZR-BvZL97plT4br7ZBkD5978JlJD7GEJl4B_00r7FbU&usqp=CAU",
     comoColocar: [
       "Paso 1: Si son frenos de llanta (caliper), monta la pinza en la horquilla y el tirante trasero, centrándola sobre la llanta.",
       "Paso 2: Si son discos, instala rotores y pinzas como en frenos MTB (ajuste y sangrado si hidráulicos).",
@@ -362,7 +365,7 @@ export const componentesData = {
   // 🔹 Fixie
   marcoFixie: {
     nombre: "Marco Fixie",
-    imagen: require('../../iconos/fixie_marco.png'),
+      imagen: "https://poseidonbogota.com/wp-content/uploads/2023/03/ontrail-miniaturas-marcos-FREEBIKE-MAR0387f-PISTA.jpg",
     comoColocar: [
       "Paso 1: Desmonta el cuadro viejo.",
       "Paso 2: Prepara nuevo marco verificando compatibilidad con piñón fijo.",
@@ -374,9 +377,10 @@ export const componentesData = {
       mantenimiento: "Limpieza y revisión de fisuras.",
     },
   },
+
   ruedasFixie: {
     nombre: "Ruedas Fixie",
-    imagen: require("../../iconos/fixie_rueda.jpeg"),
+    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqp7bucWzaiD__Q2BAa3ArP64oazFvYcVd95Myb4LeJAmFKcM_kw2LOBQ-rWQrkuHCyAY&usqp=CAU",
     comoColocar: [
       "Paso 1: Afloja tuercas del eje.",
       "Paso 2: Retira la rueda vieja y coloca la nueva.",
@@ -388,23 +392,10 @@ export const componentesData = {
       mantenimiento: "Revisar tensión de radios y presión.",
     },
   },
-   ruedas: {
-    nombre: "Ruedas Fixie",
-    imagen: require("../../iconos/fixie_rueda.jpeg"),
-    comoColocar: [
-      "Paso 1: Afloja tuercas del eje.",
-      "Paso 2: Retira la rueda vieja y coloca la nueva.",
-      "Paso 3: Ajusta alineación y tensión de la cadena.",
-    ],
-    herramientas: ["Llave inglesa", "Bomba de aire"],
-    informacion: {
-      utilidad: "Diseñadas para uso urbano y resistencia.",
-      mantenimiento: "Revisar tensión de radios y presión.",
-    },
-  },
+
   manubrioFixie: {
     nombre: "Manubrio Fixie",
-    imagen: require("../../iconos/fixie_manubrio.png"),
+    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb-MieeDMfvX7_1ukxSCZEIVOuknQbE2f-9Q&s",
     comoColocar: [
       "Paso 1: Afloja potencia.",
       "Paso 2: Coloca nuevo manubrio (flat o bullhorn).",
@@ -416,9 +407,10 @@ export const componentesData = {
       mantenimiento: "Revisar apriete y estado de puños.",
     },
   },
+
   piñonFixie: {
     nombre: "Piñón Fijo",
-    imagen: require("../../iconos/fixie_piñon.png"),
+    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRG-2UpKLx0okwJsLygv6Txo-_nRzv8wohwPQ&s",
     comoColocar: [
       "Paso 1: Retira rueda trasera.",
       "Paso 2: Desmonta piñón viejo y coloca el nuevo enroscado.",
@@ -432,7 +424,7 @@ export const componentesData = {
   },
   pedalFixie: {
     nombre: "Pedales Fixie",
-    imagen: require("../../img/fixie_pedal.webp"),
+    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqrNe-jCkhekgW4OPWv49uAAP_8W0zRRh8BRS6AfWiZdi-bI-zuCq7f78dQp-QNu8UylU&usqp=CAU",
     comoColocar: [
       "Paso 1: Retira pedales viejos.",
       "Paso 2: Coloca nuevos pedales (planos o con straps).",
@@ -447,7 +439,7 @@ export const componentesData = {
 
   cadenaFixie: {
     nombre: "Cadena Fixie",
-    imagen: require('../../iconos/fixie_cadena.jpeg'),
+      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSayr0CIuCwQr1XIQg1tycCKrK9ZQeRsvg93g&s",
     comoColocar: [
       "Paso 1: Determina si tu fixie usa cadena 1/8\" (track) o 3/32\" (más común en conversiones).",
       "Paso 2: Mide la longitud adecuada (mueve la rueda trasera para lograr la tensión correcta si el cuadro tiene dropouts horizontales).",
@@ -467,7 +459,7 @@ export const componentesData = {
 
   platoFixie: {
     nombre: "Plato Fixie (Chainring)",
-    imagen: require('../../iconos/fixie_plato.jpeg'),
+      imagen: "https://sc04.alicdn.com/kf/H21a93fe5b856484784aa6b92adb32da5i.jpg",
     comoColocar: [
       "Paso 1: Afloja los tornillos de la biela o corona y retira la corona vieja si aplica.",
       "Paso 2: Coloca el nuevo plato asegurándote de que las estrías/BCD coincidan y la orientación sea correcta.",
@@ -487,7 +479,7 @@ export const componentesData = {
 
   sillinFixie: {
     nombre: "Sillín Fixie",
-    imagen: require('../../iconos/fixie_sillin.png'),
+      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR76sJymJyO0P9eOBEQneFETu_9LcaPP7DrVA&s",
     comoColocar: [
       "Paso 1: Afloja la abrazadera de la tija y coloca la altura deseada.",
       "Paso 2: Ajusta el ángulo y el retroceso para comodidad en ciudad.",
@@ -506,7 +498,7 @@ export const componentesData = {
 
   tenedorFixie: {
     nombre: "Tenedor (Horquilla) Fixie",
-    imagen: require('../../img/tenedor.webp'),
+      imagen: "https://poseidonbogota.com/wp-content/uploads/2023/03/Tenedor-Fibra-de-Carbono-GW-XCP-Oversize22-300x375.jpg",
     comoColocar: [
       "Paso 1: Retira la rueda delantera y afloja la potencia para liberar la horquilla antigua si la hay.",
       "Paso 2: Inserta la horquilla nueva en la dirección (asegurando rodamientos y espaciadores correctos).",
