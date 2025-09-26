@@ -149,6 +149,12 @@ const PerfilPantalla: React.FC = () => {
             <Text style={styles.buttonText}>Cerrar Sesión</Text>
           </LinearGradient>
         </TouchableOpacity>
+
+        <TouchableOpacity onPress={()=> navigation.navigate('Contactenos')}>
+          <Text>
+            contactanos
+          </Text>
+        </TouchableOpacity>
       </View>
   {/* foother */}
             <View style={styles.iconBar}>

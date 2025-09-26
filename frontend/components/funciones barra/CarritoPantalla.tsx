@@ -145,7 +145,7 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
           </TouchableOpacity>
 
           <TouchableOpacity 
-            onPress={() => enviarWhatsApp(item.telefono, `Hola ${item.nombre_vendedor}, estoy interesado en tu artículo: ${item.foto} ${item.nombre_articulo}, ¿aun sigue disponible?`)}
+            onPress={() => enviarWhatsApp(item.telefono, `Hola ${item.nombre_vendedor}, estoy interesado en tu artículo: ${item.nombre_articulo}, ¿aun sigue disponible?`)}
             style={styles.botonMensajeAlVendedor}
           >
             <Ionicons name="logo-whatsapp" size={20} color="#25D366" />

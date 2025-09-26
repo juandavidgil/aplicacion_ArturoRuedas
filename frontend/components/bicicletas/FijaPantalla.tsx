@@ -252,7 +252,7 @@ const FijaPantalla: React.FC = () => {
   >
     <TouchableOpacity
       onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas', tipoBicicleta })
+        navigation.navigate('ComponenteDetalle', { componenteId: 'ruedasFixie', tipoBicicleta })
       }
     >
       <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_rueda.jpeg')} />

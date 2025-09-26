@@ -76,6 +76,7 @@ export type StackParamList = {
   CambiarContrasena:  { usuario: Usuario }; 
   PublicacionesUsuarioLogueado: undefined;
   DetallePublicacionLogueado: { publicacion: Publicacion; id: number; };
+  Contactenos:undefined;
 };
 
 export interface Articulo {

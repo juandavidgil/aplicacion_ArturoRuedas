@@ -25,6 +25,61 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [ID_usuario, setID_usuario] = useState<number | null>(null);
   const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false);
+  const componentesPorBici: Record<string, { label: string; value: string }[]> = {
+  MTB: [
+    { label: 'Marco', value: 'marcoMtb' },
+    { label: 'Ruedas', value: 'ruedasMtb' },
+    { label: 'Manubrio', value: 'manubrioMtb' },
+    { label: 'Suspensión', value: 'suspensionMtb' },
+    { label: 'Pedales', value: 'pedalMtb' },
+    { label: 'Pacha', value: 'pachaMtb' },
+    { label: 'Sillín', value: 'sillinMtb' },
+    { label: 'Frenos', value: 'frenosMtb' },
+    { label: 'Cadena', value: 'cadenaMtb' },
+    { label: 'Plato', value: 'platoMtb' },
+  ],
+  Ruta: [
+    { label: 'Marco', value: 'marcoRuta' },
+    { label: 'Ruedas', value: 'ruedasRuta' },
+    { label: 'Manubrio', value: 'manubrioRuta' },
+    { label: 'Horquilla', value: 'horquillaRuta' },
+    { label: 'Pedales', value: 'pedalRuta' },
+    { label: 'Piñones / Cassette', value: 'pinonesRuta' },
+    { label: 'Cadena', value: 'cadenaRuta' },
+    { label: 'Plato', value: 'platoRuta' },
+    { label: 'Sillín', value: 'sillinRuta' },
+    { label: 'Frenos', value: 'frenosRuta' },
+  ],
+  Fija: [
+    { label: 'Marco', value: 'marcoFixie' },
+    { label: 'Ruedas', value: 'ruedasFixie' },
+    { label: 'Manubrio', value: 'manubrioFixie' },
+    { label: 'Piñón', value: 'piñonFixie' },
+    { label: 'Pedales', value: 'pedalFixie' },
+    { label: 'Cadena', value: 'cadenaFixie' },
+    { label: 'Plato', value: 'platoFixie' },
+    { label: 'Sillín', value: 'sillinFixie' },
+    { label: 'Tenedor / Horquilla', value: 'tenedorFixie' },
+  ],
+};
+
+const [opcionesComponentes, setOpcionesComponentes] = useState(
+  componentesPorBici[tipoBicicleta] || componentesPorBici['MTB']
+);
+
+useEffect(() => {
+  // cuando cambie el tipo de bici actualizamos las opciones y reseteamos el componente seleccionado
+  const opts = componentesPorBici[tipoBicicleta] || componentesPorBici['MTB'];
+  setOpcionesComponentes(opts);
+
+  // Si el componente actual no existe dentro de las nuevas opciones => seleccionar la primera
+  const existe = opts.some(opt => opt.value === tipoComponente);
+  if (!existe) {
+    setTipoComponente(opts[0].value);
+  }
+}, [tipoBicicleta]);
+
+
 
   useEffect(() => {
     const cargarUsuario = async () => {
@@ -42,13 +97,15 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
   }, []);
 
   const resetFormulario = () => {
-    setNombre_Articulo('');
-    setDescripcion('');
-    setPrecio('');
-    setFotos([]);
-    setTipoBicicleta('MTB');
-    setTipoComponente('ruedas');
-  };
+  setNombre_Articulo('');
+  setDescripcion('');
+  setPrecio('');
+  setFotos([]);
+  setTipoBicicleta('MTB');
+  // setear componente al primero disponible en MTB
+  setTipoComponente(componentesPorBici['MTB'][0].value);
+};
+
 
   const formatPrice = (value: string) => {
     const cleanValue = value.replace(/\D/g, "");
@@ -198,23 +255,25 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
               </Picker>
             </View>
 
-            {/* Tipo componente */}
+         
+            {/* Tipo componente (dinámico según tipoBicicleta) */}
             <View style={styles.pickerContainer}>
               <Text style={styles.pickerLabel}>Tipo de Componente</Text>
-              <Picker selectedValue={tipoComponente} onValueChange={setTipoComponente} style={styles.picker}>
-                <Picker.Item label="ruedas" value="ruedas" color={Platform.OS === "ios" ? "white" : "black"} />
-                <Picker.Item label="suspension" value="suspension" color={Platform.OS === "ios" ? "white" : "black"} />
-                <Picker.Item label="frenos" value="frenos" color={Platform.OS === "ios" ? "white" : "black"} />
-                <Picker.Item label="marco" value="marco" color={Platform.OS === "ios" ? "white" : "black"} />
-                <Picker.Item label="sillin" value="sillin" color={Platform.OS === "ios" ? "white" : "black"} />
-                <Picker.Item label="manubrio" value="manubrio" color={Platform.OS === "ios" ? "white" : "black"} />
-                <Picker.Item label="pedal" value="pedal" color={Platform.OS === "ios" ? "white" : "black"} />
-                <Picker.Item label="piñon" value="piñon" color={Platform.OS === "ios" ? "white" : "black"} />
-                <Picker.Item label="cadena" value="cadena" color={Platform.OS === "ios" ? "white" : "black"} />
-                <Picker.Item label="plato" value="plato" color={Platform.OS === "ios" ? "white" : "black"} />
-              </Picker>
-            </View>
-
+              <Picker
+                selectedValue={tipoComponente}
+                onValueChange={(val) => setTipoComponente(val)}
+                style={styles.picker}
+              >
+              {opcionesComponentes.map((opcion) => (
+                <Picker.Item
+                  key={opcion.value}
+                  label={opcion.label}
+                  value={opcion.value}
+                  color={Platform.OS === "ios" ? "white" : "black"}
+                />
+              ))}
+          </Picker>
+        </View>
             {/* Carrusel horizontal de fotos seleccionadas */}
             {fotos.length > 0 && (
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginVertical: 15 }}>

@@ -29,6 +29,7 @@ import EditarPerfil from './components/perfil/EditarPerfil';
 import CambiarContrasena from './components/perfil/CambiarContraseña';
 import PublicacionesUsuarioLogueado from './components/perfil/PublicacionesUsuarioLogueadoPantalla';
 import DetallePublicacionLogueado from './components/perfil/DetallePublicacionLogueado';
+import Contactenos from './components/perfil/contactenos';
 
 import ChatGPT from './components/detalle y publicaciones/ChatgptPantalla';
 import DetallePublicacion from './components/detalle y publicaciones/DetallePublicacion';
@@ -78,6 +79,7 @@ const MainNavigator = () => {
       <Stack.Screen name="CambiarContrasena" component={CambiarContrasena} />
       <Stack.Screen name="PublicacionesUsuarioLogueado" component={PublicacionesUsuarioLogueado} />
       <Stack.Screen name="DetallePublicacionLogueado" component={DetallePublicacionLogueado} />
+      <Stack.Screen name="Contactenos" component={Contactenos} />
     </Stack.Navigator>
   );
 };
