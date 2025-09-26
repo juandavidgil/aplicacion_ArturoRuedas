@@ -106,7 +106,7 @@ const DetallePublicacion: React.FC<Props> = ({ route }) => {
 
           {/* Botón WhatsApp */}
           <TouchableOpacity 
-            onPress={() => enviarWhatsApp(publicacion.telefono, `Hola ${publicacion.nombre_vendedor}, estoy interesado en tu artículo: ${publicacion.nombre_articulo}`)}
+            onPress={() => enviarWhatsApp(publicacion.telefono, `Hola ${publicacion.nombre_vendedor}, estoy interesado en tu artículo: ${publicacion.foto} ${publicacion.nombre_articulo}, ¿aun sigue disponible?`)}
             style={styles.botonMensajeAlVendedor}
           >
             <View style={styles.contenidoBoton}>

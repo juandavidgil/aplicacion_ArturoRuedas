@@ -35,7 +35,7 @@ interface Articulo {
   nombre_vendedor: string;
   telefono: string;
   foto: string;
-    id_vendedor: number;
+  id_vendedor: number;
 }
 
 type RouteParams = {
@@ -43,7 +43,6 @@ type RouteParams = {
 };
 
 const { width, height } = Dimensions.get('window');
-
 const FijaPantalla: React.FC = () => {
   const [busqueda, setBusqueda] = useState('');
   const [articulos, setArticulos] = useState<Articulo[]>([]);
@@ -52,7 +51,7 @@ const FijaPantalla: React.FC = () => {
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
   const route = useRoute();
   const { tipoBicicleta } = route.params as RouteParams;
-
+  
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (busqueda.trim() !== '') {
@@ -63,7 +62,7 @@ const FijaPantalla: React.FC = () => {
     }, 500);
     return () => clearTimeout(delayDebounce);
   }, [busqueda]);
-
+  
   const buscarArticulos = async (texto: string) => {
     setCargando(true);
     try {
@@ -73,14 +72,14 @@ const FijaPantalla: React.FC = () => {
       if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
       const data = await response.json();
       const resultados: Articulo[] = Array.isArray(data)
-        ? data
-        : Array.isArray(data.articulos)
-        ? data.articulos
-        : [];
+      ? data
+      : Array.isArray(data.articulos)
+      ? data.articulos
+      : [];
       const articulosValidos = resultados.filter(
         (articulo) =>
           articulo.id &&
-          articulo.tipo_bicicleta?.toLowerCase() === tipoBicicleta.toLowerCase()
+        articulo.tipo_bicicleta?.toLowerCase() === tipoBicicleta.toLowerCase()
       );
       setArticulos(articulosValidos);
     } catch (error) {
@@ -90,7 +89,7 @@ const FijaPantalla: React.FC = () => {
       setCargando(false);
     }
   };
-
+  
   const AgregarCarrito = async (articulo: Articulo) => {
     try {
       const usuarioStr = await AsyncStorage.getItem('usuario');
@@ -116,6 +115,7 @@ const FijaPantalla: React.FC = () => {
       Alert.alert('Error al agregar al carrito');
     }
   };
+
 
   return (
     <LinearGradient
@@ -153,8 +153,8 @@ const FijaPantalla: React.FC = () => {
                     contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }}
                     renderItem={({ item }) => (
                       <TouchableOpacity
-                        onPress={() =>
-                          navigation.navigate('DetallePublicacion', { publicacion: item, id_vendedor: item.id_vendedor })
+                        onPress={(hola) =>
+                          navigation.navigate('DetallePublicacion', { publicacion: item, id_vendedor: item.id_vendedor})
                           
                         }
                       >
@@ -252,7 +252,7 @@ const FijaPantalla: React.FC = () => {
   >
     <TouchableOpacity
       onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'ruedasFixie', tipoBicicleta })
+        navigation.navigate('ComponenteDetalle', { componenteId: 'ruedas', tipoBicicleta })
       }
     >
       <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_rueda.jpeg')} />

@@ -388,6 +388,20 @@ export const componentesData = {
       mantenimiento: "Revisar tensión de radios y presión.",
     },
   },
+   ruedas: {
+    nombre: "Ruedas Fixie",
+    imagen: require("../../iconos/fixie_rueda.jpeg"),
+    comoColocar: [
+      "Paso 1: Afloja tuercas del eje.",
+      "Paso 2: Retira la rueda vieja y coloca la nueva.",
+      "Paso 3: Ajusta alineación y tensión de la cadena.",
+    ],
+    herramientas: ["Llave inglesa", "Bomba de aire"],
+    informacion: {
+      utilidad: "Diseñadas para uso urbano y resistencia.",
+      mantenimiento: "Revisar tensión de radios y presión.",
+    },
+  },
   manubrioFixie: {
     nombre: "Manubrio Fixie",
     imagen: require("../../iconos/fixie_manubrio.png"),

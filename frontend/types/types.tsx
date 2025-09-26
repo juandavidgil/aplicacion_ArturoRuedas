@@ -37,7 +37,10 @@ export type ComponenteId =
   | 'cadenaFixie'
   | 'platoFixie'
   | 'sillinFixie'
-  | 'frenosFixie';
+  | 'frenosFixie'
+  | 'ruedas'
+  ;
+  
 export type ComponenteData = {nombre: string; imagen: any; comoColocar: string[]; informacion: { utilidad: string; mantenimiento: string; }; herramientas: string[]; };
 export type StackParamList = {
   
@@ -62,10 +65,10 @@ export type StackParamList = {
   PublicacionesAdmin: {ID_usuario : number};
   DetallePublicacionAdmin: { publicacion: Publicacion; id: number; }
   
-  DetallePublicacion: { publicacion: Publicacion, id_vendedor: number };
+  DetallePublicacion: { publicacion: Publicacion, id_vendedor: number};
   ComponenteDetalle: { componenteId: ComponenteId, tipoBicicleta: string };
   ChatGPT: undefined;
-  PublicacionesRelacionadasVendedor: { id_vendedor: number };
+  PublicacionesRelacionadasVendedor: {id_vendedor: number};
   
   
   Perfil: undefined;
@@ -89,7 +92,6 @@ export interface Usuario {
   nombre: string;
   correo: string;
   telefono: string;
- 
   foto: string;
 }
 

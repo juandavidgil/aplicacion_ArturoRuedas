@@ -92,7 +92,7 @@ const InformacionUsuarioAdmin: React.FC<Props> = ({ route }) => {
             onPress={() =>
               enviarWhatsApp(
                 usuario.telefono,
-                `Hola ${usuario.nombre}, esperamos te encuentres muy bien, somos los administradores de Arturo Ruedas y queremos comunicarnos contigo por la siguiente razón`
+                `Hola ${usuario.nombre}, esperamos te encuentres muy bien, soy  administrador de Arturo Ruedas y queremos comunicarnos contigo por la siguiente razón`
               )
             }
             style={styles.botonMensaje}

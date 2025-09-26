@@ -269,8 +269,8 @@ app.get('/buscar', async (req: Request, res: Response) => {
         cv.precio, 
         cv.tipo_bicicleta, 
         cv.tipo_componente,
-        cv.ID_usuario as id_vendedor,
-        u.nombre as nombre_vendedor,
+        cv.ID_usuario AS id_vendedor,
+        u.nombre AS nombre_vendedor,
         u.telefono,
         u.foto,
         COALESCE(
@@ -383,7 +383,7 @@ app.post("/guardar-token", async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Faltan ID_usuario o token" });
     }
 
-    if (!expo.isExpoPushToken(token)) {
+    if (!Expo.isExpoPushToken(token)) {
       return res.status(400).json({ error: "Token inválido" });
     }
 
@@ -878,7 +878,7 @@ app.get("/publicaciones", async (req: Request, res: Response) => {
         cv.precio,
         cv.tipo_bicicleta,
         cv.tipo_componente,
-        cv.ID_vendedor as id_vendedor,
+        cv.ID_usuario AS id_vendedor,
         u.nombre AS nombre_vendedor,
         u.telefono,
         u.foto,
@@ -960,6 +960,49 @@ app.put("/CambiarContrasena/:id", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error al cambiar la contraseña" });
+  }
+});
+
+
+
+
+app.get('/PublicacionesRelacionadasVendedor/:ID_usuario', async (req, res) => {
+  try {
+    const { ID_usuario } = req.params;
+
+    const result = await pool.query(
+      `
+      SELECT 
+        cv.ID_publicacion AS id,
+        cv.nombre_Articulo AS nombre_articulo,
+        cv.descripcion,
+        cv.precio,
+        cv.tipo_bicicleta,
+        u.nombre AS nombre_vendedor,
+        u.telefono,
+        u.foto,
+        cv.ID_usuario AS id_vendedor,
+        COALESCE(
+          json_agg(cvf.url_foto) FILTER (WHERE cvf.url_foto IS NOT NULL),
+          '[]'
+        ) AS fotos
+      FROM com_ventas cv
+      JOIN usuario u ON cv.ID_usuario = u.ID_usuario
+      LEFT JOIN com_ventas_fotos cvf ON cv.ID_publicacion = cvf.ID_publicacion
+      WHERE cv.ID_usuario = $1
+      GROUP BY cv.ID_publicacion, cv.nombre_Articulo, cv.descripcion, cv.precio, cv.tipo_bicicleta,
+               u.nombre, u.telefono, u.foto, cv.ID_usuario
+      ORDER BY cv.ID_publicacion DESC;
+      `,
+      [ID_usuario]
+    );
+
+    console.log('📦 Publicaciones obtenidas:', result.rows.length);
+    res.status(200).json(result.rows);
+
+  } catch (error) {
+    console.error('❌ Error al obtener publicaciones del vendedorrrr:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
   }
 });
 
