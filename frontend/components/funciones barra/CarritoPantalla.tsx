@@ -48,14 +48,10 @@ const CarritoPantalla: React.FC = () => {
       const ID_usuario = usuario.ID_usuario;
       if (!ID_usuario) throw new Error('No se pudo obtener el ID de usuario');
 
-    
-      
       const response = await fetch(`${URL}/carrito/${ID_usuario}`);
       if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
 
       const data = await response.json();
-     
-
       setArticulos(data);
 
       const suma = data.reduce((acc: number, item: any) => {
@@ -101,43 +97,41 @@ const CarritoPantalla: React.FC = () => {
       Alert.alert('No se pudo eliminar el artículo');
     }
   };
-const enviarWhatsApp = (numero: string, mensaje: string) => {
-  // Limpiamos el número: solo dígitos
-  const numeroFormateado = numero.replace(/\D/g, ''); 
-  const url = `whatsapp://send?phone=57${numeroFormateado}&text=${encodeURIComponent(mensaje)}`;
 
-  // Intentamos abrir WhatsApp directamente
-  Linking.openURL(url).catch(() => {
-    // Si falla, usamos WhatsApp Web como fallback
-    const urlWeb = `https://wa.me/57${numeroFormateado}?text=${encodeURIComponent(mensaje)}`;
-    Linking.openURL(urlWeb).catch(() => {
-      Alert.alert('Error', 'No se pudo abrir WhatsApp ni WhatsApp Web');
+  const enviarWhatsApp = (numero: string, mensaje: string) => {
+    const numeroFormateado = numero.replace(/\D/g, ''); 
+    const url = `whatsapp://send?phone=57${numeroFormateado}&text=${encodeURIComponent(mensaje)}`;
+
+    Linking.openURL(url).catch(() => {
+      const urlWeb = `https://wa.me/57${numeroFormateado}?text=${encodeURIComponent(mensaje)}`;
+      Linking.openURL(urlWeb).catch(() => {
+        Alert.alert('Error', 'No se pudo abrir WhatsApp ni WhatsApp Web');
+      });
     });
-  });
-};
+  };
 
- 
   useEffect(() => {
     obtenerCarrito();
   }, []);
 
   const renderItem = ({ item }: { item: Articulo }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('DetallePublicacion', { publicacion: item, id_vendedor : item.id_vendedor })}>
+    <TouchableOpacity 
+      onPress={() => navigation.navigate('DetallePublicacion', { publicacion: item, id_vendedor : item.id_vendedor })}
+    >
       <View style={styles.card}>
         {/* ✅ Mostrar solo la primera foto */}
         <Image 
-  source={{ uri: item.fotos && item.fotos.length > 0 ? item.fotos[0] : 'https://via.placeholder.com/120' }} 
-  style={styles.imagen} 
-  resizeMode="cover" 
-/>
-
+          source={{ uri: item.fotos && item.fotos.length > 0 ? item.fotos[0] : 'https://via.placeholder.com/120' }} 
+          style={styles.imagen} 
+          resizeMode="cover" 
+        />
 
         <View style={styles.info}>
           <Text style={styles.nombre}>{item.nombre_articulo}</Text>
-          <Text style={styles.descripcion}>Descripcion: {item.descripcion}</Text>
+          <Text style={styles.descripcion}>Descripción: {item.descripcion}</Text>
           <Text style={styles.precio}>Precio: ${item.precio}</Text>
           <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
-          <Text style={styles.descripcion}>Vendedor: {item.nombre_vendedor}</Text>
+          <Text style={styles.vendedor}>Vendedor: {item.nombre_vendedor}</Text>
 
           <TouchableOpacity onPress={() => eliminarArticulo(item.id)} style={styles.botonEliminar}>
             <Ionicons name="trash-outline" size={20} color="#e63946" />
@@ -148,7 +142,7 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
             onPress={() => enviarWhatsApp(item.telefono, `Hola ${item.nombre_vendedor}, estoy interesado en tu artículo: ${item.nombre_articulo}, ¿aun sigue disponible?`)}
             style={styles.botonMensajeAlVendedor}
           >
-            <Ionicons name="logo-whatsapp" size={20} color="#25D366" />
+            <Ionicons name="logo-whatsapp" size={20} color="#fff" />
             <Text style={styles.textoMensajeAlVendedor}>Chatear por WhatsApp</Text>
           </TouchableOpacity>
         </View>
@@ -220,9 +214,7 @@ const enviarWhatsApp = (numero: string, mensaje: string) => {
 };
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1 
-  },
+  container: { flex: 1 },
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -265,14 +257,23 @@ const styles = StyleSheet.create({
   },
   imagen: { width: 110, height: 110, borderRadius: 10, backgroundColor: '#e0e0e0' },
   info: { flex: 1, marginLeft: 15, justifyContent: 'space-around' },
-  nombre: { fontSize: 18, fontWeight: 'bold', color: '#333' },
-  descripcion: { fontSize: 14, color: '#666' },
-  precio: { fontSize: 16, fontWeight: '600', color: '#2c7a7b' },
-  tipo: { fontSize: 14, color: '#666' },
+  nombre: { fontSize: 18, fontWeight: 'bold', color: '#1a1a1a' },
+  descripcion: { fontSize: 14, color: '#444', marginTop: 2 },
+  precio: { fontSize: 16, fontWeight: '700', color: '#e63946', marginTop: 4 },
+  tipo: { fontSize: 14, fontWeight: '600', color: '#006d77', marginTop: 2 },
+  vendedor: { fontSize: 14, fontWeight: '500', color: '#0e0e0eff', marginTop: 2 },
   botonEliminar: { flexDirection: 'row', alignItems: 'center', marginTop: 8 },
   textoEliminar: { color: '#e63946', marginLeft: 5, fontWeight: 'bold' },
-  botonMensajeAlVendedor: { flexDirection: 'row', alignItems: 'center', marginTop: 8 },
-  textoMensajeAlVendedor: { color:"#51AFF7" },
+  botonMensajeAlVendedor: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+    backgroundColor: '#25D366',
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+  },
+  textoMensajeAlVendedor: { color:"#fff", marginLeft: 6, fontWeight: '600' },
   lista: { paddingBottom: 20 },
   totalContainer: {
     flexDirection: 'row',

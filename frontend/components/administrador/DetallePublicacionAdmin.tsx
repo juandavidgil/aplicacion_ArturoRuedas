@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, FlatList, Image, Alert, TouchableOpacity, Dimensions } from 'react-native';
 import { StackParamList } from '../../types/types';
 import { RouteProp, useNavigation } from '@react-navigation/native';
@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { URL } from '../../config/UrlApi';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 type DetallePublicacionAdminRouteProp = RouteProp<StackParamList, 'DetallePublicacionAdmin'>;
 
@@ -17,6 +17,8 @@ interface Props {
 const DetallePublicacionAdmin: React.FC<Props> = ({ route }) => {
   const { publicacion, id } = route.params;
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
+
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const EliminarPublicacion = () => {
     Alert.alert(
@@ -35,7 +37,7 @@ const DetallePublicacionAdmin: React.FC<Props> = ({ route }) => {
                 const errorText = await response.text();
                 throw new Error(`Error ${response.status}: ${errorText}`);
               }
-              const data = await response.json();
+              await response.json();
               Alert.alert('Éxito', 'La publicación fue eliminada ✅');
               navigation.goBack();
             } catch (error) {
@@ -69,7 +71,25 @@ const DetallePublicacionAdmin: React.FC<Props> = ({ route }) => {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           renderItem={renderFotos}
+          onScroll={(event) => {
+            const index = Math.round(event.nativeEvent.contentOffset.x / width);
+            setActiveIndex(index);
+          }}
+          scrollEventThrottle={16}
         />
+
+        {/* Indicador de puntos */}
+        <View style={styles.dotsContainer}>
+          {publicacion.fotos.map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.dot,
+                { opacity: index === activeIndex ? 1 : 0.3 }
+              ]}
+            />
+          ))}
+        </View>
 
         <View style={styles.detalleContainer}>
           <Text style={styles.tituloDetalle}>{publicacion.nombre_articulo}</Text>
@@ -136,6 +156,20 @@ const styles = StyleSheet.create({
   avatar: { width: 50, height: 50, borderRadius: 25, borderWidth: 2, borderColor: "#007bff" },
   vendedorContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
   vendedorInfo: { marginLeft: 15 },
+
+  /* Estilos dots carrusel */
+  dotsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: 8,
+  },
+  dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 5,
+    backgroundColor: '#00ffb3',
+  },
 });
 
 export default DetallePublicacionAdmin;

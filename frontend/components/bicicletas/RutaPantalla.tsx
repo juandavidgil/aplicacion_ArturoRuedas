@@ -1,8 +1,18 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import {
-  View, Text, TextInput, FlatList, Image,
-  TouchableOpacity, StyleSheet, ActivityIndicator,
-  SafeAreaView, Alert, Dimensions, ScrollView
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+  SafeAreaView,
+  Alert,
+  Dimensions,
+  ScrollView,
+  Linking,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -96,6 +106,17 @@ const RutaPantalla: React.FC = () => {
     }
   };
 
+  const enviarWhatsApp = (numero: string, mensaje: string) => {
+    const numeroFormateado = numero.replace(/\D/g, '');
+    const url = `whatsapp://send?phone=57${numeroFormateado}&text=${encodeURIComponent(mensaje)}`;
+    Linking.openURL(url).catch(() => {
+      const urlWeb = `https://wa.me/57${numeroFormateado}?text=${encodeURIComponent(mensaje)}`;
+      Linking.openURL(urlWeb).catch(() => {
+        Alert.alert('Error', 'No se pudo abrir WhatsApp ni WhatsApp Web');
+      });
+    });
+  };
+
   return (
     <LinearGradient colors={['#0c2b2aff', '#000000']} start={{x:0,y:0}} end={{x:0,y:1}} style={{ flex: 1 }}>
       <SafeAreaProvider>
@@ -129,12 +150,29 @@ const RutaPantalla: React.FC = () => {
                       <Image source={{ uri: item.fotos?.[0] || '' }} style={styles.imagenMTB} resizeMode="cover" />
                       <View style={styles.infoMTB}>
                         <Text style={styles.nombreMTB}>{item.nombre_articulo}</Text>
-                        <Text style={styles.descripcionMTB} numberOfLines={2}>Descripcion:{item.descripcion}</Text>
+                        <Text style={styles.descripcionMTB} numberOfLines={2}>Descripción: {item.descripcion}</Text>
                         <Text style={styles.precioMTB}>Precio: ${item.precio}</Text>
-                        <Text style={styles.precioMTB}>Tipo: {item.tipo_bicicleta}</Text>
-                        <Text style={styles.descripcionMTB}>Vendedor: {item.nombre_vendedor}</Text>
-                        <TouchableOpacity onPress={() => AgregarCarrito(item)} style={{ marginTop: 8 }}>
-                          <Ionicons name='cart-outline' size={25} color="#004f4d" />
+                        <Text style={styles.tipoMTB}>Tipo: {item.tipo_bicicleta}</Text>
+                        <Text style={styles.vendedorMTB}>Vendedor: {item.nombre_vendedor}</Text>
+
+                        {/* Botón Carrito */}
+                        <TouchableOpacity onPress={() => AgregarCarrito(item)} style={styles.botonCarrito}>
+                          <Ionicons name='cart-outline' size={20} color="#fff" />
+                          <Text style={styles.textoCarrito}>Agregar al carrito</Text>
+                        </TouchableOpacity>
+
+                        {/* Botón WhatsApp */}
+                        <TouchableOpacity
+                          onPress={() =>
+                            enviarWhatsApp(
+                              item.telefono,
+                              `Hola ${item.nombre_vendedor}, estoy interesado en tu artículo: ${item.nombre_articulo}, ¿aún sigue disponible?`
+                            )
+                          }
+                          style={styles.botonWhatsapp}
+                        >
+                          <Ionicons name="logo-whatsapp" size={20} color="#fff" />
+                          <Text style={styles.textoWhatsapp}>Chatear por WhatsApp</Text>
                         </TouchableOpacity>
                       </View>
                     </View>
@@ -160,6 +198,7 @@ const RutaPantalla: React.FC = () => {
           </View>
         </SafeAreaView>
 
+        {/* Barra inferior */}
         <View style={styles.iconBar}>
           <TouchableOpacity onPress={() => navigation.navigate('Publicar')}><Ionicons name='storefront-outline' size={28} color="#fff" /></TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Carrito')}><Ionicons name='cart-outline' size={28} color="#fff" /></TouchableOpacity>
@@ -171,88 +210,39 @@ const RutaPantalla: React.FC = () => {
         </View>
 
         {/* Barra de componentes deslizable  */}
-{mostrarBarraComponentes && (
-  <ScrollView
-    horizontal
-    showsHorizontalScrollIndicator={false}
-    style={styles.barraComponentes}
-    contentContainerStyle={{ paddingHorizontal: 10 }}
-  >
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'ruedasRuta', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_ruedas.jpeg')} />
-    </TouchableOpacity>
-
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'manubrioRuta', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_manubrio.jpeg')} />
-    </TouchableOpacity>
-
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'marcoRuta', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_marco.png')} />
-    </TouchableOpacity>
-
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'piñonRuta', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_piñon.png')} />
-    </TouchableOpacity>
-
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'cadenaRuta', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_cadena.png')} />
-    </TouchableOpacity>
-
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'platoRuta', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_plato.jpeg')} />
-    </TouchableOpacity>
-
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'pedalesRuta', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_pedal.jpeg')} />
-    </TouchableOpacity>
-
-    {/* No tienes sillin.png */}
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'sillinRuta', tipoBicicleta })
-      }
-    >
-      { <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_sillin.png')} /> }
-    </TouchableOpacity>
-
-    {/* No tienes frenos.png */}
-    {/* <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'frenosRuta', tipoBicicleta })
-      }
-    >
-      {<Image style={styles.iconoComponentes} source={require('../../iconos/ruta_frenos.png')} /> }
-    </TouchableOpacity> */}
-  </ScrollView>
-)}
+        {mostrarBarraComponentes && (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.barraComponentes}
+            contentContainerStyle={{ paddingHorizontal: 10 }}
+          >
+            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedasRuta', tipoBicicleta })}>
+              <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_ruedas.jpeg')} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrioRuta', tipoBicicleta })}>
+              <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_manubrio.jpeg')} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'marcoRuta', tipoBicicleta })}>
+              <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_marco.png')} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'piñonRuta', tipoBicicleta })}>
+              <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_piñon.png')} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'cadenaRuta', tipoBicicleta })}>
+              <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_cadena.png')} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'platoRuta', tipoBicicleta })}>
+              <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_plato.jpeg')} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedalesRuta', tipoBicicleta })}>
+              <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_pedal.jpeg')} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'sillinRuta', tipoBicicleta })}>
+              <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_sillin.png')} />
+            </TouchableOpacity>
+          </ScrollView>
+        )}
       </SafeAreaProvider>
     </LinearGradient>
   );
@@ -268,9 +258,37 @@ const styles = StyleSheet.create({
   cardMTB: { flexDirection:'row', marginBottom:20, backgroundColor:'#fff', padding:12, borderRadius:12, shadowColor:'#000', shadowOffset:{width:0,height:4}, shadowOpacity:0.1, shadowRadius:6, elevation:4 },
   imagenMTB: { width:110, height:110, borderRadius:10, backgroundColor:'#e0e0e0' },
   infoMTB: { flex:1, marginLeft:15, justifyContent:'space-around' },
-  nombreMTB: { fontSize:18, fontWeight:'bold', color:'#333' },
-  descripcionMTB: { fontSize:14, color:'#666' },
-  precioMTB: { fontSize:16, fontWeight:'600', color:'#2c7a7b' },
+
+  // 🎨 Textos con contraste
+  nombreMTB: { fontSize:18, fontWeight:'bold', color:'#004f4d' },
+  descripcionMTB: { fontSize:14, color:'#444' },
+  precioMTB: { fontSize:16, fontWeight:'700', color:'#e63946' },
+  tipoMTB: { fontSize:14, color:'#006d77' },
+  vendedorMTB: { fontSize:13, fontWeight:'600', color:'#1d3557' },
+
+  // Botones
+  botonCarrito: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#5bdaedff',
+    paddingVertical: 8,
+    borderRadius: 10,
+    marginTop: 8,
+  },
+  textoCarrito: { color: '#fff', fontSize: 14, fontWeight: '600', marginLeft: 6 },
+
+  botonWhatsapp: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#25D366',
+    paddingVertical: 8,
+    borderRadius: 10,
+    marginTop: 8,
+  },
+  textoWhatsapp: { color: '#fff', fontSize: 14, fontWeight: '600', marginLeft: 6 },
+
   screen: { justifyContent:'center', alignItems:'center', padding:16 },
   card: { backgroundColor:'#fff', borderRadius:16, shadowColor:'#000', shadowOffset:{width:0,height:3}, shadowOpacity:0.1, shadowRadius:6, elevation:4, width:'100%', maxWidth:350, aspectRatio:10/12, overflow:'hidden', marginTop:15 },
   iconBar: { flexDirection:'row', justifyContent:'space-around', paddingVertical:height*0.015, backgroundColor:'#004f4d', borderTopLeftRadius:10, borderTopRightRadius:10, position:'absolute', bottom:0, left:0, right:0, shadowOpacity:0.1, shadowOffset:{width:0,height:-2}, shadowRadius:6, paddingBottom:'7%' },

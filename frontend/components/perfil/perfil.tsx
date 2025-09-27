@@ -144,16 +144,21 @@ const PerfilPantalla: React.FC = () => {
         </View>
 
         {/* Botón cerrar sesión */}
+         {/* Botón cerrar sesión */}
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <LinearGradient colors={['#ff416c', '#ff4b2b']} style={styles.buttonBg}>
             <Text style={styles.buttonText}>Cerrar Sesión</Text>
           </LinearGradient>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={()=> navigation.navigate('Contactenos')}>
-          <Text>
-            contactanos
-          </Text>
+        {/* Botón Contáctanos */}
+        <TouchableOpacity
+          style={styles.contactButton}
+          onPress={() => navigation.navigate('Contactenos')}
+        >
+          <LinearGradient colors={['#0072ff', '#00c6ff']} style={styles.buttonBg}>
+            <Text style={styles.buttonText}>📞 Contáctanos</Text>
+          </LinearGradient>
         </TouchableOpacity>
       </View>
   {/* foother */}
@@ -284,6 +289,10 @@ headerTitle: {
     shadowOffset: { width: 0, height: -2 },
     shadowRadius: 6, 
     paddingBottom:"7%",
+  },
+    contactButton: {
+    marginTop: 15,
+    width: "90%",
   },
 });
 

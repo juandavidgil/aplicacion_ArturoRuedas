@@ -12,6 +12,7 @@ import {
   Alert,
   Dimensions,
   ScrollView,
+  Linking,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -116,6 +117,16 @@ const FijaPantalla: React.FC = () => {
     }
   };
 
+  const enviarWhatsApp = (numero: string, mensaje: string) => {
+    const numeroFormateado = numero.replace(/\D/g, '');
+    const url = `whatsapp://send?phone=57${numeroFormateado}&text=${encodeURIComponent(mensaje)}`;
+    Linking.openURL(url).catch(() => {
+      const urlWeb = `https://wa.me/57${numeroFormateado}?text=${encodeURIComponent(mensaje)}`;
+      Linking.openURL(urlWeb).catch(() => {
+        Alert.alert('Error', 'No se pudo abrir WhatsApp ni WhatsApp Web');
+      });
+    });
+  };
 
   return (
     <LinearGradient
@@ -153,9 +164,8 @@ const FijaPantalla: React.FC = () => {
                     contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }}
                     renderItem={({ item }) => (
                       <TouchableOpacity
-                        onPress={(hola) =>
+                        onPress={() =>
                           navigation.navigate('DetallePublicacion', { publicacion: item, id_vendedor: item.id_vendedor})
-                          
                         }
                       >
                         <View style={styles.cardMTB}>
@@ -167,16 +177,33 @@ const FijaPantalla: React.FC = () => {
                           <View style={styles.infoMTB}>
                             <Text style={styles.nombreMTB}>{item.nombre_articulo}</Text>
                             <Text style={styles.descripcionMTB} numberOfLines={2}>
-                              Descripcion:{item.descripcion}
+                              Descripción: {item.descripcion}
                             </Text>
                             <Text style={styles.precioMTB}>Precio: ${item.precio}</Text>
-                            <Text style={styles.precioMTB}>Tipo: {item.tipo_bicicleta}</Text>
-                            <Text style={styles.descripcionMTB}>Vendedor: {item.nombre_vendedor}</Text>
+                            <Text style={styles.tipoMTB}>Tipo: {item.tipo_bicicleta}</Text>
+                            <Text style={styles.vendedorMTB}>Vendedor: {item.nombre_vendedor}</Text>
+
+                            {/* Botón Carrito */}
                             <TouchableOpacity
                               onPress={() => AgregarCarrito(item)}
-                              style={{ marginTop: 8 }}
+                              style={styles.botonCarrito}
                             >
-                              <Ionicons name="cart-outline" size={25} color="#004f4d" />
+                              <Ionicons name="cart-outline" size={20} color="#fff" />
+                              <Text style={styles.textoCarrito}>Agregar al carrito</Text>
+                            </TouchableOpacity>
+
+                            {/* Botón WhatsApp */}
+                            <TouchableOpacity
+                              onPress={() =>
+                                enviarWhatsApp(
+                                  item.telefono,
+                                  `Hola ${item.nombre_vendedor}, estoy interesado en tu artículo: ${item.nombre_articulo}, ¿aún sigue disponible?`
+                                )
+                              }
+                              style={styles.botonWhatsapp}
+                            >
+                              <Ionicons name="logo-whatsapp" size={20} color="#fff" />
+                              <Text style={styles.textoWhatsapp}>Chatear por WhatsApp</Text>
                             </TouchableOpacity>
                           </View>
                         </View>
@@ -298,15 +325,6 @@ const FijaPantalla: React.FC = () => {
       <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_plato.jpeg')} />
     </TouchableOpacity>
 
-    {/* <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'pedalesFixie', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_pedal.png')} />
-    </TouchableOpacity> */}
-
-    
     <TouchableOpacity
       onPress={() =>
         navigation.navigate('ComponenteDetalle', { componenteId: 'sillinFixie', tipoBicicleta })
@@ -365,9 +383,37 @@ const styles = StyleSheet.create({
   },
   imagenMTB: { width: 110, height: 110, borderRadius: 10, backgroundColor: '#e0e0e0' },
   infoMTB: { flex: 1, marginLeft: 15, justifyContent: 'space-around' },
-  nombreMTB: { fontSize: 18, fontWeight: 'bold', color: '#333' },
-  descripcionMTB: { fontSize: 14, color: '#666' },
-  precioMTB: { fontSize: 16, fontWeight: '600', color: '#2c7a7b' },
+
+  // 🎨 Textos con contraste
+  nombreMTB: { fontSize: 18, fontWeight: 'bold', color: '#004f4d' },
+  descripcionMTB: { fontSize: 14, color: '#444' },
+  precioMTB: { fontSize: 16, fontWeight: '700', color: '#e63946' },
+  tipoMTB: { fontSize: 14, color: '#006d77' },
+  vendedorMTB: { fontSize: 13, fontWeight: '600', color: '#1d3557' },
+
+  // Botones
+  botonCarrito: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#5bdaedff',
+    paddingVertical: 8,
+    borderRadius: 10,
+    marginTop: 8,
+  },
+  textoCarrito: { color: '#fff', fontSize: 14, fontWeight: '600', marginLeft: 6 },
+
+  botonWhatsapp: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#25D366',
+    paddingVertical: 8,
+    borderRadius: 10,
+    marginTop: 8,
+  },
+  textoWhatsapp: { color: '#fff', fontSize: 14, fontWeight: '600', marginLeft: 6 },
+
   screen: { justifyContent: 'center', alignItems: 'center', padding: 16 },
   card: {
     backgroundColor: '#fff',

@@ -166,58 +166,84 @@ useEffect(() => {
   };
   // ----------------- FIN FOTO -----------------
 
-  const PublicarBoton = async () => {
-    if (!ID_usuario) {
-      alert('Debes iniciar sesión para publicar artículos');
-      return;
-    }
-    if (!nombre_Articulo || !descripcion || !precio || fotos.length === 0) {
-      alert('Todos los campos y al menos una foto son obligatorios');
-      return;
-    }
+ const fetchWithTimeout = (url: string, options: any, timeout = 20000) => {
+  return Promise.race([
+    fetch(url, options),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Tiempo de espera excedido")), timeout)
+    ),
+  ]);
+};
 
-    try {
-      const fotosBase64: string[] = [];
-      for (const fotoUri of fotos) {
-        const manipResult = await ImageManipulator.manipulateAsync(
-          fotoUri,
-          [{ resize: { width: 800 } }],
-          { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG, base64: true }
-        );
-        if (!manipResult.base64) throw new Error('No se pudo generar Base64 de la imagen');
-        fotosBase64.push(`data:image/jpeg;base64,${manipResult.base64}`);
+const PublicarBoton = async () => {
+  if (!ID_usuario) {
+    alert("Debes iniciar sesión para publicar artículos");
+    return;
+  }
+  if (!nombre_Articulo.trim() || !descripcion.trim() || !precio.trim()) {
+    alert("Todos los campos son obligatorios");
+    return;
+  }
+  if (fotos.length === 0) {
+    alert("Debes agregar al menos una foto");
+    return;
+  }
+
+  try {
+    const fotosBase64: string[] = [];
+
+    for (const fotoUri of fotos) {
+      const manipResult = await ImageManipulator.manipulateAsync(
+        fotoUri,
+        [{ resize: { width: 600 } }], // ⬅️ más pequeño que antes
+        {
+          compress: 0.5, // ⬅️ más comprimido
+          format: ImageManipulator.SaveFormat.JPEG,
+          base64: true,
+        }
+      );
+
+      if (!manipResult.base64) {
+        throw new Error("No se pudo generar Base64 de la imagen");
       }
 
-      const formData = {
-        nombre_Articulo,
-        descripcion,
-        precio: parseFloat(precio.replace(/[^0-9]/g, "")),
-        tipo_bicicleta: tipoBicicleta,
-        tipo_componente: tipoComponente,
-        fotos: fotosBase64,
-        ID_usuario,
-      };
-
-      const response = await fetch(`${URL}/publicar_articulo`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setModalVisible(true);
-        resetFormulario();
-        setTimeout(() => setModalVisible(false), 2000);
-      } else {
-        alert(data.error || 'Error al publicar el artículo');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Error de conexión');
+      fotosBase64.push(`data:image/jpeg;base64,${manipResult.base64}`);
     }
-  };
+
+    const formData = {
+      nombre_Articulo: nombre_Articulo.trim(),
+      descripcion: descripcion.trim(),
+      precio: parseFloat(precio.replace(/[^0-9]/g, "")),
+      tipo_bicicleta: tipoBicicleta,
+      tipo_componente: tipoComponente,
+      fotos: fotosBase64,
+      ID_usuario,
+    };
+
+    const response: any = await fetchWithTimeout(
+      `${URL}/publicar_articulo`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      },
+      20000 // ⬅️ 20 segundos máximo
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      setModalVisible(true);
+      resetFormulario();
+      setTimeout(() => setModalVisible(false), 2000);
+    } else {
+      alert(data.error || "Error al publicar el artículo");
+    }
+  } catch (error: any) {
+    console.error("Error:", error);
+    alert(error.message || "Error de conexión");
+  }
+};
 
   return (
     <LinearGradient

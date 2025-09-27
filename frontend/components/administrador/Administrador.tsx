@@ -175,113 +175,118 @@ const Administrador: React.FC = () => {
   );
   
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
-    
-   
-  },
-  image: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
   },
   titulo: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     textAlign: 'center',
-     marginTop: 50,
-    marginBottom: 20,
-    color: '#ffffffff',
+    marginTop: 40,
+    marginBottom: 16,
+    color: '#fff',
+    letterSpacing: 1,
   },
   lista: {
     paddingBottom: 20,
   },
   card: {
-    backgroundColor: '#ffffff',
-    padding: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.07)',
     borderRadius: 12,
-    margin:12,
-    marginBottom: 12,
+    padding: 14,
+    marginHorizontal: 14,
+    marginBottom: 14,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
   },
   info: {
     flex: 1,
   },
   label: {
+    fontSize: 14,
     fontWeight: 'bold',
-    marginBottom: 4,
-    color: '#555',
+    color: '#00e6a8',
+    marginBottom: 2,
   },
   value: {
-    fontWeight: 'normal',
-    color: '#333',
+    fontSize: 14,
+    color: '#f5f5f5',
+    marginBottom: 6,
   },
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 10,
-    gap: 10,
+    gap: 8,
   },
   button: {
+    flex: 1,
     paddingVertical: 10,
-    paddingHorizontal: 6,
-    borderRadius: 6,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  blockButton: {
+    backgroundColor: '#5a67d8', // azul violeta
+  },
+  deleteButton: {
+    backgroundColor: '#e53e3e', // rojo sobrio
+  },
+  adminPublicaciones: {
+    backgroundColor: '#3182ce', // azul consistente
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-    marginHorizontal: 4,
+    marginHorizontal: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  blockButton: {
-    backgroundColor: '#ffc107',
-  },
-  deleteButton: {
-    backgroundColor: '#dc3545',
-  },
-  adminPublicaciones: {
-    backgroundColor: '#28a745',
-    borderRadius: 6,
-    padding: '1%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingRight: '5%',
-    paddingLeft: '5%',
-   
-
-   },
   buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-   
-
-
-
-  adminPublicacionesText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 14,
+    letterSpacing: 0.3,
   },
   refreshButton: {
     flexDirection: 'row',
     backgroundColor: '#007bff',
     padding: 12,
-    borderRadius: 6,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
+    marginHorizontal: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 5,
   },
   refreshButtonText: {
     color: 'white',
-    fontWeight: 'bold',
+    fontWeight: '600',
+    fontSize: 15,
     marginLeft: 8,
   },
- 
 });
+
 
 export default Administrador;

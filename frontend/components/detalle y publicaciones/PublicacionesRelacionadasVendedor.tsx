@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { URL } from '@frontend/config/UrlApi';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Publicacion {
   id: number;
@@ -42,6 +43,32 @@ const PublicacionesRelacionadasVendedor: React.FC<Props> = ({ route }) => {
 
   const ID_usuario = id_vendedor;
 
+  const AgregarCarrito = async (articulo: Publicacion) => {
+    try {
+      const usuarioStr = await AsyncStorage.getItem('usuario');
+      if (!usuarioStr) {
+        Alert.alert('Error', 'Debes iniciar sesión primero');
+        navigation.navigate('InicioSesion');
+        return;
+      }
+      const usuario = JSON.parse(usuarioStr);
+      const ID_usuario = usuario.ID_usuario;
+      if (!ID_usuario) throw new Error('No se pudo obtener el ID de usuario');
+      if (!articulo.id) throw new Error('El artículo no tiene ID definido');
+      const response = await fetch(`${URL}/agregar-carrito`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ID_usuario, ID_publicacion: articulo.id }),
+      });
+      const responseData = await response.json();
+      if (!response.ok) throw new Error(responseData.error || 'Error al agregar al carrito');
+      Alert.alert('Éxito', 'Artículo agregado al carrito');
+    } catch (error) {
+      console.error('Error completo en AgregarCarrito:', error);
+      Alert.alert('Error al agregar al carrito');
+    }
+  };
+
   const obtenerCarrito = async () => {
     try {
       setCargando(true);
@@ -50,7 +77,6 @@ const PublicacionesRelacionadasVendedor: React.FC<Props> = ({ route }) => {
       const data = await response.json();
       setArticulos(data);
 
-      // Cambiar título dinámicamente con el nombre del vendedor
       if (data.length > 0) {
         navigation.setOptions({
           title: `Publicaciones relacionadas al vendedor: ${data[0].nombre_vendedor}`,
@@ -91,19 +117,29 @@ const PublicacionesRelacionadasVendedor: React.FC<Props> = ({ route }) => {
         />
         <View style={styles.info}>
           <Text style={styles.nombre}>{item.nombre_articulo}</Text>
-          <Text style={styles.descripcion}>Descripcion: {item.descripcion}</Text>
+          <Text style={styles.descripcion}>Descripción: {item.descripcion}</Text>
           <Text style={styles.precio}>Precio: ${item.precio}</Text>
           <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
-          <Text style={styles.descripcion}>Vendedor: {item.nombre_vendedor}</Text>
+          <Text style={styles.vendedor}>Vendedor: {item.nombre_vendedor}</Text>
+          
+          {/* Botón Agregar al carrito */}
+          <TouchableOpacity
+            onPress={() => AgregarCarrito(item)}
+            style={styles.botonCarrito}
+          >
+            <Ionicons name="cart-outline" size={20} color="#fff" />
+            <Text style={styles.textoCarrito}>Agregar al carrito</Text>
+          </TouchableOpacity>
 
+          {/* Botón WhatsApp */}
           <TouchableOpacity
             onPress={() =>
-              enviarWhatsApp(item.telefono, `Hola ${item.nombre_vendedor}, estoy interesado en tu artículo: ${item.nombre_articulo}`)
+              enviarWhatsApp(item.telefono, `Hola ${item.nombre_vendedor}, estoy interesado en tu artículo: ${item.nombre_articulo}, ¿aun sigue disponible?`)
             }
-            style={styles.botonMensajeAlVendedor}
+            style={styles.botonWhatsapp}
           >
-            <Ionicons name="logo-whatsapp" size={20} color="#25D366" />
-            <Text style={styles.textoMensajeAlVendedor}>Chatear por WhatsApp</Text>
+            <Ionicons name="logo-whatsapp" size={20} color="#fff" />
+            <Text style={styles.textoWhatsapp}>Chatear por WhatsApp</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -138,8 +174,6 @@ const PublicacionesRelacionadasVendedor: React.FC<Props> = ({ route }) => {
               ListHeaderComponent={renderHeader}
             />
 
-           
-
             {/* Barra inferior */}
             <View style={styles.iconBar}>
               <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
@@ -173,7 +207,7 @@ const styles = StyleSheet.create({
   vendedorContainer: {
     alignItems: 'center',
     marginVertical: 20,
-    marginTop:80,
+    marginTop: 80,
   },
   vendedorFoto: {
     width: 100,
@@ -204,12 +238,50 @@ const styles = StyleSheet.create({
   },
   imagen: { width: 110, height: 110, borderRadius: 10, backgroundColor: '#e0e0e0' },
   info: { flex: 1, marginLeft: 15, justifyContent: 'space-around' },
-  nombre: { fontSize: 18, fontWeight: 'bold', color: '#333' },
-  descripcion: { fontSize: 14, color: '#666' },
-  precio: { fontSize: 16, fontWeight: '600', color: '#2c7a7b' },
-  tipo: { fontSize: 14, color: '#666' },
-  botonMensajeAlVendedor: { flexDirection: 'row', alignItems: 'center', marginTop: 8 },
-  textoMensajeAlVendedor: { color: '#51AFF7' },
+
+  // 🎨 Textos con mejor contraste
+  nombre: { fontSize: 18, fontWeight: 'bold', color: '#004f4d' }, // verde oscuro elegante
+  descripcion: { fontSize: 14, color: '#444' }, // gris legible
+  precio: { fontSize: 16, fontWeight: '700', color: '#e63946' }, // rojo fuerte
+  tipo: { fontSize: 14, color: '#006d77' }, // azul verdoso
+  vendedor: { fontSize: 13, fontWeight: '600', color: '#1d3557' }, // azul fuerte
+
+  // Botón carrito
+  botonCarrito: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#5bdaedff", // Lila
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    marginTop: 8,
+  },
+  textoCarrito: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "600",
+    marginLeft: 6,
+  },
+
+  // Botón WhatsApp
+  botonWhatsapp: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#25D366", // Verde oficial
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    marginTop: 8,
+  },
+  textoWhatsapp: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "600",
+    marginLeft: 6,
+  },
+
   lista: { paddingBottom: 20 },
 
   botonComprar: {

@@ -18,7 +18,7 @@ interface Publicacion {
   nombre_vendedor: string;
   telefono: string;
   foto:string;
-   id_vendedor: number;
+  id_vendedor: number;
 }
 
 const PublicacionesUsuarioLogueado: React.FC = () => {
@@ -153,20 +153,24 @@ const styles = StyleSheet.create({
   nombre: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#1a1a1a', // Negro fuerte para resaltar el título
   },
   descripcion: {
     fontSize: 14,
-    color: '#666',
+    color: '#444', // Gris oscuro legible
+    marginTop: 2,
   },
   precio: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#2c7a7b',
+    fontWeight: '700',
+    color: '#e63946', // Rojo fuerte para destacar el precio
+    marginTop: 4,
   },
   tipo: {
     fontSize: 14,
-    color: '#666',
+    fontWeight: '600',
+    color: '#006d77', // Azul verdoso para diferenciar tipo
+    marginTop: 2,
   },
   lista: {
     paddingBottom: 20,
