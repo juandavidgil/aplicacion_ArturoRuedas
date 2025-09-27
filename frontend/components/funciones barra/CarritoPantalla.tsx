@@ -33,6 +33,11 @@ const CarritoPantalla: React.FC = () => {
   const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false); 
   const [cargando, setCargando] = useState(true);
   const [total, setTotal] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
+const [modalMessage, setModalMessage] = useState("");
+const [modalSuccess, setModalSuccess] = useState(true); // true = éxito, false = error
+
+
   
   const obtenerCarrito = async () => {
     try {
@@ -91,10 +96,11 @@ const CarritoPantalla: React.FC = () => {
       }
 
       await obtenerCarrito();
-      Alert.alert('Éxito', 'Artículo eliminado del carrito');
+     mostrarModal("Artículo eliminado del carrito ✅", true);
     } catch (error) {
       console.error('🚨 Error en eliminarArticulo:', error);
-      Alert.alert('No se pudo eliminar el artículo');
+      mostrarModal("No se pudo eliminar el artículo ❌", false);
+
     }
   };
 
@@ -109,6 +115,16 @@ const CarritoPantalla: React.FC = () => {
       });
     });
   };
+  const mostrarModal = (mensaje: string, exito: boolean) => {
+  setModalMessage(mensaje);
+  setModalSuccess(exito);
+  setModalVisible(true);
+
+  setTimeout(() => {
+    setModalVisible(false);
+  }, 2000); // se oculta solo después de 2s
+};
+
 
   useEffect(() => {
     obtenerCarrito();
@@ -209,6 +225,19 @@ const CarritoPantalla: React.FC = () => {
           </>
         )}
       </SafeAreaView>
+      {modalVisible && (
+  <View style={styles.modalOverlay}>
+    <View style={[styles.modalBox, modalSuccess ? styles.modalSuccess : styles.modalError]}>
+      <Ionicons 
+        name={modalSuccess ? "checkmark-circle-outline" : "close-circle-outline"} 
+        size={50} 
+        color={modalSuccess ? "#22c55e" : "#ef4444"} 
+      />
+      <Text style={styles.modalText}>{modalMessage}</Text>
+    </View>
+  </View>
+)}
+
     </LinearGradient>
   );
 };
@@ -223,6 +252,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginTop: Platform.OS === "android" ? 10 : 0,
   },
+  // modales 
+  modalOverlay: {
+  position: "absolute",
+  top: 0, left: 0, right: 0, bottom: 0,
+  backgroundColor: "rgba(0,0,0,0.5)",
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 999,
+},
+modalBox: {
+  width: "75%",
+  padding: 20,
+  borderRadius: 15,
+  alignItems: "center",
+  justifyContent: "center",
+  shadowColor: "#000",
+  shadowOpacity: 0.25,
+  shadowRadius: 8,
+  elevation: 5,
+},
+modalSuccess: { backgroundColor: "#ecfdf5" },
+modalError: { backgroundColor: "#fef2f2" },
+modalText: { marginTop: 10, fontSize: 16, fontWeight: "600", textAlign: "center", color: "#111" },
+
+
   backButton: {
     marginTop: Platform.OS === "android" ? 40 : 0,
     marginLeft: Platform.OS === "android" ? 10 : 5,

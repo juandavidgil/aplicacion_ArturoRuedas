@@ -73,6 +73,18 @@ const PerfilPantalla: React.FC = () => {
     fetchUsuario();
   }, []);
 
+  const confirmarLogout = () => {
+  Alert.alert(
+    "Cerrar sesión",
+    "¿Seguro deseas cerrar sesión?",
+    [
+      { text: "Cancelar", style: "cancel" },
+      { text: "Sí, salir", style: "destructive", onPress: handleLogout }
+    ]
+  );
+};
+
+
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
@@ -145,7 +157,7 @@ const PerfilPantalla: React.FC = () => {
 
         {/* Botón cerrar sesión */}
          {/* Botón cerrar sesión */}
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <TouchableOpacity style={styles.logoutButton} onPress={confirmarLogout}>
           <LinearGradient colors={['#ff416c', '#ff4b2b']} style={styles.buttonBg}>
             <Text style={styles.buttonText}>Cerrar Sesión</Text>
           </LinearGradient>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   View, SafeAreaView, Text, Image, StyleSheet, Platform,
-  ActivityIndicator, Alert, TouchableOpacity, Dimensions, FlatList, Linking
+  ActivityIndicator, TouchableOpacity, Dimensions, FlatList, Linking, Alert
 } from 'react-native';
 import { StackParamList } from '../../types/types';
 import { RouteProp, useNavigation } from '@react-navigation/native';
@@ -10,6 +10,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { URL } from '@frontend/config/UrlApi';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import CustomModal from '../detalle y publicaciones/CustomModal';
+
 
 interface Publicacion {
   id: number;
@@ -41,31 +44,57 @@ const PublicacionesRelacionadasVendedor: React.FC<Props> = ({ route }) => {
   const [articulos, setArticulos] = useState<Publicacion[]>([]);
   const [cargando, setCargando] = useState(true);
 
+  // 🔹 Estados para el modal
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalSuccess, setModalSuccess] = useState(true);
+
   const ID_usuario = id_vendedor;
+
+  const mostrarModal = (mensaje: string, exito: boolean) => {
+    setModalMessage(mensaje);
+    setModalSuccess(exito);
+    setModalVisible(true);
+
+    setTimeout(() => {
+      setModalVisible(false);
+    }, 2000);
+  };
 
   const AgregarCarrito = async (articulo: Publicacion) => {
     try {
       const usuarioStr = await AsyncStorage.getItem('usuario');
       if (!usuarioStr) {
-        Alert.alert('Error', 'Debes iniciar sesión primero');
+        mostrarModal("Debes iniciar sesión primero", false);
         navigation.navigate('InicioSesion');
         return;
       }
+
       const usuario = JSON.parse(usuarioStr);
       const ID_usuario = usuario.ID_usuario;
       if (!ID_usuario) throw new Error('No se pudo obtener el ID de usuario');
       if (!articulo.id) throw new Error('El artículo no tiene ID definido');
+
       const response = await fetch(`${URL}/agregar-carrito`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ID_usuario, ID_publicacion: articulo.id }),
       });
+
       const responseData = await response.json();
       if (!response.ok) throw new Error(responseData.error || 'Error al agregar al carrito');
-      Alert.alert('Éxito', 'Artículo agregado al carrito');
-    } catch (error) {
-      console.error('Error completo en AgregarCarrito:', error);
-      Alert.alert('Error al agregar al carrito');
+
+      // ✅ Modal de éxito
+      mostrarModal("¡Artículo agregado al carrito!", true);
+
+    } catch (error: any) {
+      console.error("Error completo en AgregarCarrito:", error);
+
+      if (error.message?.includes("ya está en el carrito")) {
+        mostrarModal("El artículo ya está en el carrito ❌", false);
+      } else {
+        mostrarModal("Hubo un error al agregar el artículo ❌", false);
+      }
     }
   };
 
@@ -194,6 +223,13 @@ const PublicacionesRelacionadasVendedor: React.FC<Props> = ({ route }) => {
             </View>
           </>
         )}
+
+        {/* 🔹 Aquí mostramos el modal */}
+        <CustomModal 
+          visible={modalVisible} 
+          message={modalMessage} 
+          success={modalSuccess} 
+        />
       </SafeAreaView>
     </LinearGradient>
   );
@@ -239,19 +275,17 @@ const styles = StyleSheet.create({
   imagen: { width: 110, height: 110, borderRadius: 10, backgroundColor: '#e0e0e0' },
   info: { flex: 1, marginLeft: 15, justifyContent: 'space-around' },
 
-  // 🎨 Textos con mejor contraste
-  nombre: { fontSize: 18, fontWeight: 'bold', color: '#004f4d' }, // verde oscuro elegante
-  descripcion: { fontSize: 14, color: '#444' }, // gris legible
-  precio: { fontSize: 16, fontWeight: '700', color: '#e63946' }, // rojo fuerte
-  tipo: { fontSize: 14, color: '#006d77' }, // azul verdoso
-  vendedor: { fontSize: 13, fontWeight: '600', color: '#1d3557' }, // azul fuerte
+  nombre: { fontSize: 18, fontWeight: 'bold', color: '#004f4d' },
+  descripcion: { fontSize: 14, color: '#444' },
+  precio: { fontSize: 16, fontWeight: '700', color: '#e63946' },
+  tipo: { fontSize: 14, color: '#006d77' },
+  vendedor: { fontSize: 13, fontWeight: '600', color: '#1d3557' },
 
-  // Botón carrito
   botonCarrito: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#5bdaedff", // Lila
+    backgroundColor: "#5bdaedff",
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 10,
@@ -264,12 +298,11 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
 
-  // Botón WhatsApp
   botonWhatsapp: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#25D366", // Verde oficial
+    backgroundColor: "#25D366",
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 10,
@@ -283,23 +316,6 @@ const styles = StyleSheet.create({
   },
 
   lista: { paddingBottom: 20 },
-
-  botonComprar: {
-    backgroundColor: '#00c774',
-    paddingVertical: 14,
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-    marginBottom: Platform.OS === 'android' ? 90 : 70,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    marginHorizontal: 20,
-  },
-  textoComprar: { color: '#fff', fontWeight: 'bold', marginLeft: 10, fontSize: 16 },
-  contenidoBoton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
 
   iconBar: {
     flexDirection: 'row',
