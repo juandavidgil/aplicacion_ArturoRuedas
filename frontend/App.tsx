@@ -4,6 +4,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StackParamList } from './types/types';
 import { UserProvider, UserContext } from './components/inicio de sesion/userContext';
 
+import "./components/firebaseConfig";
+
+
 import PresentacionPantalla from './components/inicio de sesion/PresentacionPantalla';
 import RegistroPantalla from './components/inicio de sesion/RegistroPantalla';
 import InicioSesionPantalla from './components/inicio de sesion/InicioSesionPantalla';
