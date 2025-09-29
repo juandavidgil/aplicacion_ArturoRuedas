@@ -1,519 +1,659 @@
-export const componentesData = {
+
+export type ComponenteId =
   // 🔹 MTB
+  | 'marcoMtb'
+  | 'tenedorMtb'
+  | 'bielaMtb'
+  | 'pinonMtb'
+  | 'desviadortraseroMtb'
+  | 'mandodecambio'
+  | 'frenosdiscoMtb'
+  | 'ruedaMtb'
+  | 'amortiguadortraseroMtb'
+
+  // 🔹 Ruta
+  | 'marcoRuta'
+  | 'tenedorRuta' 
+  | 'bielaRuta'
+  | 'pinonRuta'
+  | 'desviadordelanteroRuta'
+  | 'desviadortraseroRuta'
+  | 'cambiosRuta'
+  | 'frenospinsaRuta'
+  | 'ruedaRuta'
+
+  // 🔹 Fixie
+  | 'marcoFixie'
+  | 'tenedorFixie'
+  | 'bielasFixie'
+  | 'pinonFixie'
+  | 'ruedaFixie'
+
+   // 🔹 componentes en comun 
+  | 'cana'
+  | 'centro'
+  | 'manubrio'
+  | 'juegodedireccion'
+  | 'sillin'
+  | 'poste'
+  | 'pedales'
+  | 'neumatico'
+  | 'cadena' 
+
+interface Componente {
+  nombre: string;
+  imagen: string; 
+  comoColocar: string[];
+  herramientas: string[];
+  informacion: {
+    consiste: string;
+    curiosidades: string;
+    mantenimiento: string;
+  };
+}
+
+export const componentesData: Record<ComponenteId, Componente> = {
+  // --------------------
+  // 🔹 MTB
+  // --------------------
   marcoMtb: {
-    nombre: "Marco MTB",
-    imagen: "https://bikehouse.co/cdn/shop/products/HerofrontR-team.png?v=1669646231",
+    nombre: "Marco",
+    imagen: require( "../../img/MTB/marco.jpg"),
     comoColocar: [
-      "Paso 1: Desmonta todos los componentes del marco viejo.",
-      "Paso 2: Limpia y prepara el nuevo marco, revisando compatibilidad con suspensión, ruedas y frenos de disco.",
-      "Paso 3: Instala dirección, suspensión delantera y potencia.",
-      "Paso 4: Monta transmisión, frenos hidráulicos y ruedas.",
-      "Paso 5: Ajusta todo y verifica que no haya holguras.",
+      "Paso 1: Retira componentes del cuadro anterior (ruedas, transmisión, frenos).",
+      "Paso 2: Revisa compatibilidad con suspensión y ejes.",
+      "Paso 3: Monta juego de dirección y horquilla; luego ancla ruedas y transmisión.",
     ],
     herramientas: ["Llaves Allen", "Extractor de bielas", "Grasa para rodamientos"],
     informacion: {
-      utilidad: "El marco MTB está diseñado para resistir impactos y terrenos irregulares.",
-      mantenimiento: "Revisar fisuras tras caídas y mantenerlo limpio para detectar desgaste.",
+      consiste:
+        "La estructura principal de la bicicleta (triángulo delantero y trasero) diseñada para absorber impactos y soportar geometrías específicas para montaña (ángulos más relajados y mayor distancia entre ejes).",
+      curiosidades:
+        "Los marcos MTB modernos se fabrican en aluminio, carbono o acero; algunos incorporan anclajes para amortiguador trasero (full-suspension). La geometría puede cambiar radicalmente la sensación de manejo.",
+      mantenimiento:
+        "Revisar soldaduras y roscas, limpiar después de salidas embarradas y revisar puntos de anclaje de suspensión; aplicar grasa donde lo indique el fabricante.",
     },
   },
 
-  ruedasMtb: {
-    nombre: "Ruedas MTB",
-    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS83xGr01YdnVfr7Pq5_a7gyKeVijRc4b6J4Q&s",
+  tenedorMtb: {
+    nombre: "Horquilla o suspensión",
+    imagen: require('../../img/MTB/tenedor.avif'),
     comoColocar: [
-      "Paso 1: Suelta el freno de disco o ejes pasantes.",
-      "Paso 2: Retira la rueda y coloca la nueva alineándola en el cuadro.",
-      "Paso 3: Ajusta el eje pasante o cierre rápido.",
-      "Paso 4: Verifica que el rotor de disco no roce con la pinza.",
-    ],
-    herramientas: ["Llave inglesa", "Desmontadores de neumáticos", "Bomba de aire"],
-    informacion: {
-      utilidad: "Proporcionan tracción en terrenos irregulares.",
-      mantenimiento: "Revisar presión, desgaste de llantas y estado de rodamientos.",
-    },
-  },
-  manubrioMtb: {
-    nombre: "Manubrio MTB",
-      imagen: "https://giant-bicycles.com.co/pub/media/catalog/product/cache/7a8f5b56e46e9009957f5cc3fe54a0bd/k/p/kpbrovicmpppeimtv1ee6bnmu_dfurzvjj9uusi7zx.jpg",
-    comoColocar: [
-      "Paso 1: Afloja los tornillos de la potencia.",
-      "Paso 2: Coloca el nuevo manubrio ancho para mejor control.",
-      "Paso 3: Ajusta la inclinación y aprieta tornillos en cruz.",
-    ],
-    herramientas: ["Llaves Allen (4-5 mm)", "Grasa ligera"],
-    informacion: {
-      utilidad: "Da control y estabilidad en bajadas y terrenos técnicos.",
-      mantenimiento: "Revisar que no tenga grietas ni esté flojo.",
-    },
-  },
-  suspensionMtb: {
-    nombre: "Suspensión MTB",
-      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBe9n_J1ETHG12vx8UKDm7F5F0KVKJgjn9og&s",
-    comoColocar: [
-      "Paso 1: Retira la horquilla vieja aflojando la potencia.",
-      "Paso 2: Lubrica rodamientos de dirección.",
-      "Paso 3: Coloca la suspensión nueva y ajusta espaciadores.",
-      "Paso 4: Monta la rueda delantera y alinea.",
-    ],
-    herramientas: ["Llaves Allen", "Grasa", "Trapo"],
-    informacion: {
-      utilidad: "Absorbe impactos en descensos y terrenos difíciles.",
-      mantenimiento: "Lubricar, limpiar y hacer mantenimiento de aceite en taller.",
-    },
-  },
-  pedalMtb: {
-    nombre: "Pedales MTB",
-      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCpC1j5-MJ06dM_FOoo9EM0_N-yxyRW8FsaQ&s",
-    comoColocar: [
-      "Paso 1: Retira los pedales viejos con llave de 15 mm.",
-      "Paso 2: Coloca grasa en las roscas.",
-      "Paso 3: Enrosca pedal derecho en sentido horario, izquierdo antihorario.",
-    ],
-    herramientas: ["Llave de pedal", "Grasa"],
-    informacion: {
-      utilidad: "Permiten mejor agarre y eficiencia en subidas.",
-      mantenimiento: "Lubricar y revisar rodamientos internos.",
-    },
-  },
-
-  pachaMtb: {
-    nombre: "Pacha MTB",
-      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZmgfQLVJ5rEZbRqj2dMO4KRhLMlZMCM3iQg&s",
-    comoColocar: [
-      "Paso 1: Quita la rueda trasera de la bicicleta.",
-      "Paso 2: Usa una llave de cadena y una llave para bloqueo de cassette (o extractor de cassette) para aflojar y retirar la pacha/cassette antiguo.",
-      "Paso 3: Limpia el núcleo del buje (freehub) y revisa el estado del anclaje.",
-      "Paso 4: Coloca el nuevo cassette alineando las estrías con el freehub y enrosca el anillo de bloqueo.",
-      "Paso 5: Aprieta al par recomendado (si tienes llave dinamométrica) y monta la rueda trasera en el cuadro.",
-    ],
-    herramientas: [
-      "Extractor de cassette / llave para bloqueo de cassette",
-      "Llave de cadena (chain whip)",
-      "Llave dinamométrica (recomendada)",
-      "Guantes y trapo",
-    ],
-    informacion: {
-      utilidad: "Conjunto de piñones que determina el rango de desarrollos en MTB; los cassettes MTB suelen tener relaciones más amplias para subir y bajar terreno técnico.",
-      mantenimiento: "Limpiar y desengrasar periódicamente; revisar dientes por desgaste y reemplazar si la cadena salta. Controlar torque del anillo de bloqueo.",
-    },
-  },
-
-  sillinMtb: {
-    nombre: "Sillín MTB",
-      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3uY1diciN7f5OTJxPlUPEiOZRISbjuZDh5g&s",
-    comoColocar: [
-      "Paso 1: Afloja la abrazadera de la tija del sillín (seatpost clamp).",
-      "Paso 2: Coloca la tija a la altura aproximada y ajusta el retroceso del sillín (fore/aft) según tu posición.",
-      "Paso 3: Alinea el sillín con el eje de la bicicleta y aprieta la abrazadera al par recomendado.",
-      "Paso 4: Si la tija es telescópica (dropper), instala y conecta el mando/cable o manguera según el fabricante y verifica funcionalidad.",
-      "Paso 5: Haz una prueba de rodado y ajusta altura/ángulo si es necesario.",
-    ],
-    herramientas: [
-      "Llaves Allen (para abrazadera y railes)",
-      "Grasa o pasta anti-apriete (si la tija es de carbono)",
-      "Cinta métrica o referencia de altura",
-    ],
-    informacion: {
-      utilidad: "Soporta al ciclista y ayuda en el control de la bici; en MTB los sillines suelen permitir mayor movilidad y las tijas telescópicas permiten bajar la altura del sillín en descensos.",
-      mantenimiento: "Revisar raíles y abrazadera, limpiar la tija y comprobar que el mecanismo dropper no presente juego ni fugas.",
-    },
-  },
-
-  frenosMtb: {
-    nombre: "Frenos MTB",
-      imagen: "https://m.media-amazon.com/images/I/71jc76EHLUL._UF894,1000_QL80_.jpg",
-    comoColocar: [
-      "Paso 1: Monta los rotores (si aplica) en las llantas verificando el sentido y el apriete correcto.",
-      "Paso 2: Fija las pinzas/calipers al cuadro y horquilla en sus puntos de anclaje.",
-      "Paso 3: Centra la pinza respecto al rotor (afloja, oprime la palanca y aprieta los tornillos) o ajusta el cable en frenos mecánicos.",
-      "Paso 4: Si son hidráulicos, comprueba que no haya fugas y, de ser necesario, realiza sangrado siguiendo las instrucciones del fabricante.",
-      "Paso 5: Revisa recorrido de la palanca, desgaste de pastillas y realiza rodado de prueba.",
-    ],
-    herramientas: [
-      "Llaves Allen / Torx (según tornillería)",
-      "Llave dinamométrica (recomendada)",
-      "Kit de sangrado (para hidráulicos)",
-      "Limpiador de frenos (isopropanol) y trapo",
-    ],
-    informacion: {
-      utilidad: "En MTB lo habitual son frenos de disco (mecánicos o hidráulicos) por su potencia y control en barro/humedad; proporcionan modulación y frenada consistente en terrenos técnicos.",
-      mantenimiento: "Inspeccionar pastillas y rotores, limpiar residuos de aceite, centrar pinzas y sangrar frenos hidráulicos periódicamente; sustituir piezas desgastadas.",
-    },
-  },
-
-  cadenaMtb: {
-    nombre: "Cadena MTB",
-      imagen: "https://http2.mlstatic.com/D_NQ_NP_2X_925706-MCO51698503489_092022-T.webp",
-    comoColocar: [
-      "Paso 1: Coloca la bicicleta en caballete o voltéala para trabajar cómodo.",
-      "Paso 2: Selecciona una cadena compatible con el número de velocidades del grupo (anchura correcta).",
-      "Paso 3: Mide la longitud adecuada (método big-big + 2 enlaces o según fabricante) y corta con corta-cadenas.",
-      "Paso 4: Une la cadena con eslabón maestro o remache según tipo y verifica funcionamiento pasando cambios y girando pedales.",
-      "Paso 5: Ajusta tensión si es necesario y aplica lubricante específico para cadenas de MTB.",
-    ],
-    herramientas: [
-      "Corta cadenas / herramienta de remache",
-      "Eslabón maestro (opcional)",
-      "Guantes y trapo",
-      "Lubricante para cadenas",
-    ],
-    informacion: {
-      utilidad: "Transfiere la potencia del pedaleo al cassette; en MTB debe soportar cargas laterales y suciedad, por eso es importante elegir cadena compatible con el número de velocidades.",
-      mantenimiento: "Limpiar y lubricar con regularidad; medir elongación y reemplazar antes de que desgaste cassette y platos.",
-    },
-  },
-
-  platoMtb: {
-    nombre: "Plato MTB",
-      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzkjYbb7D26rjx-5wkg-E-M95IMdUvldaJUg&s",
-    comoColocar: [
-      "Paso 1: Si es necesario, retira la cadena y/o desmonta la biela para acceder al plato.",
-      "Paso 2: Afloja los tornillos del plato o extrae la corona según el sistema (bolts o direct mount).",
-      "Paso 3: Coloca el nuevo plato respetando orientación y alineación (BCD o montaje directo).",
-      "Paso 4: Aprieta tornillos al par recomendado y vuelve a montar biela/cadena.",
-      "Paso 5: Comprueba que el desviador (si existe) y la línea de cadena están correctamente ajustados.",
-    ],
-    herramientas: [
-      "Llaves Allen (tornillos de plato)",
-      "Extractor de bielas (si aplica)",
-      "Llave dinamométrica (recomendada)",
-    ],
-    informacion: {
-      utilidad: "Determina la relación de transmisión; en MTB hoy es muy común el sistema monoplato (1x) por simplicidad y menor riesgo de caída de cadena en terreno técnico.",
-      mantenimiento: "Revisar desgaste de dientes y ajustar desviador/guía; limpiar restos de barro y grasa para prolongar vida útil.",
-    },
-  },
-
-
-  // 🔹 Ruta
-  marcoRuta: {
-    nombre: "Marco Ruta",
-      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8_uD2zJxm0kLom2NxCp_qoXkGWDe16zOtSw&s",
-    comoColocar: [
-      "Paso 1: Desmonta componentes del marco viejo.",
-      "Paso 2: Instala horquilla rígida y dirección ligera.",
-      "Paso 3: Monta transmisión de carretera, frenos y ruedas delgadas.",
+      "Paso 1: Instala el tubo de dirección en la caja de dirección del cuadro.",
+      "Paso 2: Ajusta rodamientos y aprieta la potencia.",
+      "Paso 3: Monta la rueda delantera y comprueba alineación.",
     ],
     herramientas: ["Llaves Allen", "Grasa", "Extractor de dirección"],
     informacion: {
-      utilidad: "Ligero y aerodinámico, pensado para velocidad.",
-      mantenimiento: "Revisar ante grietas por fatiga del material.",
-    },
-  },
-  ruedasRuta: {
-    nombre: "Ruedas Ruta",
-    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVUp46wu_pIHIb1pVMmGSO81LIikh18XRyJA&s",
-    comoColocar: [
-      "Paso 1: Suelta frenos caliper o disco.",
-      "Paso 2: Retira la rueda y coloca la nueva con cierre rápido.",
-      "Paso 3: Ajusta y verifica alineación.",
-    ],
-    herramientas: ["Llave inglesa", "Bomba de aire"],
-    informacion: {
-      utilidad: "Minimizan la fricción y mejoran la velocidad en asfalto.",
-      mantenimiento: "Mantener alta presión y revisar fisuras.",
+      consiste:
+        "Componente que sostiene la rueda delantera; en MTB suele integrar suspensión (horquilla con recorrido) para absorber impactos y mejorar tracción y control.",
+      curiosidades:
+        "Las horquillas de suspensión tienen ajustes de rebote y compresión; la cantidad de recorrido (mm) indica cuánto movimiento absorbe la rueda delantera.",
+      mantenimiento:
+        "Limpiar sellos y barras, revisar fugas de aceite y realizar servicio de suspensión según recomendaciones del fabricante.",
     },
   },
 
-  manubrioRuta: {
-    nombre: "Manubrio Ruta",
-    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCGhszD_jPQEA8oxPG1eskyzvDi7S5lWdImpSI8rB1x0gCJKrSctAhcvfBZnosc6qPFcc&usqp=CAU",
+  bielaMtb: {
+    nombre: "Biela",
+    imagen: require('../../img/MTB/biela.webp'),
     comoColocar: [
-      "Paso 1: Afloja potencia y retira manubrio antiguo.",
-      "Paso 2: Coloca drop bar y ajusta inclinación.",
-      "Paso 3: Aprieta tornillos en cruz.",
+      "Paso 1: Instala el eje de pedalier compatible en la caja del cuadro.",
+      "Paso 2: Monta las bielas y aprieta a torque especificado.",
+      "Paso 3: Verifica alineación de platos y cadena.",
     ],
-    herramientas: ["Llaves Allen", "Cinta de manubrio"],
+    herramientas: ["Extractor de bielas", "Llaves Allen", "Grasa"],
     informacion: {
-      utilidad: "Permite posiciones aerodinámicas y de resistencia.",
-      mantenimiento: "Revisar cinta y que no tenga grietas.",
+      consiste:
+        "Brazo que conecta el eje del pedalier con el plato(s); transmite la fuerza del ciclista al sistema de transmisión.",
+      curiosidades:
+        "Existen bielas monoplato (1x) muy usadas en MTB moderno para simplificar la transmisión y ahorrar peso.",
+      mantenimiento:
+        "Comprobar apriete, lubricar el eje del pedalier y revisar holguras; cambiar rodamientos si hay juego o ruidos.",
     },
   },
 
-  horquillaRuta: {
-    nombre: "Horquilla Ruta",
-    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDzMR9W0LTp_aWDPV4Pu5jU1SOoY8p-nS_58Bvx6rIOhO5vPseJ4n7CGSOw6-NYAff3c0&usqp=CAU",
+  pinonMtb: {
+    nombre: "Pacha",
+    imagen: require('../../img/MTB/pinon.jpg'),
     comoColocar: [
-      "Paso 1: Desmonta la horquilla vieja.",
-      "Paso 2: Limpia zona de dirección e instala nueva horquilla rígida.",
-      "Paso 3: Ajusta espaciadores y aprieta tornillos de la potencia.",
+      "Paso 1: Monta el cassette o piñón en el núcleo de la rueda trasera.",
+      "Paso 2: Usa extractor o llave específica para apretar.",
+      "Paso 3: Reinstala la rueda en el cuadro y ajusta la cadena.",
+    ],
+    herramientas: ["Extractor de cassette", "Llave inglesa"],
+    informacion: {
+      consiste:
+        "Conjunto de coronas (piñones) montadas en el buje trasero que, junto con la cadena y platos, definen las relaciones de marcha.",
+      curiosidades:
+        "Los cassettes actuales ofrecen rangos muy amplios (p. ej. 11–50) para subir y bajar terreno técnico sin cambiar tanto la cadencia.",
+      mantenimiento:
+        "Limpiar el cassette con desengrasante, revisar desgaste de dientes y sustituir si hay salto o pérdida de rendimiento.",
+    },
+  },
+
+  desviadortraseroMtb: {
+    nombre: "Desviador trasero",
+    imagen: require('../../img/MTB/desviadortrasero.jpg'),
+    comoColocar: [
+      "Paso 1: Atornilla el desviador a la patilla del cuadro.",
+      "Paso 2: Pasa la cadena por las poleas correctamente.",
+      "Paso 3: Ajusta topes y tensión de cable o línea hidráulica electrónica.",
+    ],
+    herramientas: ["Llaves Allen", "Destornillador estrella"],
+    informacion: {
+      consiste:
+        "Mecanismo que mueve la cadena en el cassette para seleccionar diferentes piñones; mantiene tensión con un muelle y poleas guía.",
+      curiosidades:
+        "Los desviadores modernos tienen tecnología Shadow/Clutch para reducir golpes y caídas de cadena en MTB.",
+      mantenimiento:
+        "Limpiar poleas, revisar alineación de la patilla y ajustar la tensión de cable; sustituir poleas gastadas.",
+    },
+  },
+
+  mandodecambio: {
+    nombre: "Mando de cambio",
+    imagen: require('../../img/MTB/mandodecambio.jpg'),
+    comoColocar: [
+      "Paso 1: Fija el mando al manubrio con la abrazadera.",
+      "Paso 2: Pasa la funda y cable hasta el desviador (o configura electrónicamente).",
+      "Paso 3: Ajusta índice y tensión para cambios precisos.",
+    ],
+    herramientas: ["Llaves Allen", "Cortacables"],
+    informacion: {
+      consiste:
+        "Control montado en el manillar que permite al ciclista cambiar marchas; puede ser mecánico (cable) o electrónico (ACTUADORES).",
+      curiosidades:
+        "Algunos mandos integran freno y cambio (especial en ruta) mientras que en MTB suelen separarse o ser multifunción.",
+      mantenimiento:
+        "Comprobar tensión de cable, lubricar funda y actualizar firmware en mandos electrónicos cuando aplique.",
+    },
+  },
+
+  frenosdiscoMtb: {
+    nombre: "Frenos de disco",
+    imagen: require('../../img/MTB/frenosdisco.webp'),
+    comoColocar: [
+      "Paso 1: Atornilla la pinza en el soporte del cuadro/horquilla.",
+      "Paso 2: Monta el rotor en la rueda y verifica separación con la pinza.",
+      "Paso 3: Si son hidráulicos, purga el circuito si detectas esponjosidad.",
+    ],
+    herramientas: ["Llaves Allen", "Llave Torx", "Kit de purgado"],
+    informacion: {
+      consiste:
+        "Sistema de frenado que usa un rotor metálico y pinza con pastillas; puede ser mecánico (cable) o hidráulico (líquido).",
+      curiosidades:
+        "Los discos ofrecen frenado más consistente con barro/agua y permiten diseños de rueda más flexibles que los frenos de llanta.",
+      mantenimiento:
+        "Cambiar pastillas cuando estén desgastadas, limpiar rotors con desengrasante y purgar frenos hidráulicos según necesidad.",
+    },
+  },
+
+  ruedaMtb: {
+    nombre: "Ruedas",
+    imagen: require('../../img/MTB/ruedas.webp'),
+    comoColocar: [
+      "Paso 1: Instala la rueda en el eje o horquilla.",
+      "Paso 2: Asegura cierre rápido o eje pasante.",
+      "Paso 3: Comprueba centrado y tensión de radios.",
+    ],
+    herramientas: ["Llave inglesa", "Tendedor de radios", "Bomba de aire"],
+    informacion: {
+      consiste:
+        "Conjunto de llanta, radios, buje y neumático que transmite tracción y soporta cargas; en MTB se usan llantas más anchas y bujes reforzados.",
+      curiosidades:
+        "Diámetros comunes: 29\", 27.5\" y 26\"; el tamaño afecta maniobrabilidad y rodamiento sobre obstáculos.",
+      mantenimiento:
+        "Verificar tensión de radios, centrado de la llanta y estado del buje; desalambrar o truear si es necesario.",
+    },
+  },
+
+  amortiguadortraseroMtb: {
+    nombre: "Amortiguador trasero",
+    imagen: require('../../img/MTB/amortiguadortrasero.jpg'),
+    comoColocar: [
+      "Paso 1: Monta el amortiguador en los anclajes del cuadro.",
+      "Paso 2: Aprieta tornillería al torque correcto.",
+      "Paso 3: Ajusta presión o precarga según peso y estilo.",
+    ],
+    herramientas: ["Llaves Allen", "Bomba para suspensión"],
+    informacion: {
+      consiste:
+        "Elemento que controla el movimiento del triángulo trasero en bicicletas full-suspension; puede ser aire o muelle con ajustes de rebote/compresión.",
+      curiosidades:
+        "La evolución de amortiguadores ha permitido separar ajustes para subida y bajada (lockout) y mejorar eficiencia.",
+      mantenimiento:
+        "Revisar fugas, cambiar aceite/retén según intervalos del fabricante y comprobar pernos de anclaje.",
+    },
+  },
+
+  // --------------------
+  // 🔹 Ruta
+  // --------------------
+  marcoRuta: {
+    nombre: "Marco",
+    imagen: require('../../img/Ruta/marco.jpg'),
+    comoColocar: [
+      "Paso 1: Retira componentes del cuadro anterior.",
+      "Paso 2: Monta horquilla, juego de dirección y transmisión alineada.",
+      "Paso 3: Ajusta potencias y manillares para postura aerodinámica.",
+    ],
+    herramientas: ["Llaves Allen", "Grasa", "Extractor de bielas"],
+    informacion: {
+      consiste:
+        "Cuadro optimizado para eficiencia aerodinámica y peso ligero; geometría pensada para postura inclinada y transmisión eficiente en carretera.",
+      curiosidades:
+        "Los marcos de ruta de alto rendimiento usan perfiles aerodinámicos y muchas marcas realizan pruebas en túnel de viento.",
+      mantenimiento:
+        "Revisar integridad del cuadro, puntos de fijación y limpieza frecuente; seguir torque recomendado en tornillería integrada.",
+    },
+  },
+
+  tenedorRuta: {
+    nombre: "Tenedor",
+    imagen: require('../../img/Ruta/tenedor.webp'),
+    comoColocar: [
+      "Paso 1: Inserta tubo de dirección y ajusta juego de dirección.",
+      "Paso 2: Monta potencia y manillar de ruta.",
+      "Paso 3: Instala la rueda delantera y ajusta alineación.",
     ],
     herramientas: ["Llaves Allen", "Grasa"],
     informacion: {
-      utilidad: "Ligera y rígida para precisión en carretera.",
-      mantenimiento: "Revisar rodamientos de dirección.",
+      consiste:
+        "Horquilla rígida (o con poca suspensión en modelos de gravel) que sujeta la rueda delantera y contribuye a la aerodinámica del conjunto.",
+      curiosidades:
+        "En ruta, muchas horquillas son de carbono para reducir peso y vibraciones.",
+      mantenimiento:
+        "Comprobar cola de dirección y estado de rodamientos; evitar golpes fuertes que dañen fibra (si es carbono).",
     },
   },
 
-  pedalRuta: {
-    nombre: "Pedales Ruta",
-    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFC_od4ySpZi_SwFkVomlCY13Y4F2eN24Vs_cZUkwp17w9HeKEGGhRUOOAn_yA9EXOBCc&usqp=CAU",
+  bielaRuta: {
+    nombre: "Biela",
+    imagen: require('../../img/Ruta/biela.jpg'),
     comoColocar: [
-      "Paso 1: Retira los pedales viejos.",
-      "Paso 2: Instala pedales automáticos según lado.",
-      "Paso 3: Ajusta tensión de enganche si aplica.",
+      "Paso 1: Monta eje de pedalier compatible.",
+      "Paso 2: Inserta bielas y aprieta a torque.",
+      "Paso 3: Asegura platos y comprueba alineación con desviador.",
     ],
-    herramientas: ["Llave de pedal", "Grasa"],
+    herramientas: ["Extractor de bielas", "Llaves Allen"],
     informacion: {
-      utilidad: "Mejoran eficiencia del pedaleo al estar sujetos a las zapatillas.",
-      mantenimiento: "Lubricar el sistema de clip y revisar desgaste.",
+      consiste:
+        "Biela (y conjunto de platos) diseñada para eficiencia en transferencia de potencia; suele estar optimizada para peso y rigidez en ruta.",
+      curiosidades:
+        "Bielas compactas (50/34) y estándar (53/39) son elecciones comunes según tipo de recorrido.",
+      mantenimiento:
+        "Revisar aprietes, limpiar y comprobar desgaste de roldanas y platos.",
     },
   },
 
-  pinonesRuta: {
-    nombre: "Piñones Ruta",
-      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9lMeccJkVb_4yzYqYWHhZnPVkKNM2rLSjrUoxBpm9sOm3zUMIhUudJduCNmb7BbG7wsk&usqp=CAU",
+  pinonRuta: {
+    nombre: "Piñón",
+    imagen: require('../../img/Ruta/pinon.jpg'),
     comoColocar: [
-      "Paso 1: Retira la rueda trasera.",
-      "Paso 2: Usa extractor de cassette y llave de cadena para aflojar el anillo de bloqueo.",
-      "Paso 3: Sustituye el cassette por uno compatible (mismo nº de velocidades) alineando las estrías.",
-      "Paso 4: Aprieta al par recomendado y vuelve a montar la rueda.",
-      "Paso 5: Ajusta el desviador trasero si hace falta para un cambio suave.",
+      "Paso 1: Montar cassette en el núcleo del buje trasero.",
+      "Paso 2: Ajustar con extractor y bloquear correctamente.",
     ],
-    herramientas: [
-      "Extractor de cassette / llave para bloqueo",
-      "Llave de cadena (chain whip)",
-      "Llave dinamométrica (opcional)",
-    ],
+    herramientas: ["Extractor de cassette", "Llave inglesa"],
     informacion: {
-      utilidad: "Los piñones de ruta suelen tener desarrollos más cerrados (pasos finos) para mantener cadencia eficiente en asfalto.",
-      mantenimiento: "Limpiar con desengrasante, revisar desgaste de dientes y sustituir cuando la cadena salte o esté muy gastada.",
+      consiste:
+        "Cassette de piñones con relaciones pensadas para mantener cadencia eficiente en asfalto; materiales varían entre acero y aleaciones ligeras.",
+      curiosidades:
+        "Las relaciones y el número de piñones han evolucionado (11, 12 velocidades) buscando escalonamientos más finos.",
+      mantenimiento:
+        "Limpiar y desengrasar, comprobar desgaste y sustituir para evitar salto de cadena.",
     },
   },
 
-  cadenaRuta: {
-    nombre: "Cadena Ruta",
-      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQulyiUtmP4GiFWnoVYY-5Zqmni0BjFBYMJEJCaMA4zOxgTFpIAer6_KM8qLwFoRvwDsyU&usqp=CAU",
+  desviadordelanteroRuta: {
+    nombre: "Desviador delantero",
+    imagen: require('../../img/Ruta/desviadordelantero.jpg'),
     comoColocar: [
-      "Paso 1: Verifica el número de velocidades del grupo y compra cadena compatible (anchura correcta).",
-      "Paso 2: Mide longitud adecuada (según método recomendado) y corta con corta-cadenas.",
-      "Paso 3: Une con eslabón maestro o remache según tipo y comprueba el cambio pasando marchas.",
-      "Paso 4: Aplica lubricante específico para cadenas de carretera y retira exceso.",
+      "Paso 1: Fija el desviador al tubo del cuadro o al cuello del pedalier.",
+      "Paso 2: Ajusta límites superior e inferior y tensiona cable.",
     ],
-    herramientas: [
-      "Corta cadenas",
-      "Eslabón maestro (opcional)",
-      "Lubricante para cadena",
-    ],
+    herramientas: ["Llaves Allen", "Destornillador"],
     informacion: {
-      utilidad: "Cadena más estrecha para transmisiones de mayor número de velocidades; optimiza eficiencia en ruta.",
-      mantenimiento: "Mantener limpia y lubricada; medir elongación y cambiar antes de que dañe cassette y platos.",
+      consiste:
+        "Mecanismo que guía la cadena entre los platos delanteros para seleccionar marchas; en ruta permite transiciones suaves entre platos.",
+      curiosidades:
+        "Algunas bicis modernas optan por configuraciones 1x para eliminar el desviador delantero en ciertos segmentos.",
+      mantenimiento:
+        "Limpiar bisagras, ajustar topes y tensionar el cable regularmente.",
     },
   },
 
-  platoRuta: {
-    nombre: "Plato Ruta",
-      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuHNZ17Vl-g2JHqCjW3j1nTNeGVU4HrINvTQ&s",
+  desviadortraseroRuta: {
+    nombre: "Desviador trasero",
+    imagen: require('../../img/Ruta/desviadortrasero.jpg'),
     comoColocar: [
-      "Paso 1: Retira la cadena o posiciona la transmisión en plato pequeño para liberar tornillos.",
-      "Paso 2: Afloja los tornillos del plato (o desmonta el conjunto de platos/bielas si hace falta).",
-      "Paso 3: Monta el plato nuevo asegurando correcta orientación y BCD si aplica.",
-      "Paso 4: Aprieta a los pares recomendados y vuelve a montar la transmisión.",
-      "Paso 5: Ajusta desviador delantero si se necesita para evitar caídas de cadena.",
+      "Paso 1: Instalar en patilla del cuadro.",
+      "Paso 2: Pasa la cadena y ajusta la tensión de cable y límites.",
     ],
-    herramientas: [
-      "Llaves Allen",
-      "Extractor de bielas (si es necesario)",
-      "Llave dinamométrica (recomendada)",
-    ],
+    herramientas: ["Llaves Allen", "Destornillador"],
     informacion: {
-      utilidad: "En ruta es común el doble plato (compact o estándar) para cubrir rangos de velocidad con cadencia eficiente.",
-      mantenimiento: "Limpiar, revisar dientes y reemplazar si muestra desgaste o deformación.",
+      consiste:
+        "Desviador trasero que mueve la cadena entre los piñones del cassette; en ruta busca precisión y cambios rápidos.",
+      curiosidades:
+        "Los sistemas electrónicos ofrecen cambios más precisos y requieren menos mantenimiento mecánico.",
+      mantenimiento:
+        "Limpiar, lubricar poleas y comprobar que la patilla esté recta; ajustar índice de cambios.",
     },
   },
 
-  sillinRuta: {
-    nombre: "Sillín_Ruta",
-      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROiJ_UTwL6U_rcb2LXqQ1THQVXpzxibkXGjA&s",
+  cambiosRuta: {
+    nombre: "Mando de cambios",
+    imagen: require('../../img/Ruta/cambios.jpg'),
     comoColocar: [
-      "Paso 1: Afloja la abrazadera de la tija y coloca la altura aproximada según tu medida de entrepierna.",
-      "Paso 2: Ajusta el ángulo (ligeramente hacia abajo si prefieres aerodinámica) y el retroceso del sillín.",
-      "Paso 3: Aprieta la abrazadera al par correcto y verifica que no exista juego.",
-      "Paso 4: Realiza prueba de pedaleo y ajusta posición fina para comodidad y eficiencia.",
+      "Paso 1: Montar manetas en el manubrio de ruta (integradas con freno si aplica).",
+      "Paso 2: Conectar cables/fundas a desviadores.",
     ],
-    herramientas: [
-      "Llaves Allen",
-      "Cinta métrica o guía de ajuste",
-    ],
+    herramientas: ["Llaves Allen", "Cortacables"],
     informacion: {
-      utilidad: "Sillines de ruta suelen ser más estrechos y firmes para reducir rozaduras y favorecer eficiencia en salidas largas.",
-      mantenimiento: "Revisar raíles y fijaciones, cambiar si hay deformación o pérdida de confort excesiva.",
+      consiste:
+        "Manetas que permiten cambiar marchas y, en ruta, suelen integrarse con frenos para control ergonómico.",
+      curiosidades:
+        "El diseño STI (stops/turns integration) revolucionó el control al juntar freno y cambio en una sola palanca.",
+      mantenimiento:
+        "Revisar causa/tensión de cables y ajustes; en electrónico, mantener firmware actualizado y baterías cargadas.",
     },
   },
 
-  frenosRuta: {
-    nombre: "Frenos Ruta",
-      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgWLfu1upCOp2tlvfmsYPJJS53ZR-BvZL97plT4br7ZBkD5978JlJD7GEJl4B_00r7FbU&usqp=CAU",
+  frenospinsaRuta: {
+    nombre: "Frenos de pinza",
+    imagen: require('../../img/Ruta/frenospinsa.jpg'),
     comoColocar: [
-      "Paso 1: Si son frenos de llanta (caliper), monta la pinza en la horquilla y el tirante trasero, centrándola sobre la llanta.",
-      "Paso 2: Si son discos, instala rotores y pinzas como en frenos MTB (ajuste y sangrado si hidráulicos).",
-      "Paso 3: Ajusta la tensión del cable (mecánicos) o revisa sistema hidráulico y palancas.",
-      "Paso 4: Comprueba que las pastillas no rozan y que la respuesta sea progresiva.",
+      "Paso 1: Atornilla las pinzas en los soportes del cuadro u horquilla.",
+      "Paso 2: Ajusta la alineación de las zapatas con la llanta y la tensión del cable.",
     ],
-    herramientas: [
-      "Llaves Allen / Torx",
-      "Kit de sangrado (si hidráulicos)",
-      "Limpieza de frenos (isopropanol)",
-    ],
+    herramientas: ["Llaves Allen", "Destornillador"],
     informacion: {
-      utilidad: "En ruta tradicionalmente se usaban frenos de llanta (caliper) por aerodinámica; hoy día los discos de carretera ofrecen mejor rendimiento en mojado y mayor consistencia.",
-      mantenimiento: "Revisar pastillas y discos/rasgadas de llanta, ajustar y sangrar cuando sea necesario.",
+      consiste:
+        "Frenos de llanta tradicionales que aplican zapatas a la superficie de la llanta para detener la bici; ligeros y sencillos.",
+      curiosidades:
+        "Aunque los frenos de disco ganan terreno, las pinzas siguen siendo populares por su ligereza y simplicidad en competición de ruta.",
+      mantenimiento:
+        "Sustituir zapatas gastadas, limpiar la llanta y verificar que el cable no esté deshilachado.",
     },
   },
 
+  ruedaRuta: {
+    nombre: "Ruedas",
+    imagen: require('../../img/Ruta/rueda.webp'),
+    comoColocar: [
+      "Paso 1: Montar la rueda en la horquilla o cuadro.",
+      "Paso 2: Asegurar cierre rápido o eje pasante.",
+    ],
+    herramientas: ["Llave inglesa", "Bomba de aire"],
+    informacion: {
+      consiste:
+        "Rueda diseñada para velocidad: llantas más estrechas, perfiles aerodinámicos y rodamientos finos para minimizar resistencia.",
+      curiosidades:
+        "Las ruedas con perfil alto mejoran la aerodinámica pero pueden afectar control con viento lateral.",
+      mantenimiento:
+        "Comprobar centrado, tensión de radios y estado de los rodamientos; mantener la presión de neumáticos adecuada.",
+    },
+  },
 
+  // --------------------
   // 🔹 Fixie
+  // --------------------
   marcoFixie: {
-    nombre: "Marco Fixie",
-      imagen: "https://poseidonbogota.com/wp-content/uploads/2023/03/ontrail-miniaturas-marcos-FREEBIKE-MAR0387f-PISTA.jpg",
+    nombre: "Marco",
+    imagen: require('../../img/Fixie/marco.jpg'),
     comoColocar: [
-      "Paso 1: Desmonta el cuadro viejo.",
-      "Paso 2: Prepara nuevo marco verificando compatibilidad con piñón fijo.",
-      "Paso 3: Instala horquilla, potencia y transmisión sencilla.",
+      "Paso 1: Montar horquilla y juego de dirección.",
+      "Paso 2: Instalar transmisión (piñón fijo) y ajustar tensión de cadena.",
     ],
     herramientas: ["Llaves Allen", "Grasa"],
     informacion: {
-      utilidad: "Simple, rígido y ligero, diseñado para ciudad.",
-      mantenimiento: "Limpieza y revisión de fisuras.",
-    },
-  },
-
-  ruedasFixie: {
-    nombre: "Ruedas Fixie",
-    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqp7bucWzaiD__Q2BAa3ArP64oazFvYcVd95Myb4LeJAmFKcM_kw2LOBQ-rWQrkuHCyAY&usqp=CAU",
-    comoColocar: [
-      "Paso 1: Afloja tuercas del eje.",
-      "Paso 2: Retira la rueda vieja y coloca la nueva.",
-      "Paso 3: Ajusta alineación y tensión de la cadena.",
-    ],
-    herramientas: ["Llave inglesa", "Bomba de aire"],
-    informacion: {
-      utilidad: "Diseñadas para uso urbano y resistencia.",
-      mantenimiento: "Revisar tensión de radios y presión.",
-    },
-  },
-
-  manubrioFixie: {
-    nombre: "Manubrio Fixie",
-    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb-MieeDMfvX7_1ukxSCZEIVOuknQbE2f-9Q&s",
-    comoColocar: [
-      "Paso 1: Afloja potencia.",
-      "Paso 2: Coloca nuevo manubrio (flat o bullhorn).",
-      "Paso 3: Aprieta tornillos y ajusta posición.",
-    ],
-    herramientas: ["Llaves Allen"],
-    informacion: {
-      utilidad: "Varía entre control o velocidad según estilo.",
-      mantenimiento: "Revisar apriete y estado de puños.",
-    },
-  },
-
-  piñonFixie: {
-    nombre: "Piñón Fijo",
-    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRG-2UpKLx0okwJsLygv6Txo-_nRzv8wohwPQ&s",
-    comoColocar: [
-      "Paso 1: Retira rueda trasera.",
-      "Paso 2: Desmonta piñón viejo y coloca el nuevo enroscado.",
-      "Paso 3: Ajusta tensión de cadena.",
-    ],
-    herramientas: ["Llave inglesa", "Extractor de piñón"],
-    informacion: {
-      utilidad: "Transmite fuerza sin rueda libre.",
-      mantenimiento: "Revisar apriete y lubricar.",
-    },
-  },
-  pedalFixie: {
-    nombre: "Pedales Fixie",
-    imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqrNe-jCkhekgW4OPWv49uAAP_8W0zRRh8BRS6AfWiZdi-bI-zuCq7f78dQp-QNu8UylU&usqp=CAU",
-    comoColocar: [
-      "Paso 1: Retira pedales viejos.",
-      "Paso 2: Coloca nuevos pedales (planos o con straps).",
-      "Paso 3: Ajusta tensión de cadena si aplica.",
-    ],
-    herramientas: ["Llave de pedal", "Grasa"],
-    informacion: {
-      utilidad: "Ofrecen simplicidad o agarre con correas.",
-      mantenimiento: "Revisar rodamientos y correas.",
-    },
-  },
-
-  cadenaFixie: {
-    nombre: "Cadena Fixie",
-      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSayr0CIuCwQr1XIQg1tycCKrK9ZQeRsvg93g&s",
-    comoColocar: [
-      "Paso 1: Determina si tu fixie usa cadena 1/8\" (track) o 3/32\" (más común en conversiones).",
-      "Paso 2: Mide la longitud adecuada (mueve la rueda trasera para lograr la tensión correcta si el cuadro tiene dropouts horizontales).",
-      "Paso 3: Corta la cadena a medida y une con eslabón maestro o remache según tipo.",
-      "Paso 4: Ajusta la rueda trasera para lograr 8–12 mm de juego vertical en la mitad del recorrido y aprieta las tuercas del eje.",
-    ],
-    herramientas: [
-      "Corta cadenas",
-      "Eslabón maestro (opcional)",
-      "Llave inglesa para las tuercas del eje",
-    ],
-    informacion: {
-      utilidad: "Cadena de una sola velocidad, generalmente más ancha y robusta (1/8\") para soportar esfuerzos constantes; en fixies la tensión correcta es crítica para evitar saltos.",
-      mantenimiento: "Limpiar y lubricar; comprobar tensión con frecuencia y revisar desgaste para evitar roturas.",
-    },
-  },
-
-  platoFixie: {
-    nombre: "Plato Fixie (Chainring)",
-      imagen: "https://sc04.alicdn.com/kf/H21a93fe5b856484784aa6b92adb32da5i.jpg",
-    comoColocar: [
-      "Paso 1: Afloja los tornillos de la biela o corona y retira la corona vieja si aplica.",
-      "Paso 2: Coloca el nuevo plato asegurándote de que las estrías/BCD coincidan y la orientación sea correcta.",
-      "Paso 3: Aprieta los tornillos al par recomendado y coloca la cadena comprobando alineación con el piñón fijo.",
-      "Paso 4: Ajusta la posición de la rueda trasera para que la cadena quede tensa y recta.",
-    ],
-    herramientas: [
-      "Llaves Allen para tornillos de plato",
-      "Extractor de bielas (si aplica)",
-      "Llave dinamométrica (recomendada)",
-    ],
-    informacion: {
-      utilidad: "El plato en fixie transmite directamente la fuerza al piñón fijo; normalmente es simple y muy robusto para uso urbano y altas solicitaciones.",
-      mantenimiento: "Revisar dientes por desgaste y mantener buena alineación (línea de cadena).",
-    },
-  },
-
-  sillinFixie: {
-    nombre: "Sillín Fixie",
-      imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR76sJymJyO0P9eOBEQneFETu_9LcaPP7DrVA&s",
-    comoColocar: [
-      "Paso 1: Afloja la abrazadera de la tija y coloca la altura deseada.",
-      "Paso 2: Ajusta el ángulo y el retroceso para comodidad en ciudad.",
-      "Paso 3: Aprieta la abrazadera al par correcto y verifica estabilidad.",
-      "Paso 4: Prueba en ruta urbana y ajusta si hay molestias.",
-    ],
-    herramientas: [
-      "Llaves Allen",
-      "Cinta métrica o guía de ajuste",
-    ],
-    informacion: {
-      utilidad: "Sillines para fixie suelen priorizar confort urbano y eficiencia; la elección depende de la ergonomía y el uso (trayectos cortos vs largos).",
-      mantenimiento: "Revisar fijaciones y raíles; sustituir si hay deformación o rotura.",
+      consiste:
+        "Cuadro de diseño simple y rígido pensado para uso urbano y transmisión directa; geometría pensada para maniobrabilidad en ciudad.",
+      curiosidades:
+        "Las fixies suelen prescindir de cambio y a veces de frenos delanteros/más habituales, priorizando simplicidad y bajo mantenimiento.",
+      mantenimiento:
+        "Revisar tensado de cadena, apriete de piñón fijo y estado del cuadro; limpiar con regularidad.",
     },
   },
 
   tenedorFixie: {
-    nombre: "Tenedor (Horquilla) Fixie",
-      imagen: "https://poseidonbogota.com/wp-content/uploads/2023/03/Tenedor-Fibra-de-Carbono-GW-XCP-Oversize22-300x375.jpg",
+    nombre: "Tenedor",
+    imagen: require('../../img/Fixie/tenedor.jpg'),
     comoColocar: [
-      "Paso 1: Retira la rueda delantera y afloja la potencia para liberar la horquilla antigua si la hay.",
-      "Paso 2: Inserta la horquilla nueva en la dirección (asegurando rodamientos y espaciadores correctos).",
-      "Paso 3: Ajusta la tapa de dirección y aprieta la potencia a su par, asegurando alineación con la rueda.",
-      "Paso 4: Monta la rueda delantera y ajusta tuercas o cierre rápido; verifica que gire libremente sin juego.",
+      "Paso 1: Insertar tubo de dirección y ajustar rodamientos.",
+      "Paso 2: Fijar potencia y manillar.",
     ],
-    herramientas: [
-      "Llaves Allen",
-      "Extractor de dirección (si es necesario)",
-      "Grasa para rodamientos",
-    ],
+    herramientas: ["Llaves Allen", "Grasa"],
     informacion: {
-      utilidad: "La horquilla en fixie suele ser rígida y simple para uso urbano; debe ser ligera y compatible con el eje delantero seleccionado.",
-      mantenimiento: "Comprobar rodamientos de dirección, mantener limpia y verificar que no haya juego en la dirección.",
+      consiste:
+        "Horquilla rígida que sujeta la rueda delantera; en fixie suele ser simple y robusta para uso urbano.",
+      curiosidades:
+        "Al ser usos urbanos, muchas horquillas fixie priorizan durabilidad sobre lujo (poco peso).",
+      mantenimiento:
+        "Mantener rodamientos limpios y sin juego; revisar por golpes o dobleces.",
     },
   },
 
+  bielasFixie: {
+    nombre: "Bielas",
+    imagen: require('../../img/Fixie/bielas.jpg'),
+    comoColocar: [
+      "Paso 1: Montar eje y colocar bielas en el pedalier.",
+      "Paso 2: Fijar plato y comprobar aprietes.",
+    ],
+    herramientas: ["Extractor de bielas", "Llaves Allen"],
+    informacion: {
+      consiste:
+        "Conjunto de bielas y plato que transmiten la pedaleada a un único piñón fijo; construcción simple y resistente.",
+      curiosidades:
+        "Las configuraciones varían poco (plato único) lo que facilita mantenimiento y reduce piezas.",
+      mantenimiento:
+        "Revisar apriete de bielas y desgaste del plato; lubricar el eje si es necesario.",
+    },
+  },
+
+  pinonFixie: {
+    nombre: "Piñón",
+    imagen: require('../../img/Fixie/pinon.jpg'),
+    comoColocar: [
+      "Paso 1: Enroscar el piñón fijo en el buje del buje trasero.",
+      "Paso 2: Asegurarlo con herramienta adecuada y contra-tuerca si aplica.",
+    ],
+    herramientas: ["Llave de piñón", "Herramienta de bloqueo"],
+    informacion: {
+      consiste:
+        "Piñón roscado que no permite libre giro (es fijo); la rueda y la transmisión giran en síncrono con los pedales.",
+      curiosidades:
+        "En fixie no existe rueda libre: si la rueda gira, los pedales lo hacen también — esto altera técnicas de frenado y control.",
+      mantenimiento:
+        "Revisar apriete, rosca y estado de dientes; controlar tensión y alineación de cadena.",
+    },
+  },
+
+  ruedaFixie: {
+    nombre: "Ruedas",
+    imagen: require('../../img/Fixie/rueda.jpg'),
+    comoColocar: [
+      "Paso 1: Montar y asegurar rueda en el cuadro.",
+      "Paso 2: Ajustar tensión de cadena y alineación.",
+    ],
+    herramientas: ["Llave inglesa", "Bomba de aire"],
+    informacion: {
+      consiste:
+        "Rueda pensada para uso urbano; bujes simples y llantas resistentes que toleren frenado por retención cuando se practica.",
+      curiosidades:
+        "Algunos ciclistas usan ruedas con mayor rigidez para transmisión directa y mejor respuesta.",
+      mantenimiento:
+        "Comprobar centrado, tensión de radios y presión del neumático; revisar buje si hay juegos.",
+    },
+  },
+
+  
+
+  // --------------------
+  // 🔹 Comunes
+  // --------------------
+  cana: {
+    nombre: "Caña (Tija guía del manubrio)",
+    imagen: require('../../img/Comun/cana.jpg'),
+    comoColocar: [
+      "Paso 1: Insertar la caña en la horquilla/steerer tube.",
+      "Paso 2: Ajustar altura y apretar la potencia según torque.",
+    ],
+    herramientas: ["Llaves Allen"],
+    informacion: {
+      consiste:
+        "Tubo que conecta la horquilla con la potencia y el manubrio; puede ser parte del sistema de dirección (steerer) o una pieza de ajuste.",
+      curiosidades:
+        "En bicicletas modernas las cañas integradas y potencias de una pieza mejoran la estética y rigidez pero limitan ajustes rápidos.",
+      mantenimiento:
+        "Revisar apriete, corrosión y alineación; evitar apretar en exceso que pueda dañar roscas o carbono.",
+    },
+  },
+
+  centro: {
+    nombre: "Centro (Eje / Buje)",
+    imagen: require('../../img/Comun/centro.jpg'),
+    comoColocar: [
+      "Paso 1: Insertar buje en la llanta y centrar radios.",
+      "Paso 2: Ajustar rodamientos y verificar libre giro.",
+    ],
+    herramientas: ["Extractor de centro", "Llaves de cono", "Tendedor de radios"],
+    informacion: {
+      consiste:
+        "Buje es el eje central de la rueda que aloja rodamientos y permite que la llanta gire; en freno de piñón o cassette se monta el sistema de transmisión.",
+      curiosidades:
+        "Los bujes modernos incorporan rodamientos sellados para menor mantenimiento y mayor durabilidad.",
+      mantenimiento:
+        "Servir y limpiar rodamientos, engrasar o sustituir sellos y comprobar juego axial/ radial periódicamente.",
+    },
+  },
+
+  manubrio: {
+    nombre: "Manubrio",
+    imagen: require('../../img/Comun/manubrio.png'),
+    comoColocar: [
+      "Paso 1: Colocar en la potencia y fijar a torque.",
+      "Paso 2: Ajustar ángulo e instalar controles (frenos, mandos).",
+    ],
+    herramientas: ["Llaves Allen"],
+    informacion: {
+      consiste:
+        "Barra que permite dirigir la bicicleta y alojar controles (freno, cambio, luces); viene en distintos anchos y formas según disciplina.",
+      curiosidades:
+        "Los manubrios anchos ofrecen mayor control en MTB; en ruta se usan manubrios curvos para posiciones aerodinámicas.",
+      mantenimiento:
+        "Revisar apriete de la potencia, integridad (grietas en carbono) y estado de cinta/punos.",
+    },
+  },
+
+  juegodedireccion: {
+    nombre: "Juego de dirección",
+    imagen: require('../../img/Comun/juegodedireccion.jpg'),
+    comoColocar: [
+      "Paso 1: Insertar rodamientos en la caja de dirección.",
+      "Paso 2: Ajustar tapa superior y comprobar ausencia de juego.",
+    ],
+    herramientas: ["Extractor de dirección", "Grasa"],
+    informacion: {
+      consiste:
+        "Conjunto de rodamientos que permite girar la horquilla suavemente dentro del tubo de dirección del cuadro.",
+      curiosidades:
+        "Los sistemas integrados ocultan los rodamientos para estética y aerodinámica, pero pueden ser más difíciles de ajustar.",
+      mantenimiento:
+        "Limpiar, engrasar rodamientos y ajustar precarga para evitar juego o rozamiento.",
+    },
+  },
+
+  sillin: {
+    nombre: "Sillín",
+    imagen: require('../../img/Comun/sillin.jpg'),
+    comoColocar: [
+      "Paso 1: Insertar en la abrazadera del poste y ajustar altura e inclinación.",
+      "Paso 2: Apriete final a torque recomendado.",
+    ],
+    herramientas: ["Llave Allen"],
+    informacion: {
+      consiste:
+        "Asiento del ciclista; hay variedad en forma, relleno y propósito (ruta, MTB, confort) para adaptarse a la anatomía y la disciplina.",
+      curiosidades:
+        "Elegir sillín correcto depende de la separación de isquiones y estilo de pedaleo; un sillín mal ajustado causa molestias.",
+      mantenimiento:
+        "Revisar railes, abrazadera y desgaste de la cubierta; reemplazar cuando se deforme o rompa el relleno.",
+    },
+  },
+
+  poste: {
+    nombre: "Poste de sillín",
+    imagen: require('../../img/Comun/poste.jpg'),
+    comoColocar: [
+      "Paso 1: Insertar poste en el tubo del sillín y fijar con abrazadera.",
+      "Paso 2: Ajustar altura y apretar a torque.",
+    ],
+    herramientas: ["Llaves Allen", "Grasa"],
+    informacion: {
+      consiste:
+        "Tubo que conecta el sillín al cuadro y permite ajustar la altura; hay postes rígidos, con suspensión y materiales variados.",
+      curiosidades:
+        "Postes telescópicos (dropper) permiten bajar el sillín en descenso sin desmontar herramientas, muy usados en MTB.",
+      mantenimiento:
+        "Limpiar y engrasar la zona de inserción (si aplica), y revisar mecanismos telescópicos por suciedad y desgaste.",
+    },
+  },
+
+  pedales: {
+    nombre: "Pedales",
+    imagen: require ('../../img/Comun/pedales.jpg'),
+    comoColocar: [
+      "Paso 1: Enroscar pedales en las bielas (derecho e izquierdo con sentido correcto).",
+      "Paso 2: Aprietar a torque y comprobar giro suave.",
+    ],
+    herramientas: ["Llave de pedales", "Grasa"],
+    informacion: {
+      consiste:
+        "Interfaz donde el pie aplica fuerza; hay pedales planos y automáticos (clipless) que enganchan a zapatillas específicas.",
+      curiosidades:
+        "Los pedales clipless aumentan eficiencia y control; existen múltiples standards (SPD, Look, etc.).",
+      mantenimiento:
+        "Lubricar roscas antes de montaje, revisar rodamientos y limpiar conexiones mecánicas o de cala.",
+    },
+  },
+
+  neumatico: {
+    nombre: "Neumático",
+    imagen: require('../../img/Comun/neumatico.jpg'),
+    comoColocar: [
+      "Paso 1: Montar neumático en la llanta con desmontadores.",
+      "Paso 2: Asegurar cámara o usar tubeless y sellar correctamente.",
+      "Paso 3: Inflar a la presión recomendada.",
+    ],
+    herramientas: ["Desmontadores", "Bomba de aire", "Sellador (si tubeless)"],
+    informacion: {
+      consiste:
+        "Elemento que hace contacto con el suelo; su compuesto, dibujo y ancho determinan tracción, confort y resistencia a pinchazos.",
+      curiosidades:
+        "En MTB se usan neumáticos anchos y con tacos; en ruta, neumáticos estrechos y de alta presión para menor resistencia rodante.",
+      mantenimiento:
+        "Revisar presión antes de cada salida, comprobar cortes o desgaste y, en tubeless, mantener nivel de sellador.",
+    },
+  },
+
+  cadena: {
+    nombre: "Cadena",
+    imagen: require('../../img/Comun/cadena.png'),
+    
+    comoColocar: [
+      "Paso 1: Pasar la cadena por platos, desviadores y piñones siguiendo el recorrido correcto.",
+      "Paso 2: Unir eslabones con pin o cierre rápido y ajustar tensión.",
+    ],
+    herramientas: ["Tronchacadenas", "Lubricante"],
+    informacion: {
+      consiste:
+        "Elemento metálico compuesto por eslabones que transmite la potencia desde las bielas al cassette/plato; su desgaste afecta la transmisión.",
+      curiosidades:
+        "Una cadena desgastada acelera el desgaste de platos y piñones; medir la elongación periódicamente evita reemplazos mayores.",
+      mantenimiento:
+        "Limpiar y lubricar regularmente, comprobar la elongación con una herramienta medidora y sustituir cuando supere el desgaste recomendado.",
+    },
+  },
 };

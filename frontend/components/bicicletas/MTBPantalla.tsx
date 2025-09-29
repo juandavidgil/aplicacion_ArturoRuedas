@@ -286,96 +286,99 @@ const MtbPantalla: React.FC = () => {
     contentContainerStyle={{ paddingHorizontal: 10 }}
   >
     {/* Marco MTB */}
-    <TouchableOpacity
-      onPress={() => 
-  navigation.navigate('ComponenteDetalle', { componenteId: 'marcoMtb', tipoBicicleta })
-}
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_marco.jpeg')} />
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'marcoMtb', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/MTB/marco.jpg')} />
     </TouchableOpacity>
 
-    {/* Ruedas MTB */}
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'ruedasMtb', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../img/rueda.webp')} />
+    {/* Tenedor MTB */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'tenedorMtb', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/MTB/tenedor.avif')} />
     </TouchableOpacity>
 
-    {/* Manubrio MTB */}
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'manubrioMtb', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../img/manub.webp')} />
+    {/* Biela MTB */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'bielaMtb', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/MTB/biela.webp')} />
     </TouchableOpacity>
 
-    {/* Suspensión MTB */}
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'suspensionMtb', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../img/suspe.webp')} />
+    {/* Piñón MTB */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pinonMtb', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/MTB/pinon.jpg')} />
     </TouchableOpacity>
 
-    {/* Pedales MTB */}
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'pedalMtb', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../img/pedal.jpg')} />
+    {/* Desviador Trasero MTB */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'desviadortraseroMtb', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/MTB/desviadortrasero.jpg')} />
     </TouchableOpacity>
 
-    {/* Pacha MTB */}
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'pachaMtb', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_piñon.jpeg')} />
+    {/* Mando de Cambio MTB */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'mandodecambio', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/MTB/mandodecambio.jpg')} />
     </TouchableOpacity>
 
-    {/* Sillín MTB */}
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'sillinMtb', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_sillin.jpeg')} />
+    {/* Frenos de Disco MTB */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'frenosdiscoMtb', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/MTB/frenosdisco.webp')} />
     </TouchableOpacity>
 
-    {/* Frenos MTB */}
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'frenosMtb', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_frenos.jpeg')} />
+    {/* Rueda MTB */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedaMtb', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/MTB/ruedas.webp')} />
     </TouchableOpacity>
 
-    {/* Cadena MTB */}
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'cadenaMtb', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_cadena.png')} />
+    {/* Amortiguador Trasero MTB */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'amortiguadortraseroMtb', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/MTB/amortiguadortrasero.jpg')} />
     </TouchableOpacity>
 
-    {/* Plato MTB */}
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'platoMtb', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/mtb_plato.png')} />
-    </TouchableOpacity>
-  </ScrollView>
-)}
+      {/* componentes en comun  */}
+        
+        {/* Caña */}
+        <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'cana', tipoBicicleta })}>
+          <Image style={styles.iconoComponentes} source={require('../../img/Comun/cana.jpg')} />
+        </TouchableOpacity>
+    
+        {/* Centro */}
+        <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'centro', tipoBicicleta })}>
+          <Image style={styles.iconoComponentes} source={require('../../img/Comun/centro.jpg')} />
+        </TouchableOpacity>
+    
+        {/* Manubrio */}
+        <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio', tipoBicicleta })}>
+          <Image style={styles.iconoComponentes} source={require('../../img/Comun/manubrio.png')} />
+        </TouchableOpacity>
+    
+        {/* Juego de Dirección */}
+        <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'juegodedireccion', tipoBicicleta })}>
+          <Image style={styles.iconoComponentes} source={require('../../img/Comun/juegodedireccion.jpg')} />
+        </TouchableOpacity>
+    
+        {/* Sillín */}
+        <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'sillin', tipoBicicleta })}>
+          <Image style={styles.iconoComponentes} source={require('../../img/Comun/sillin.jpg')} />
+        </TouchableOpacity>
+    
+        {/* Poste */}
+        <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'poste', tipoBicicleta })}>
+          <Image style={styles.iconoComponentes} source={require('../../img/Comun/poste.jpg')} />
+        </TouchableOpacity>
+    
+        {/* Pedales */}
+        <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedales', tipoBicicleta })}>
+          <Image style={styles.iconoComponentes} source={require('../../img/Comun/pedales.jpg')} />
+        </TouchableOpacity>
+    
+        {/* Neumático */}
+        <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'neumatico', tipoBicicleta })}>
+          <Image style={styles.iconoComponentes} source={require('../../img/Comun/neumatico.jpg')} />
+        </TouchableOpacity>
+    
+        {/* Cadena */}
+        <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'cadena', tipoBicicleta })}>
+          <Image style={styles.iconoComponentes} source={require('../../img/Comun/cadena.png')} />
+        </TouchableOpacity>
+      </ScrollView>
+    )}
+
       </SafeAreaProvider>
     </LinearGradient>
   );

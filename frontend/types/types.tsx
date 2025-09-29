@@ -1,47 +1,49 @@
 import { RouteProp } from '@react-navigation/native';
+import { ImageSourcePropType } from 'react-native';
+
 
 export type ComponenteId =
   // 🔹 MTB
   | 'marcoMtb'
-  | 'ruedasMtb'
-  | 'manubrioMtb'
-  | 'suspensionMtb'
-  | 'pedalesMtb'
-  | 'pachaMtb'
-  | 'sillinMtb'
-  | 'frenosMtb'
-  | 'cadenaMtb'
-  | 'platoMtb'
-  | 'pedalMtb'
-  
+  | 'tenedorMtb'
+  | 'bielaMtb'
+  | 'pinonMtb'
+  | 'desviadortraseroMtb'
+  | 'mandodecambio'
+  | 'frenosdiscoMtb'
+  | 'ruedaMtb'
+  | 'amortiguadortraseroMtb'
 
   // 🔹 Ruta
   | 'marcoRuta'
-  | 'ruedasRuta'
-  | 'manubrioRuta'
-  | 'horquillaRuta'
-  | 'pedalesRuta'
-  | 'pinonesRuta'
-  | 'cadenaRuta'
-  | 'platoRuta'
-  | 'sillinRuta'
-  | 'frenosRuta'
-  | 'piñonRuta'
+  | 'tenedorRuta' 
+  | 'bielaRuta'
+  | 'pinonRuta'
+  | 'desviadordelanteroRuta'
+  | 'desviadortraseroRuta'
+  | 'cambiosRuta'
+  | 'frenospinsaRuta'
+  | 'ruedaRuta'
 
   // 🔹 Fixie
-  | 'cuadroFixie'
-  | 'ruedasFixie'
-  | 'manubrioFixie'
-  | 'pedalesFixie'
-  | 'piñonFixie'
-  | 'cadenaFixie'
-  | 'platoFixie'
-  | 'sillinFixie'
-  | 'frenosFixie'
-  | 'ruedas'
-  ;
+  | 'marcoFixie'
+  | 'tenedorFixie'
+  | 'bielasFixie'
+  | 'pinonFixie'
+  | 'ruedaFixie'
+
+   // 🔹 componentes en comun 
+  | 'cana'
+  | 'centro'
+  | 'manubrio'
+  | 'juegodedireccion'
+  | 'sillin'
+  | 'poste'
+  | 'pedales'
+  | 'neumatico'
+  | 'cadena' 
   
-export type ComponenteData = {nombre: string; imagen: any; comoColocar: string[]; informacion: { utilidad: string; mantenimiento: string; }; herramientas: string[]; };
+export type ComponenteData = {nombre: string; imagen: ImageSourcePropType; comoColocar: string[]; informacion: { utilidad: string; mantenimiento: string; }; herramientas: string[]; };
 export type StackParamList = {
   
   Presentacion: undefined;

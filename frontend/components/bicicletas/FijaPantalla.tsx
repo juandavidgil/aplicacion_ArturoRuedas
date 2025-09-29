@@ -276,8 +276,7 @@ const FijaPantalla: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-       {/* Barra de componentes deslizable */}
- 
+      {/* Barra de componentes deslizable Fixie */}
 {mostrarBarraComponentes && (
   <ScrollView
     horizontal
@@ -285,62 +284,80 @@ const FijaPantalla: React.FC = () => {
     style={styles.barraComponentes}
     contentContainerStyle={{ paddingHorizontal: 10 }}
   >
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'ruedasFixie', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_rueda.jpeg')} />
+    {/* Marco Fixie */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'marcoFixie', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Fixie/marco.jpg')} />
     </TouchableOpacity>
 
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'manubrioFixie', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_manubrio.png')} />
+    {/* Tenedor Fixie */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'tenedorFixie', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Fixie/tenedor.jpg')} />
     </TouchableOpacity>
 
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'cuadroFixie', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_marco.png')} />
+    {/* Bielas Fixie */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'bielasFixie', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Fixie/bielas.jpg')} />
     </TouchableOpacity>
 
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'piñonFixie', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_piñon.png')} />
+    {/* Piñón Fixie */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pinonFixie', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Fixie/pinon.jpg')} />
     </TouchableOpacity>
 
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'cadenaFixie', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_cadena.jpeg')} />
+    {/* Rueda Fixie */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedaFixie', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Fixie/rueda.jpg')} />
     </TouchableOpacity>
 
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'platoFixie', tipoBicicleta })
-      }
-    >
-      <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_plato.jpeg')} />
+   
+
+
+    {/* componentes en comun  */}
+    
+    {/* Caña */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'cana', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Comun/cana.jpg')} />
     </TouchableOpacity>
 
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ComponenteDetalle', { componenteId: 'sillinFixie', tipoBicicleta })
-      }
-    >
-      { <Image style={styles.iconoComponentes} source={require('../../iconos/fixie_sillin.png')} /> }
+    {/* Centro */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'centro', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Comun/centro.jpg')} />
     </TouchableOpacity>
 
+    {/* Manubrio */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Comun/manubrio.png')} />
+    </TouchableOpacity>
+
+    {/* Juego de Dirección */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'juegodedireccion', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Comun/juegodedireccion.jpg')} />
+    </TouchableOpacity>
+
+    {/* Sillín */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'sillin', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Comun/sillin.jpg')} />
+    </TouchableOpacity>
+
+    {/* Poste */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'poste', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Comun/poste.jpg')} />
+    </TouchableOpacity>
+
+    {/* Pedales */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedales', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Comun/pedales.jpg')} />
+    </TouchableOpacity>
+
+    {/* Neumático */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'neumatico', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Comun/neumatico.jpg')} />
+    </TouchableOpacity>
+
+    {/* Cadena */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'cadena', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Comun/cadena.png')} />
+    </TouchableOpacity>
   </ScrollView>
 )}
       </SafeAreaProvider>

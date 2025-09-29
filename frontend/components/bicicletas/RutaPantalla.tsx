@@ -215,40 +215,108 @@ const RutaPantalla: React.FC = () => {
           </TouchableOpacity> 
         </View>
 
-        {/* Barra de componentes deslizable  */}
-        {mostrarBarraComponentes && (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.barraComponentes}
-            contentContainerStyle={{ paddingHorizontal: 10 }}
-          >
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedasRuta', tipoBicicleta })}>
-              <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_ruedas.jpeg')} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrioRuta', tipoBicicleta })}>
-              <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_manubrio.jpeg')} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'marcoRuta', tipoBicicleta })}>
-              <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_marco.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'piñonRuta', tipoBicicleta })}>
-              <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_piñon.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'cadenaRuta', tipoBicicleta })}>
-              <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_cadena.png')} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'platoRuta', tipoBicicleta })}>
-              <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_plato.jpeg')} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedalesRuta', tipoBicicleta })}>
-              <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_pedal.jpeg')} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'sillinRuta', tipoBicicleta })}>
-              <Image style={styles.iconoComponentes} source={require('../../iconos/ruta_sillin.png')} />
-            </TouchableOpacity>
-          </ScrollView>
-        )}
+       {/* Barra de componentes deslizable Ruta */}
+{mostrarBarraComponentes && (
+  <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    style={styles.barraComponentes}
+    contentContainerStyle={{ paddingHorizontal: 10 }}
+  >
+    {/* Marco Ruta */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'marcoRuta', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Ruta/marco.jpg')} />
+    </TouchableOpacity>
+
+    {/* Tenedor Ruta */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'tenedorRuta', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Ruta/tenedor.webp')} />
+    </TouchableOpacity>
+
+    {/* Biela Ruta */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'bielaRuta', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Ruta/biela.jpg')} />
+    </TouchableOpacity>
+
+    {/* Piñón Ruta */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pinonRuta', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Ruta/pinon.jpg')} />
+    </TouchableOpacity>
+
+    {/* Desviador Delantero Ruta */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'desviadordelanteroRuta', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Ruta/desviadordelantero.jpg')} />
+    </TouchableOpacity>
+
+    {/* Desviador Trasero Ruta */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'desviadortraseroRuta', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Ruta/desviadortrasero.jpg')} />
+    </TouchableOpacity>
+
+    {/* Cambios Ruta */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'cambiosRuta', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Ruta/cambios.jpg')} />
+    </TouchableOpacity>
+
+    {/* Frenos de Pinza Ruta */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'frenospinsaRuta', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Ruta/frenospinsa.jpg')} />
+    </TouchableOpacity>
+
+    {/* Rueda Ruta */}
+    <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'ruedaRuta', tipoBicicleta })}>
+      <Image style={styles.iconoComponentes} source={require('../../img/Ruta/rueda.webp')} />
+    </TouchableOpacity>
+
+     {/* componentes en comun  */}
+       
+       {/* Caña */}
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'cana', tipoBicicleta })}>
+         <Image style={styles.iconoComponentes} source={require('../../img/Comun/cana.jpg')} />
+       </TouchableOpacity>
+   
+       {/* Centro */}
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'centro', tipoBicicleta })}>
+         <Image style={styles.iconoComponentes} source={require('../../img/Comun/centro.jpg')} />
+       </TouchableOpacity>
+   
+       {/* Manubrio */}
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'manubrio', tipoBicicleta })}>
+         <Image style={styles.iconoComponentes} source={require('../../img/Comun/manubrio.png')} />
+       </TouchableOpacity>
+   
+       {/* Juego de Dirección */}
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'juegodedireccion', tipoBicicleta })}>
+         <Image style={styles.iconoComponentes} source={require('../../img/Comun/juegodedireccion.jpg')} />
+       </TouchableOpacity>
+   
+       {/* Sillín */}
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'sillin', tipoBicicleta })}>
+         <Image style={styles.iconoComponentes} source={require('../../img/Comun/sillin.jpg')} />
+       </TouchableOpacity>
+   
+       {/* Poste */}
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'poste', tipoBicicleta })}>
+         <Image style={styles.iconoComponentes} source={require('../../img/Comun/poste.jpg')} />
+       </TouchableOpacity>
+   
+       {/* Pedales */}
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'pedales', tipoBicicleta })}>
+         <Image style={styles.iconoComponentes} source={require('../../img/Comun/pedales.jpg')} />
+       </TouchableOpacity>
+   
+       {/* Neumático */}
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'neumatico', tipoBicicleta })}>
+         <Image style={styles.iconoComponentes} source={require('../../img/Comun/neumatico.jpg')} />
+       </TouchableOpacity>
+   
+       {/* Cadena */}
+       <TouchableOpacity onPress={() => navigation.navigate('ComponenteDetalle', { componenteId: 'cadena', tipoBicicleta })}>
+         <Image style={styles.iconoComponentes} source={require('../../img/Comun/cadena.png')} />
+       </TouchableOpacity>
+     </ScrollView>
+   )}
+
       </SafeAreaProvider>
     </LinearGradient>
   );

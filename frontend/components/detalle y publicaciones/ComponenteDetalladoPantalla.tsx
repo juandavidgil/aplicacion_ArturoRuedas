@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   View, Text, TouchableOpacity, Dimensions, Image, StyleSheet, Alert, FlatList, ScrollView,
-  Linking
+  Linking, ImageSourcePropType
 } from "react-native";
 import { useRoute, useNavigation, RouteProp } from "@react-navigation/native";
 import { componentesData } from "../../components/detalle y publicaciones/ComponentesData";
@@ -13,7 +13,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from 'expo-linear-gradient';
 import CustomModal from '../detalle y publicaciones/CustomModal';
 
-
 interface Publicacion {
   id: number;
   nombre_articulo: string;
@@ -24,7 +23,7 @@ interface Publicacion {
   fotos: string[];
   nombre_vendedor: string;
   telefono: string;
-  foto:string;
+  foto: string;
   id_vendedor: number;
 }
 
@@ -49,19 +48,19 @@ const ComponenteDetallePantalla = () => {
   const [articulos, setPublicaciones] = useState<Publicacion[]>([]);
   const [expandedStep, setExpandedStep] = useState<number | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-const [modalMessage, setModalMessage] = useState("");
-const [modalSuccess, setModalSuccess] = useState(true);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalSuccess, setModalSuccess] = useState(true);
 
-const mostrarModal = (mensaje: string, exito: boolean) => {
-  setModalMessage(mensaje);
-  setModalSuccess(exito);
-  setModalVisible(true);
+  const mostrarModal = (mensaje: string, exito: boolean) => {
+    setModalMessage(mensaje);
+    setModalSuccess(exito);
+    setModalVisible(true);
 
-  setTimeout(() => {
-    setModalVisible(false);
-  }, 2000);
-};
-  
+    setTimeout(() => {
+      setModalVisible(false);
+    }, 2000);
+  };
+
   const toggleStep = (index: number) => {
     setExpandedStep(expandedStep === index ? null : index);
   };
@@ -95,16 +94,17 @@ const mostrarModal = (mensaje: string, exito: boolean) => {
         throw new Error(responseData.error || "Error al agregar al carrito");
 
       mostrarModal("¡Artículo agregado al carrito! ✅", true);
-   } catch (error: any) {
-    console.error("Error completo en AgregarCarrito:", error);
+    } catch (error: any) {
+      console.error("Error completo en AgregarCarrito:", error);
 
-    if (error.message?.includes("ya está en el carrito")) {
-      mostrarModal("El artículo ya está en el carrito ❌", false);
-    } else {
-      mostrarModal("Hubo un error al agregar el artículo ❌", false);
+      if (error.message?.includes("ya está en el carrito")) {
+        mostrarModal("El artículo ya está en el carrito ❌", false);
+      } else {
+        mostrarModal("Hubo un error al agregar el artículo ❌", false);
+      }
     }
-  }
-};
+  };
+
   const enviarWhatsApp = (numero: string, mensaje: string) => {
     const numeroFormateado = numero.replace(/\D/g, '');
     const url = `whatsapp://send?phone=57${numeroFormateado}&text=${encodeURIComponent(mensaje)}`;
@@ -163,7 +163,7 @@ const mostrarModal = (mensaje: string, exito: boolean) => {
         <View style={styles.info}>
           <Text style={styles.nombre}>{item.nombre_articulo}</Text>
           <Text style={styles.descripcion}>Descripción: {item.descripcion}</Text>
-           <Text style={styles.precio}>
+          <Text style={styles.precio}>
             {new Intl.NumberFormat('es-CO', {
               style: 'currency',
               currency: 'COP',
@@ -208,7 +208,7 @@ const mostrarModal = (mensaje: string, exito: boolean) => {
 
         {tab !== "tienda" && (
           <Image
-            source={componente.imagen}
+            source={componente.imagen as ImageSourcePropType}
             style={styles.image}
             resizeMode="contain"
           />
@@ -275,12 +275,16 @@ const mostrarModal = (mensaje: string, exito: boolean) => {
         {tab === "info" && (
           <ScrollView contentContainerStyle={styles.content}>
             <View style={styles.infoBox}>
-              <Text style={styles.infoTitle}>📌 ¿Para qué sirve?</Text>
-              <Text style={styles.infoText}>{componente.informacion.utilidad}</Text>
+              <Text style={styles.infoTitle}>📌 ¿En qué consiste?</Text>
+              <Text style={styles.infoText}>{componente.informacion.consiste}</Text>
             </View>
             <View style={styles.infoBox}>
               <Text style={styles.infoTitle}>🛠️ Mantenimiento</Text>
               <Text style={styles.infoText}>{componente.informacion.mantenimiento}</Text>
+            </View>
+            <View style={styles.infoBox}>
+              <Text style={styles.infoTitle}>📌 Curiosidades</Text>
+              <Text style={styles.infoText}>{componente.informacion.curiosidades}</Text>
             </View>
 
             <TouchableOpacity
@@ -294,7 +298,7 @@ const mostrarModal = (mensaje: string, exito: boolean) => {
 
         {tab === "tienda" &&
           (articulos.length === 0 ? (
-            <Text style={{ textAlign: "center", marginTop: 20, color:'#fff' }}>
+            <Text style={{ textAlign: "center", marginTop: 20, color: '#fff' }}>
               No hay publicaciones disponibles.
             </Text>
           ) : (
@@ -309,11 +313,10 @@ const mostrarModal = (mensaje: string, exito: boolean) => {
           ))}
       </View>
       <CustomModal
-  visible={modalVisible}
-  message={modalMessage}
-  success={modalSuccess}
-/>
-
+        visible={modalVisible}
+        message={modalMessage}
+        success={modalSuccess}
+      />
     </LinearGradient>
   );
 };
@@ -323,7 +326,7 @@ export default ComponenteDetallePantalla;
 const styles = StyleSheet.create({
   container: { flex: 1 },
   title: { fontSize: 24, fontWeight: "bold", textAlign: "center", marginBottom: 15, marginTop: "12%", color: "#fff" },
-  image: { width: "100%", height: 200, marginBottom: 15, borderRadius: 16, backgroundColor:'#fff' },
+  image: { width: "100%", height: 200, marginBottom: 15, borderRadius: 16, backgroundColor: '#fff' },
 
   stepBox: { marginBottom: 12, borderRadius: 10, backgroundColor: "#fff", shadowColor: "#000", shadowOpacity: 0.05, shadowRadius: 4, shadowOffset: { width: 0, height: 2 }, elevation: 2 },
   stepButton: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 14, borderRadius: 10, backgroundColor: "#b9c0c5ff" },
@@ -335,7 +338,7 @@ const styles = StyleSheet.create({
   tab: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 20, backgroundColor: "#e2e8f0", fontSize: 15, color: "#475569", overflow: "hidden" },
   activeTab: { backgroundColor: "#3b82f6", color: "#fff", fontWeight: "bold" },
 
-  content: { marginTop: 15, paddingBottom: 30, paddingHorizontal: 12, margin:10 },
+  content: { marginTop: 15, paddingBottom: 30, paddingHorizontal: 12, margin: 10 },
 
   botonIa: { paddingVertical: 12, paddingHorizontal: 20, borderRadius: 25, backgroundColor: "#06b6d4", marginTop: 20, alignItems: "center", alignSelf: "center", shadowColor: "#000", shadowOpacity: 0.15, shadowRadius: 6, elevation: 4 },
   botonIaText: { color: "#fff", fontWeight: "bold", fontSize: 16 },

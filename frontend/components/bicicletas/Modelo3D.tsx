@@ -26,7 +26,7 @@ export const Modelo3D: React.FC<Modelo3DProps> = ({ cargar, scale = 1, position 
     <Canvas style={{ width: '100%', height: 400 }}>
       <ambientLight intensity={0.5} />
       <directionalLight position={[5, 5, 5]} intensity={1} />
-      <primitive object={scene.clone()} scale={scale} position={position} />
+      <primitive object={scene} scale={scale} position={position} />
       <OrbitControls enableZoom enablePan enableRotate />
     </Canvas>
   );
