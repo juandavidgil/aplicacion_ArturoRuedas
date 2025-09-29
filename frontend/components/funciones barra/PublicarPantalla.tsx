@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { URL } from '../../config/UrlApi';
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { width, height } = Dimensions.get('window');
 
@@ -24,8 +25,10 @@ const PublicarPantalla: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [tipoComponente, setTipoComponente] = useState('ruedas');
   const [modalVisible, setModalVisible] = useState(false);
   const [ID_usuario, setID_usuario] = useState<number | null>(null);
+  const insets = useSafeAreaInsets();
   const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false);
   const componentesPorBici: Record<string, { label: string; value: string }[]> = {
+
   MTB: [
     { label: 'Marco', value: 'marcoMtb' },
     { label: 'Ruedas', value: 'ruedasMtb' },
@@ -329,7 +332,7 @@ const PublicarBoton = async () => {
       </SafeAreaView>
 
       {/* Footer */}
-      <View style={styles.iconBar}>
+      <View style={[styles.iconBar, { paddingBottom: insets.bottom + 10 }]}>
         <TouchableOpacity onPress={() => navigation.navigate('Publicar')}><Ionicons name='storefront-outline' size={28} color="#ffffffff" /></TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Carrito')}><Ionicons name='cart-outline' size={28} color="#ffffffff" /></TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}><Ionicons name='notifications-outline' size={28} color="#ffffffff" /></TouchableOpacity>
@@ -363,13 +366,32 @@ const styles = StyleSheet.create({
   picker: { color: '#fff', width: '100%', fontSize: 16, paddingVertical: 10, paddingHorizontal: 12 },
   image: { width: 150, height: 150, borderRadius: 14, marginRight: 10, backgroundColor: '#e0e0e0' },
   buttonGroup: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 24 },
-  photoButton: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderRadius: 30, alignItems: 'center', justifyContent: 'center', marginHorizontal: 6, backgroundColor: '#4a90e2', shadowColor: '#000', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.15, shadowRadius: 5, elevation: 5 },
-  buttonText: { color: 'white', marginLeft: 8, fontWeight: '600', fontSize: 15 },
-  publishButton: { backgroundColor: '#00c774', paddingVertical: 16, borderRadius: 30, alignItems: 'center', elevation: 5, marginTop: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.2, shadowRadius: 6, marginHorizontal: 9, marginBottom: 180 },
+  photoButton: { flex: 1, flexDirection: 'row', paddingVertical: 14, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginHorizontal: 6, backgroundColor: '#00c6ff', shadowColor: '#000', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.15, shadowRadius: 5, elevation: 5 },
+  
+  buttonText: { 
+  color: "#fff", 
+  fontWeight: "700", 
+  fontSize: 16 
+},
+
+publishButton: { 
+  backgroundColor: "#15922aff", // mismo fondo semitransparente que perfil
+  paddingVertical: 14,
+  borderRadius: 12, // igual al perfil
+  alignItems: "center",
+  marginTop: 12,
+  marginHorizontal: 12,
+  marginBottom: 180,
+  shadowColor: "#000",
+  shadowOpacity: 0.25,
+  shadowRadius: 8,
+  elevation: 4
+},
+
   publishText: { color: 'white', fontWeight: 'bold', fontSize: 17, letterSpacing: 0.5 },
   modalContainer: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', padding: 20 },
   modalContent: { backgroundColor: 'white', padding: 35, borderRadius: 20, alignItems: 'center', width: '80%', shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 10, shadowOffset: { width: 0, height: 6 }, elevation: 6 },
-  iconBar: { flexDirection: 'row', justifyContent: 'space-around', paddingVertical: height * 0.015, backgroundColor: '#004f4d', borderTopLeftRadius: 10, borderTopRightRadius: 10, position: 'absolute', bottom: 0, left: 0, right: 0, borderTopWidth: 1, shadowOpacity: 0.1, shadowOffset: { width: 0, height: -2 }, shadowRadius: 6, paddingBottom: "7%" },
+  iconBar: { flexDirection: 'row', justifyContent: 'space-around', paddingVertical: height * 0.015, backgroundColor: '#004f4d', borderTopLeftRadius: 10, borderTopRightRadius: 10, position: 'absolute', bottom: 0, left: 0, right: 0, borderTopWidth: 1, shadowOpacity: 0.1, shadowOffset: { width: 0, height: -2 }, shadowRadius: 6 },
   modalText: { marginTop: 20, fontSize: 18, fontWeight: '600', color: '#2d3748', textAlign: 'center' },
 });
 
