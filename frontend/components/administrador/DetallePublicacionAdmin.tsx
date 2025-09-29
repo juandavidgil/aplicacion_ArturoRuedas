@@ -96,7 +96,13 @@ const DetallePublicacionAdmin: React.FC<Props> = ({ route }) => {
 
           <View style={styles.seccion}>
             <Text style={styles.subtitulo}>Precio</Text>
-            <Text style={styles.precioDetalle}>${publicacion.precio}</Text>
+            <Text style={styles.precioDetalle}>
+                                     {new Intl.NumberFormat('es-CO', {
+                                       style: 'currency',
+                                       currency: 'COP',
+                                       minimumFractionDigits: 0
+                                     }).format(Number(publicacion.precio))}
+                                   </Text>
           </View>
 
           <View style={styles.seccion}>

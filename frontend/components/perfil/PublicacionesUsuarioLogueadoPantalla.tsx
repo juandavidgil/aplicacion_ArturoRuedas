@@ -84,7 +84,13 @@ const PublicacionesUsuarioLogueado: React.FC = () => {
           <Text style={styles.descripcion}>
             Descripción: {item.descripcion.substring(0, 50)}...
           </Text>
-          <Text style={styles.precio}>Precio: ${item.precio}</Text>
+           <Text style={styles.precio}>
+            {new Intl.NumberFormat('es-CO', {
+              style: 'currency',
+              currency: 'COP',
+              minimumFractionDigits: 0
+            }).format(Number(item.precio))}
+          </Text>
           <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
         </View>
       </View>

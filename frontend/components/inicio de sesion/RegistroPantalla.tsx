@@ -14,7 +14,6 @@ import CustomModal from '../detalle y publicaciones/CustomModal';
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 
-
 const RegistroPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const image = require('../../img/fondo1.png');
@@ -29,16 +28,25 @@ const RegistroPantalla: React.FC = () => {
   const [modalMessage, setModalMessage] = useState("");
   const [modalSuccess, setModalSuccess] = useState(true);
 
-const mostrarModal = (mensaje: string, exito: boolean) => {
-  setModalMessage(mensaje);
-  setModalSuccess(exito);
-  setModalVisible(true);
+  // ----------------- FETCH CON TIMEOUT (EXACTO COMO PUBLICAR) -----------------
+  const fetchWithTimeout = (url: string, options: any, timeout = 20000) => {
+    return Promise.race([
+      fetch(url, options),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Tiempo de espera excedido")), timeout)
+      ),
+    ]);
+  };
 
-  setTimeout(() => {
-    setModalVisible(false);
-  }, 2000);
-};
+  const mostrarModal = (mensaje: string, exito: boolean) => {
+    setModalMessage(mensaje);
+    setModalSuccess(exito);
+    setModalVisible(true);
 
+    setTimeout(() => {
+      setModalVisible(false);
+    }, 2000);
+  };
 
   const limpiarFormulario = () => {
     setNombre("");
@@ -54,7 +62,7 @@ const mostrarModal = (mensaje: string, exito: boolean) => {
     }, [])
   );
 
-  // ----------------- FOTO -----------------
+  // ----------------- FOTO (EXACTO COMO PUBLICAR) -----------------
   const tomarFoto = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') return alert('Permiso de cámara denegado');
@@ -68,15 +76,12 @@ const mostrarModal = (mensaje: string, exito: boolean) => {
 
     if (!result.canceled && result.assets.length > 0) {
       let uri = result.assets[0].uri;
-
-      // Copiar content:// a cache si es necesario
       if (uri.startsWith('content://')) {
         const nombreArchivo = uri.split('/').pop();
         const cacheUri = `${FileSystem.cacheDirectory}${nombreArchivo}`;
         await FileSystem.copyAsync({ from: uri, to: cacheUri });
         uri = cacheUri;
       }
-
       setFoto(uri);
     }
   };
@@ -94,15 +99,12 @@ const mostrarModal = (mensaje: string, exito: boolean) => {
 
     if (!result.canceled && result.assets.length > 0) {
       let uri = result.assets[0].uri;
-
-      // Copiar content:// a cache si es necesario
       if (uri.startsWith('content://')) {
         const nombreArchivo = uri.split('/').pop();
         const cacheUri = `${FileSystem.cacheDirectory}${nombreArchivo}`;
         await FileSystem.copyAsync({ from: uri, to: cacheUri });
         uri = cacheUri;
       }
-
       setFoto(uri);
     }
   };
@@ -113,9 +115,10 @@ const mostrarModal = (mensaje: string, exito: boolean) => {
     return regex.test(correo);
   };
 
+  // ----------------- REGISTRO (EXACTO COMO PUBLICAR) -----------------
   const handleRegistro = async () => {
     if (!nombre || !correo || !contraseña || !telefono || !foto) {
-       mostrarModal("Todos los campos son obligatorios", false);
+      mostrarModal("Todos los campos son obligatorios", false);
       return;
     }
 
@@ -130,23 +133,40 @@ const mostrarModal = (mensaje: string, exito: boolean) => {
       let fotoBase64: string | null = null;
 
       if (foto) {
-        // Convertir a JPEG y base64
         const manipResult = await ImageManipulator.manipulateAsync(
           foto,
-          [{ resize: { width: 800 } }],
-          { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+          [{ resize: { width: 600 } }], // ⬅️ EXACTO igual que Publicar
+          {
+            compress: 0.5, // ⬅️ EXACTO igual que Publicar
+            format: ImageManipulator.SaveFormat.JPEG,
+            base64: true,
+          }
         );
 
-        if (!manipResult.base64) throw new Error('No se pudo generar Base64');
+        if (!manipResult.base64) {
+          throw new Error("No se pudo generar Base64 de la imagen"); // ⬅️ EXACTO igual que Publicar
+        }
 
         fotoBase64 = `data:image/jpeg;base64,${manipResult.base64}`;
       }
 
-      const response = await fetch(`${URL}/registrar`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre, correo, contraseña, telefono, foto: fotoBase64 }),
-      });
+      const formData = {
+        nombre,
+        correo,
+        contraseña, 
+        telefono,
+        foto: fotoBase64
+      };
+
+      const response: any = await fetchWithTimeout(
+        `${URL}/registrar`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        },
+        20000 // ⬅️ EXACTO igual que Publicar
+      );
 
       const data = await response.json();
 
@@ -157,10 +177,9 @@ const mostrarModal = (mensaje: string, exito: boolean) => {
       } else {
         mostrarModal(data.error || "Error en el registro", false);
       }
-    } catch (error) {
-      console.error('Error en el registro:', error);
-      mostrarModal("No se pudo completar el registro", false);
-
+    } catch (error: any) {
+      console.error("Error:", error);
+      mostrarModal(error.message || "Error de conexión", false); // ⬅️ EXACTO igual que Publicar
     } finally {
       setCargando(false);
     }
@@ -193,25 +212,23 @@ const mostrarModal = (mensaje: string, exito: boolean) => {
             <View style={styles.photoButtonContainer}>
               <TouchableOpacity onPress={tomarFoto} style={styles.photoButton}>
                 <LinearGradient
-      colors={["#20eb4c", "#006D77"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.gradientButton}
-    >
-      <Ionicons name="camera" size={30} color="#fff" style={{ marginRight: 8 }} />
-      
-    </LinearGradient>
+                  colors={["#20eb4c", "#006D77"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.gradientButton}
+                >
+                  <Ionicons name="camera" size={30} color="#fff" style={{ marginRight: 8 }} />
+                </LinearGradient>
               </TouchableOpacity>
               <TouchableOpacity onPress={seleccionarFoto} style={styles.photoButton}>
-                 <LinearGradient
-      colors={["#4a90e2", "#006D77"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.gradientButton}
-    >
-      <Ionicons name="images" size={30} color="#fff" style={{ marginRight: 8 }} />
-      
-    </LinearGradient>
+                <LinearGradient
+                  colors={["#4a90e2", "#006D77"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.gradientButton}
+                >
+                  <Ionicons name="images" size={30} color="#fff" style={{ marginRight: 8 }} />
+                </LinearGradient>
               </TouchableOpacity>
             </View>
 
@@ -274,13 +291,12 @@ const mostrarModal = (mensaje: string, exito: boolean) => {
           </View>
         </ScrollView>
       </ImageBackground>
-     <CustomModal
-      visible={modalVisible}
-      message={modalMessage}
-     success={modalSuccess}
-     onClose={() => setModalVisible(false)}
-/>
-
+      <CustomModal
+        visible={modalVisible}
+        message={modalMessage}
+        success={modalSuccess}
+        onClose={() => setModalVisible(false)}
+      />
     </SafeAreaView>
   );
 };
@@ -313,23 +329,22 @@ const styles = StyleSheet.create({
   photoButtonContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 15 },
   photoButton: {
     flex: 1,
-     marginHorizontal: 5,
-  borderRadius: 12,
-  overflow: "hidden", // ✅ asegura que el gradiente respete el borde redondeado
-  elevation: 3,       // sombra Android
-  shadowColor: "#000", // sombra iOS
-  shadowOffset: { width: 0, height: 3 },
-  shadowOpacity: 0.2,
-  shadowRadius: 4,
-    
+    marginHorizontal: 5,
+    borderRadius: 12,
+    overflow: "hidden",
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   gradientButton: {
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "center",
-  paddingVertical: 15,
-  borderRadius: 12,
-},
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 15,
+    borderRadius: 12,
+  },
 });
 
 export default RegistroPantalla;

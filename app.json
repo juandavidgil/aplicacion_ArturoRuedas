@@ -23,6 +23,7 @@
     "android": {
       "package": "com.juandavidgil.aplicacionarturoRuedas",
       "permissions": ["NOTIFICATIONS"],
+      "googleServicesFile": "./android/app/google-services.json",
       "intentFilters": [
         {
           "action": "VIEW",

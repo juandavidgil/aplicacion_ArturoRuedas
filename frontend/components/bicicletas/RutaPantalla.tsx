@@ -151,7 +151,13 @@ const RutaPantalla: React.FC = () => {
                       <View style={styles.infoMTB}>
                         <Text style={styles.nombreMTB}>{item.nombre_articulo}</Text>
                         <Text style={styles.descripcionMTB} numberOfLines={2}>Descripción: {item.descripcion}</Text>
-                        <Text style={styles.precioMTB}>Precio: ${item.precio}</Text>
+                        <Text style={styles.precioMTB}>
+                          {new Intl.NumberFormat('es-CO', {
+                            style: 'currency',
+                            currency: 'COP',
+                            minimumFractionDigits: 0
+                          }).format(Number(item.precio))}
+                        </Text>
                         <Text style={styles.tipoMTB}>Tipo: {item.tipo_bicicleta}</Text>
                         <Text style={styles.vendedorMTB}>Vendedor: {item.nombre_vendedor}</Text>
 

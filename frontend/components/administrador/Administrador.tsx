@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, ImageBackground } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StackParamList } from '../../types/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {URL} from '../../config/UrlApi'
+import { URL } from '../../config/UrlApi';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserContext } from "../inicio de sesion/userContext"; // 👈 importa el contexto
 
 export interface Usuario {
   id_usuario: number;
@@ -17,32 +18,24 @@ export interface Usuario {
   foto: string;
 }
 
-
 const Administrador: React.FC = () => {
-  const image = require('../../img/fondo1.png');
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [refreshing, setRefreshing] = useState(false);
-  
-  
 
+  const { logout } = useContext(UserContext); // 👈 para usar logout del contexto
 
-  const obtenerUsuarios = async () => {     
+  const obtenerUsuarios = async () => {
     try {
       setRefreshing(true);
       const response = await fetch(`${URL}/obtener-usuarios`);
 
-    
-      
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Error ${response.status}: ${errorText}`);
       }
 
       const data = await response.json();
-       
-      
-      // Validación de datos
       if (!Array.isArray(data)) {
         throw new Error("La respuesta no es un array válido");
       }
@@ -57,128 +50,148 @@ const Administrador: React.FC = () => {
   };
 
   const handleEliminarUsuario = async (usuario: Usuario) => {
-  const id = Number(usuario.id_usuario || usuario.id_usuario); 
+    const id = Number(usuario.id_usuario || usuario.id_usuario);
+    if (!id || isNaN(id)) {
+      console.error("❌ ID de usuario inválido o no numérico:", usuario);
+      Alert.alert('Error', 'ID de usuario no válido');
+      return;
+    }
 
-  
-  
-  if (!id || isNaN(id)) {
-    console.error("❌ ID de usuario inválido o no numérico:", usuario);
-    Alert.alert('Error', 'ID de usuario no válido');
-    return;
-  }
+    try {
+      Alert.alert(
+        "Confirmar eliminación",
+        `¿Estás seguro de que deseas eliminar a ${usuario.nombre}?`,
+        [
+          { text: "Cancelar", style: "cancel" },
+          {
+            text: "Eliminar",
+            onPress: async () => {
+              const response = await fetch(`${URL}/eliminar-usuario/${id}`, {
+                method: 'DELETE'
+              });
 
-  try {
-    Alert.alert(
-      "Confirmar eliminación",
-      `¿Estás seguro de que deseas eliminar a ${usuario.nombre}?`,
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Eliminar",
-          onPress: async () => {
-            const response = await fetch(`${URL}/eliminar-usuario/${id}`, {
-              method: 'DELETE'
-            });
-
-            if (response.ok) {
-              await obtenerUsuarios();
-              Alert.alert("Éxito", "Usuario eliminado correctamente");
-            } else {
-              const errorText = await response.text();
-              throw new Error(errorText);
+              if (response.ok) {
+                await obtenerUsuarios();
+                Alert.alert("Éxito", "Usuario eliminado correctamente");
+              } else {
+                const errorText = await response.text();
+                throw new Error(errorText);
+              }
             }
           }
-        }
+        ]
+      );
+    } catch (error) {
+      console.error('❌ Error al eliminar usuario:', error);
+      Alert.alert('Error', 'No se pudo eliminar el usuario');
+    }
+  };
+
+  // 🔹 Funciones de cerrar sesión
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem("userToken");
+      await AsyncStorage.removeItem("userData");
+      await logout();
+
+      Alert.alert("Sesión cerrada", "Has cerrado sesión correctamente.");
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Presentacion" }],
+      });
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
+
+  const confirmarLogout = () => {
+    Alert.alert(
+      "Cerrar sesión",
+      "¿Seguro deseas cerrar sesión?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        { text: "Sí, salir", style: "destructive", onPress: handleLogout }
       ]
     );
-  } catch (error) {
-    console.error('❌ Error al eliminar usuario:', error);
-    Alert.alert('Error', 'No se pudo eliminar el usuario');
-  }
-};
+  };
 
   useEffect(() => {
     obtenerUsuarios();
   }, []);
 
   const renderItem = ({ item }: { item: Usuario }) => {
-   
+    return (
+      <View style={styles.card}>
+        <View style={styles.info}>
+          <Text style={styles.label}>ID: <Text style={styles.value}>{item.id_usuario}</Text></Text>
+          <Text style={styles.label}>Nombre: <Text style={styles.value}>{item.nombre}</Text></Text>
+          <Text style={styles.label}>Correo: <Text style={styles.value}>{item.correo}</Text></Text>
+          <Text style={styles.label}>Teléfono: <Text style={styles.value}>{item.telefono}</Text></Text>
 
-
-
-  return (
-    
-    <View style={styles.card}>
-      <View style={styles.info}>
-        <Text style={styles.label}>ID: <Text style={styles.value}>{item.id_usuario}</Text></Text>
-        <Text style={styles.label}>Nombre: <Text style={styles.value}>{item.nombre}</Text></Text>
-        <Text style={styles.label}>Correo: <Text style={styles.value}>{item.correo}</Text></Text>
-        <Text style={styles.label}>Teléfono: <Text style={styles.value}>{item.telefono}</Text></Text>
-
-        <View style={styles.buttonsContainer}>
-       <TouchableOpacity 
-        style={styles.adminPublicaciones} 
-        onPress={ () => navigation.navigate('PublicacionesAdmin', { ID_usuario : item.id_usuario}) }
-        
-      >
-        <Text style={styles.buttonText}>Publicaciones</Text>
-      </TouchableOpacity>
-          <TouchableOpacity 
-          style={[styles.button, styles.blockButton]}
-          onPress={()=>navigation.navigate('InformacionUsuarioAdmin', {usuario : item})}> 
-            <Text style={styles.buttonText}>Ver mas</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.button, styles.deleteButton]}
-            onPress={() => handleEliminarUsuario(item)}
-          >
-            <Text style={styles.buttonText}>Eliminar</Text>
-          </TouchableOpacity>
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity
+              style={styles.adminPublicaciones}
+              onPress={() => navigation.navigate('PublicacionesAdmin', { ID_usuario: item.id_usuario })}
+            >
+              <Text style={styles.buttonText}>Publicaciones</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, styles.blockButton]}
+              onPress={() => navigation.navigate('InformacionUsuarioAdmin', { usuario: item })}
+            >
+              <Text style={styles.buttonText}>Ver más</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, styles.deleteButton]}
+              onPress={() => handleEliminarUsuario(item)}
+            >
+              <Text style={styles.buttonText}>Eliminar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
-  );
-};
+    );
+  };
 
   return (
-      <LinearGradient
-            colors={['#0c2b2aff', '#000000']} // azul petróleo → negro
-            start={{ x: 0, y: 0 }}
-            end={{ x: 0, y: 1 }}
-            style={{ flex: 1 }}
-          >
-    <View style={styles.container}>
-       
-      <Text style={styles.titulo}>ADMINISTRAR USUARIOS</Text>
-      
-      <FlatList
-        data={usuarios}
-        keyExtractor={(item) => item.id_usuario?.toString() || Math.random().toString()}
-        renderItem={renderItem}
-        contentContainerStyle={styles.lista}
-        refreshing={refreshing}
-        onRefresh={obtenerUsuarios}
-      />
+    <LinearGradient
+      colors={['#0c2b2aff', '#000000']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      style={{ flex: 1 }}
+    >
+      <View style={styles.container}>
+        <Text style={styles.titulo}>ADMINISTRAR USUARIOS</Text>
 
+        <FlatList
+          data={usuarios}
+          keyExtractor={(item) => item.id_usuario?.toString() || Math.random().toString()}
+          renderItem={renderItem}
+          contentContainerStyle={styles.lista}
+          refreshing={refreshing}
+          onRefresh={obtenerUsuarios}
+        />
 
-      <TouchableOpacity 
-        style={styles.refreshButton}
-        onPress={obtenerUsuarios}
-      >
-        <Ionicons name="refresh" size={24} color="white" />
-        <Text style={styles.refreshButtonText}>Actualizar lista</Text>
-      </TouchableOpacity>
-     
-    </View>
+        {/* Botón actualizar */}
+        <TouchableOpacity style={styles.refreshButton} onPress={obtenerUsuarios}>
+          <Ionicons name="refresh" size={24} color="white" />
+          <Text style={styles.refreshButtonText}>Actualizar lista</Text>
+        </TouchableOpacity>
 
-  </LinearGradient>
+        {/* 🔹 Botón cerrar sesión */}
+        <TouchableOpacity style={styles.logoutButton} onPress={confirmarLogout}>
+          <LinearGradient colors={['#ff416c', '#ff4b2b']} style={styles.buttonBg}>
+            <Text style={styles.buttonText}>Cerrar Sesión</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+    </LinearGradient>
   );
-  
 };
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flex: 1 },
   titulo: {
     fontSize: 26,
     fontWeight: 'bold',
@@ -188,9 +201,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     letterSpacing: 1,
   },
-  lista: {
-    paddingBottom: 20,
-  },
+  lista: { paddingBottom: 20 },
   card: {
     backgroundColor: 'rgba(255, 255, 255, 0.07)',
     borderRadius: 12,
@@ -205,20 +216,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.12)',
   },
-  info: {
-    flex: 1,
-  },
+  info: { flex: 1 },
   label: {
     fontSize: 14,
     fontWeight: 'bold',
     color: '#00e6a8',
     marginBottom: 2,
   },
-  value: {
-    fontSize: 14,
-    color: '#f5f5f5',
-    marginBottom: 6,
-  },
+  value: { fontSize: 14, color: '#f5f5f5', marginBottom: 6 },
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -238,14 +243,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  blockButton: {
-    backgroundColor: '#5a67d8', // azul violeta
-  },
-  deleteButton: {
-    backgroundColor: '#e53e3e', // rojo sobrio
-  },
+  blockButton: { backgroundColor: '#5a67d8' },
+  deleteButton: { backgroundColor: '#e53e3e' },
   adminPublicaciones: {
-    backgroundColor: '#3182ce', // azul consistente
+    backgroundColor: '#3182ce',
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 8,
@@ -259,12 +260,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  buttonText: {
-    color: '#fff',
-    fontWeight: '600',
-    fontSize: 14,
-    letterSpacing: 0.3,
-  },
+  buttonText: { color: '#fff', fontWeight: '600', fontSize: 14, letterSpacing: 0.3 },
   refreshButton: {
     flexDirection: 'row',
     backgroundColor: '#007bff',
@@ -280,13 +276,16 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 5,
   },
-  refreshButtonText: {
-    color: 'white',
-    fontWeight: '600',
-    fontSize: 15,
-    marginLeft: 8,
+  refreshButtonText: { color: 'white', fontWeight: '600', fontSize: 15, marginLeft: 8 },
+  logoutButton: {
+    marginBottom: 30,
+    marginHorizontal: 16,
+  },
+  buttonBg: {
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: "center",
   },
 });
-
 
 export default Administrador;

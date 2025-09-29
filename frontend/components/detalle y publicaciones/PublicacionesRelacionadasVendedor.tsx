@@ -147,7 +147,13 @@ const PublicacionesRelacionadasVendedor: React.FC<Props> = ({ route }) => {
         <View style={styles.info}>
           <Text style={styles.nombre}>{item.nombre_articulo}</Text>
           <Text style={styles.descripcion}>Descripción: {item.descripcion}</Text>
-          <Text style={styles.precio}>Precio: ${item.precio}</Text>
+           <Text style={styles.precio}>
+            {new Intl.NumberFormat('es-CO', {
+              style: 'currency',
+              currency: 'COP',
+              minimumFractionDigits: 0
+            }).format(Number(item.precio))}
+          </Text>
           <Text style={styles.tipo}>Tipo: {item.tipo_bicicleta}</Text>
           <Text style={styles.vendedor}>Vendedor: {item.nombre_vendedor}</Text>
           

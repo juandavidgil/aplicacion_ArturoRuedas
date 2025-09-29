@@ -10,7 +10,7 @@ import { StackParamList } from '../../types/types';
 import * as Google from 'expo-auth-session/providers/google';
 
 
-
+/* 
 // ✅ Botón de Login con Google
 export function BtnLoginGoogle() {
   const [request, response, promptAsync] = Google.useAuthRequest({
@@ -37,7 +37,7 @@ export function BtnLoginGoogle() {
       <Text style={styles.buttonText}>Inicia con Google</Text>
     </Pressable>
   );
-}
+} */
 
 // Pantalla principal
 const PresentacionPantalla: React.FC = () => {
@@ -74,8 +74,8 @@ const PresentacionPantalla: React.FC = () => {
                 <Text style={[styles.buttonText, styles.registerButtonText]}>Registrarse</Text>
               </TouchableOpacity>
 
-              {/* ✅ Botón de Google funcionando */}
-              <BtnLoginGoogle />
+          
+             {/*  <BtnLoginGoogle /> */}
             </View>
           </View>
         </LinearGradient>
