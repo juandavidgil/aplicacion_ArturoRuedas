@@ -22,9 +22,10 @@ import { StackParamList } from '../../types/types';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { URL } from '../../config/UrlApi';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Modelo3D } from './Modelo3D';
 import { cargarFixie } from './Modelos3D';
+
 
 interface Articulo {
   id: number;
@@ -52,6 +53,7 @@ const FijaPantalla: React.FC = () => {
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
   const route = useRoute();
   const { tipoBicicleta } = route.params as RouteParams;
+  const insets = useSafeAreaInsets();
   
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -151,7 +153,7 @@ const FijaPantalla: React.FC = () => {
           </View>
         </View>
 
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{  flex: 1, paddingBottom: insets.bottom + 90 }}>
           <View style={styles.containerMTB}>
             {cargando ? (
               <ActivityIndicator size="large" color="#00ffb3" style={{ marginTop: 20 }} />
@@ -161,7 +163,7 @@ const FijaPantalla: React.FC = () => {
                   <FlatList
                     data={articulos}
                     keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
-                    contentContainerStyle={{ paddingBottom: 250, marginTop: 20 }}
+                    contentContainerStyle={{ paddingBottom: insets.bottom + 200, marginTop: 20 }}
                     renderItem={({ item }) => (
                       <TouchableOpacity
                         onPress={() =>
@@ -244,7 +246,7 @@ const FijaPantalla: React.FC = () => {
         </SafeAreaView>
 
         {/* Barra inferior */}
-        <View style={styles.iconBar}>
+        <View style={[styles.iconBar, { paddingBottom: insets.bottom + 10 }]}>
           <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
             <Ionicons name="storefront-outline" size={28} color="#fff" />
           </TouchableOpacity>
@@ -341,7 +343,7 @@ const FijaPantalla: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  containerMTB: { flex: 1, padding: 16, marginTop: 0 },
+  containerMTB: { flex: 1, padding: 16 },
   headerWrapper: { width: '100%', paddingBottom: 20 },
   header: {
     backgroundColor: '#004f4d',
@@ -443,7 +445,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: -2 },
     shadowRadius: 6,
-    paddingBottom: '7%',
+    
+
   },
   iconoComponentes: { width: 35, height: 35, marginHorizontal: 15 },
   barraComponentes: {

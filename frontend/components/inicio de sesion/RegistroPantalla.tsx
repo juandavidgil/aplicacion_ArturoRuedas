@@ -10,6 +10,10 @@ import * as FileSystem from 'expo-file-system/legacy';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { StackParamList } from '../../types/types';
 import { URL } from '../../config/UrlApi';
+import CustomModal from '../detalle y publicaciones/CustomModal';
+import { LinearGradient } from "expo-linear-gradient";
+import { Ionicons } from "@expo/vector-icons";
+
 
 const RegistroPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
@@ -21,6 +25,20 @@ const RegistroPantalla: React.FC = () => {
   const [telefono, setTelefono] = useState('');
   const [foto, setFoto] = useState<string | null>(null);
   const [cargando, setCargando] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalSuccess, setModalSuccess] = useState(true);
+
+const mostrarModal = (mensaje: string, exito: boolean) => {
+  setModalMessage(mensaje);
+  setModalSuccess(exito);
+  setModalVisible(true);
+
+  setTimeout(() => {
+    setModalVisible(false);
+  }, 2000);
+};
+
 
   const limpiarFormulario = () => {
     setNombre("");
@@ -97,12 +115,12 @@ const RegistroPantalla: React.FC = () => {
 
   const handleRegistro = async () => {
     if (!nombre || !correo || !contraseña || !telefono || !foto) {
-      Alert.alert('Error', 'Todos los campos son obligatorios');
+       mostrarModal("Todos los campos son obligatorios", false);
       return;
     }
 
     if (!validarCorreo(correo)) {
-      Alert.alert('Error', 'Por favor ingresa un correo electrónico válido');
+      mostrarModal("Por favor ingresa un correo electrónico válido", false);
       return;
     }
 
@@ -133,15 +151,16 @@ const RegistroPantalla: React.FC = () => {
       const data = await response.json();
 
       if (response.ok) {
-        Alert.alert('Éxito', 'Registro completado correctamente');
+        mostrarModal("Registro completado correctamente", true);
         limpiarFormulario();
         navigation.navigate('InicioSesion');
       } else {
-        Alert.alert('Error', data.error || 'Error en el registro');
+        mostrarModal(data.error || "Error en el registro", false);
       }
     } catch (error) {
       console.error('Error en el registro:', error);
-      Alert.alert('Error', 'No se pudo completar el registro');
+      mostrarModal("No se pudo completar el registro", false);
+
     } finally {
       setCargando(false);
     }
@@ -173,10 +192,26 @@ const RegistroPantalla: React.FC = () => {
 
             <View style={styles.photoButtonContainer}>
               <TouchableOpacity onPress={tomarFoto} style={styles.photoButton}>
-                <Text style={styles.buttonText}>Tomar Foto</Text>
+                <LinearGradient
+      colors={["#20eb4c", "#006D77"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.gradientButton}
+    >
+      <Ionicons name="camera" size={30} color="#fff" style={{ marginRight: 8 }} />
+      
+    </LinearGradient>
               </TouchableOpacity>
               <TouchableOpacity onPress={seleccionarFoto} style={styles.photoButton}>
-                <Text style={styles.buttonText}>Seleccionar Foto</Text>
+                 <LinearGradient
+      colors={["#4a90e2", "#006D77"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.gradientButton}
+    >
+      <Ionicons name="images" size={30} color="#fff" style={{ marginRight: 8 }} />
+      
+    </LinearGradient>
               </TouchableOpacity>
             </View>
 
@@ -239,6 +274,13 @@ const RegistroPantalla: React.FC = () => {
           </View>
         </ScrollView>
       </ImageBackground>
+     <CustomModal
+      visible={modalVisible}
+      message={modalMessage}
+     success={modalSuccess}
+     onClose={() => setModalVisible(false)}
+/>
+
     </SafeAreaView>
   );
 };
@@ -271,15 +313,23 @@ const styles = StyleSheet.create({
   photoButtonContainer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 15 },
   photoButton: {
     flex: 1,
-    paddingVertical: 15,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 5,
-    borderWidth: 2,
-    borderColor: '#006D77',
-    backgroundColor: '#4a90e2',
+     marginHorizontal: 5,
+  borderRadius: 12,
+  overflow: "hidden", // ✅ asegura que el gradiente respete el borde redondeado
+  elevation: 3,       // sombra Android
+  shadowColor: "#000", // sombra iOS
+  shadowOffset: { width: 0, height: 3 },
+  shadowOpacity: 0.2,
+  shadowRadius: 4,
+    
   },
+  gradientButton: {
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "center",
+  paddingVertical: 15,
+  borderRadius: 12,
+},
 });
 
 export default RegistroPantalla;

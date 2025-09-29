@@ -6,6 +6,7 @@ interface CustomModalProps {
   visible: boolean;
   message: string;
   success: boolean;
+  onClose?: () => void; 
 }
 
 const CustomModal: React.FC<CustomModalProps> = ({ visible, message, success }) => {

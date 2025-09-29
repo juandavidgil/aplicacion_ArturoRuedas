@@ -11,6 +11,8 @@ import { URL } from "../../config/UrlApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from 'expo-linear-gradient';
+import CustomModal from '../detalle y publicaciones/CustomModal';
+
 
 interface Publicacion {
   id: number;
@@ -46,7 +48,20 @@ const ComponenteDetallePantalla = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [articulos, setPublicaciones] = useState<Publicacion[]>([]);
   const [expandedStep, setExpandedStep] = useState<number | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+const [modalMessage, setModalMessage] = useState("");
+const [modalSuccess, setModalSuccess] = useState(true);
 
+const mostrarModal = (mensaje: string, exito: boolean) => {
+  setModalMessage(mensaje);
+  setModalSuccess(exito);
+  setModalVisible(true);
+
+  setTimeout(() => {
+    setModalVisible(false);
+  }, 2000);
+};
+  
   const toggleStep = (index: number) => {
     setExpandedStep(expandedStep === index ? null : index);
   };
@@ -79,13 +94,17 @@ const ComponenteDetallePantalla = () => {
       if (!response.ok)
         throw new Error(responseData.error || "Error al agregar al carrito");
 
-      Alert.alert("Éxito", "Artículo agregado al carrito");
-    } catch (error) {
-      console.error("Error completo en AgregarCarrito:", error);
-      Alert.alert("Error al agregar al carrito");
-    }
-  };
+      mostrarModal("¡Artículo agregado al carrito! ✅", true);
+   } catch (error: any) {
+    console.error("Error completo en AgregarCarrito:", error);
 
+    if (error.message?.includes("ya está en el carrito")) {
+      mostrarModal("El artículo ya está en el carrito ❌", false);
+    } else {
+      mostrarModal("Hubo un error al agregar el artículo ❌", false);
+    }
+  }
+};
   const enviarWhatsApp = (numero: string, mensaje: string) => {
     const numeroFormateado = numero.replace(/\D/g, '');
     const url = `whatsapp://send?phone=57${numeroFormateado}&text=${encodeURIComponent(mensaje)}`;
@@ -283,6 +302,12 @@ const ComponenteDetallePantalla = () => {
             />
           ))}
       </View>
+      <CustomModal
+  visible={modalVisible}
+  message={modalMessage}
+  success={modalSuccess}
+/>
+
     </LinearGradient>
   );
 };

@@ -1,21 +1,15 @@
 import React, { useState, useCallback, useContext } from 'react';
 import {
-  ImageBackground,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  SafeAreaView,
-  Alert,
-  ActivityIndicator,
-  Image
+  ImageBackground, View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Alert, ActivityIndicator, Image
 } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../../types/types';
 import { UserContext } from './userContext';
 import { URL } from '../../config/UrlApi';
+import CustomModal from '../detalle y publicaciones/CustomModal';
+
+
 
 const InicioSesionPantalla: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
@@ -24,6 +18,20 @@ const InicioSesionPantalla: React.FC = () => {
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
   const [cargando, setCargando] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+const [modalMessage, setModalMessage] = useState("");
+const [modalSuccess, setModalSuccess] = useState(true);
+
+const mostrarModal = (mensaje: string, exito: boolean) => {
+  setModalMessage(mensaje);
+  setModalSuccess(exito);
+  setModalVisible(true);
+
+  setTimeout(() => {
+    setModalVisible(false);
+  }, 2000);
+};
+
 
   const { setUsuario } = useContext(UserContext);
 
@@ -40,7 +48,7 @@ const InicioSesionPantalla: React.FC = () => {
 
   const handleLogin = async () => {
     if (!correo || !contraseña) {
-      Alert.alert('Error', 'Por favor ingresa correo y contraseña');
+     mostrarModal("Por favor ingresa correo y contraseña", false);
       return;
     }
 
@@ -55,17 +63,17 @@ const InicioSesionPantalla: React.FC = () => {
       const data = await response.json();
       if (response.ok) {
         await setUsuario(data.usuario); // Guarda en AsyncStorage y Context
-        Alert.alert('Éxito', 'Inicio de sesión correcto');
+       mostrarModal("Inicio de sesión correcto", true);
         limpiarFormulario();
         navigation.reset({
           index: 0,
           routes: [{ name: 'Carrusel' }],
         });
       } else {
-        Alert.alert('Error', data.error || 'Credenciales incorrectas');
+        mostrarModal(data.error || "Credenciales incorrectas", false);
       }
     } catch (error) {
-      Alert.alert('Error', 'No se pudo iniciar sesión');
+       mostrarModal("No se pudo iniciar sesión", false);
     } finally {
       setCargando(false);
     }
@@ -120,6 +128,13 @@ const InicioSesionPantalla: React.FC = () => {
           </TouchableOpacity>
         </View>
       </ImageBackground>
+      <CustomModal 
+  visible={modalVisible}
+  message={modalMessage}
+  success={modalSuccess}
+  onClose={() => setModalVisible(false)}
+/>
+
     </SafeAreaView>
   );
 };

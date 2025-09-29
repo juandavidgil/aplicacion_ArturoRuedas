@@ -4,6 +4,7 @@ import { URL } from '../../config/UrlApi';
 import { StackParamList } from '../../types/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import CustomModal from '../detalle y publicaciones/CustomModal';
 
 const RestablecerContraseñaPantalla: React.FC = () => {
    const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
@@ -11,11 +12,24 @@ const RestablecerContraseñaPantalla: React.FC = () => {
   const [codigo, setCodigo] = useState('');
   const [nuevaContraseña, setNuevaContraseña] = useState('');
   const [codigoEnviado, setCodigoEnviado] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+const [modalMessage, setModalMessage] = useState("");
+const [modalSuccess, setModalSuccess] = useState(true);
+
+const mostrarModal = (mensaje: string, exito: boolean) => {
+  setModalMessage(mensaje);
+  setModalSuccess(exito);
+  setModalVisible(true);
+
+  setTimeout(() => {
+    setModalVisible(false);
+  }, 2000);
+};
 
   // 📧 Enviar código al correo
   const enviarCodigo = async () => {
     if (!correo) {
-      Alert.alert('⚠️', 'Por favor ingresa tu correo');
+      mostrarModal("⚠️ Por favor ingresa tu correo", false);
       return;
     }
 
@@ -29,10 +43,10 @@ const RestablecerContraseñaPantalla: React.FC = () => {
       const data = await response.json();
 
       if (response.ok) {
-        Alert.alert('✅', data.mensaje);
+        mostrarModal("✅ " + data.mensaje, true);
         setCodigoEnviado(true);
       } else {
-        Alert.alert('⚠️', data.mensaje);
+        mostrarModal("⚠️ " + data.mensaje, false);
       }
     } catch (error) {
       console.error('Error enviando código:', error);
@@ -43,7 +57,7 @@ const RestablecerContraseñaPantalla: React.FC = () => {
   // 🔄 Cambiar la contraseña
   const cambiarContraseña = async () => {
     if (!codigo || !nuevaContraseña) {
-      Alert.alert('⚠️', 'Ingresa el código y la nueva contraseña');
+      mostrarModal("⚠️ Ingresa el código y la nueva contraseña", false);
       return;
     }
 
@@ -56,10 +70,10 @@ const RestablecerContraseñaPantalla: React.FC = () => {
       const data = await response.json();
 
       if (response.ok) {
-        Alert.alert('✅', data.mensaje);
+      mostrarModal("✅ " + data.mensaje, true);
        navigation.navigate('InicioSesion');
       } else {
-        Alert.alert('⚠️', data.mensaje);
+        mostrarModal("⚠️ " + data.mensaje, false);
       }
     } catch (error) {
       console.error('Error restableciendo:', error);
@@ -107,6 +121,13 @@ const RestablecerContraseñaPantalla: React.FC = () => {
           </TouchableOpacity>
         </>
       )}
+      <CustomModal 
+  visible={modalVisible}
+  message={modalMessage}
+  success={modalSuccess}
+  onClose={() => setModalVisible(false)}
+/>
+
     </View>
   );
 };
