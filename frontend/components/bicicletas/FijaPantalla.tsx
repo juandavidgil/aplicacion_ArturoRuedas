@@ -25,6 +25,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Modelo3D } from './Modelo3D';
 import { cargarFixie } from './Modelos3D';
+import CustomModal from '../detalle y publicaciones/CustomModal';
 
 
 interface Articulo {
@@ -55,6 +56,20 @@ const FijaPantalla: React.FC = () => {
   const { tipoBicicleta } = route.params as RouteParams;
   const insets = useSafeAreaInsets();
   
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalSuccess, setModalSuccess] = useState(true);
+  
+  const mostrarModal = (mensaje: string, exito: boolean) => {
+    setModalMessage(mensaje);
+    setModalSuccess(exito);
+    setModalVisible(true);
+  
+    setTimeout(() => {
+      setModalVisible(false);
+    }, 2000);
+  };
+
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (busqueda.trim() !== '') {
@@ -112,10 +127,10 @@ const FijaPantalla: React.FC = () => {
       });
       const responseData = await response.json();
       if (!response.ok) throw new Error(responseData.error || 'Error al agregar al carrito');
-      Alert.alert('Éxito', 'Artículo agregado al carrito');
+      mostrarModal("Articulo agregado al carrito", true);
     } catch (error) {
       console.error('Error completo en AgregarCarrito:', error);
-      Alert.alert('Error al agregar al carrito');
+      mostrarModal("Tu articulo ya esta en el carrito", false);
     }
   };
 
@@ -361,6 +376,12 @@ const FijaPantalla: React.FC = () => {
   </ScrollView>
 )}
       </SafeAreaProvider>
+         <CustomModal 
+  visible={modalVisible}
+  message={modalMessage}
+  success={modalSuccess}
+  onClose={() => setModalVisible(false)}
+/>
     </LinearGradient>
   );
 };
@@ -384,7 +405,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: width * 0.08,
     paddingHorizontal: width * 0.06,
-    paddingVertical: 20,
+    height: 55,
     elevation: 3,
     shadowColor: '#000',
     shadowOpacity: 0.15,
@@ -480,7 +501,7 @@ const styles = StyleSheet.create({
     borderColor: '#004f4d',
     borderRadius: 30,
     position: 'absolute',
-    bottom: 80,
+    bottom: 110,
     left: 16,
     right: 16,
   },

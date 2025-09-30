@@ -7,12 +7,23 @@ import dotenv from "dotenv";
 import { Expo } from "expo-server-sdk";
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from "resend";
-
-
-
+import admin from 'firebase-admin';
 
 
 dotenv.config();
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    }),
+  });
+}
+
+
+
 export const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_KEY!
@@ -372,98 +383,118 @@ app.post('/publicar_articulo', async (req: Request, res: Response) => {
 });
 
 
-//prueba de notificacion en apk 
 
 
-app.post("/guardar-token", async (req: Request, res: Response) => {
+// ==================== ENDPOINTS DE NOTIFICACIONES ====================
+// 📍 ENDPOINT: Obtener notificaciones del usuario (CORREGIDO)
+app.get('/notificaciones/:id_usuario', async (req, res) => {
   try {
-    const { ID_usuario, token } = req.body;
+    const { id_usuario } = req.params;
 
-    if (!ID_usuario || !token) {
-      return res.status(400).json({ error: "Faltan ID_usuario o token" });
-    }
+    console.log(`📋 Solicitando notificaciones para usuario ${id_usuario}`);
 
-    if (!Expo.isExpoPushToken(token)) {
-      return res.status(400).json({ error: "Token inválido" });
-    }
-
-    await pool.query(
-      `INSERT INTO user_tokens (ID_usuario, token)
-       VALUES ($1, $2)
-       ON CONFLICT (ID_usuario, token) DO NOTHING`,
-      [ID_usuario, token]
+    const result = await pool.query(
+      `SELECT 
+        ID_notificacion as id_notificacion,  -- ALIAS para que coincida con el frontend
+        titulo,
+        cuerpo,
+        leida,
+        fecha_envio,
+        data
+       FROM notificaciones 
+       WHERE ID_usuario = $1 
+       ORDER BY fecha_envio DESC 
+       LIMIT 50`,
+      [id_usuario]
     );
 
-    res.json({ ok: true, message: "Token guardado" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error guardando token" });
+    console.log(`✅ ${result.rows.length} notificaciones encontradas para usuario ${id_usuario}`);
+    
+    // Log para debugging
+    if (result.rows.length > 0) {
+      console.log('📝 Ejemplo de notificación:', {
+        id: result.rows[0].id_notificacion,
+        titulo: result.rows[0].titulo,
+        leida: result.rows[0].leida
+      });
+    }
+
+    res.json(result.rows);
+
+  } catch (error) {
+    console.error('❌ Error obteniendo notificaciones:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+});
+
+// 📍 ENDPOINT: Marcar notificación como leída (CORREGIDO)
+app.put('/notificaciones/:id/leida', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    console.log(`📌 Marcando notificación ${id} como leída`);
+
+    const result = await pool.query(
+      `UPDATE notificaciones SET leida = true 
+       WHERE ID_notificacion = $1 
+       RETURNING ID_notificacion as id_notificacion, titulo, cuerpo, leida, fecha_envio, data`,
+      [id]
+    );
+
+    if (result.rowCount === 0) {
+      console.log(`❌ Notificación ${id} no encontrada`);
+      return res.status(404).json({ error: 'Notificación no encontrada' });
+    }
+
+    console.log(`✅ Notificación ${id} marcada como leída`);
+    res.json({ 
+      mensaje: 'Notificación marcada como leída', 
+      notificacion: result.rows[0] 
+    });
+
+  } catch (error) {
+    console.error('❌ Error marcando notificación como leída:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
   }
 });
 
 
-// Guardar notificación en BD
-app.post("/notificaciones/guardar-notificacion", async (req: Request, res: Response) => {
+
+
+
+// Función para guardar notificación en BD (MEJORADA)
+async function guardarNotificacionBD(ID_usuario: number, titulo: string, cuerpo: string, data: any = null) {
   try {
-    const { id_usuario, titulo, cuerpo } = req.body;
-    await pool.query(
-      `INSERT INTO notificaciones (id_usuario, titulo, cuerpo) VALUES ($1, $2, $3)`,
-      [id_usuario, titulo, cuerpo]
+    console.log(`💾 Guardando notificación para usuario ${ID_usuario}:`, { titulo, cuerpo });
+    
+    const result = await pool.query(
+      `INSERT INTO notificaciones (ID_usuario, titulo, cuerpo, data) 
+       VALUES ($1, $2, $3, $4) 
+       RETURNING ID_notificacion`,
+      [ID_usuario, titulo, cuerpo, data ? JSON.stringify(data) : null]
     );
-    res.json({ ok: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error guardando notificación" });
-  }
-});
-
-// Función para enviar notificación push y guardar en BD
-
-async function enviarNotificacion(
-  tokens: string[],
-  titulo: string,
-  cuerpo: string,
-  usuarios: number[]
-) {
-  // Enviar push
-  const mensajes = tokens.map(token => ({
-    to: token,
-    sound: "default",
-    title: titulo,
-    body: cuerpo,
-  }));
-
-  const chunks = expo.chunkPushNotifications(mensajes);
-  for (const chunk of chunks) {
-    try {
-      const tickets = await expo.sendPushNotificationsAsync(chunk);
-      console.log("🎫 Tickets enviados:", tickets);
-    } catch (err) {
-      console.error("❌ Error enviando push:", err);
+    
+    const idNotificacion = result.rows[0].id_notificacion;
+    console.log(`✅ Notificación guardada en BD con ID: ${idNotificacion}`);
+    return result.rows[0];
+    
+  } catch (error) {
+    console.error('❌ Error guardando notificación en BD:', error);
+    
+    // Log detallado del error
+    if (error) { // Foreign key violation
+      console.error('🔍 El usuario no existe en la base de datos');
     }
-  }
-
-  // Guardar en BD
-  for (const id_usuario of usuarios) {
-    try {
-      await pool.query(
-        `INSERT INTO notificaciones (id_usuario, titulo, cuerpo) VALUES ($1, $2, $3)`,
-        [id_usuario, titulo, cuerpo]
-      );
-    } catch (err) {
-      console.error("❌ Error guardando notificación en BD para usuario", id_usuario, err);
-    }
+    
+    throw error;
   }
 }
 
-
-
-// Ruta para agregar al carrito - Mejorada
+// 📍 ENDPOINT: Agregar al carrito (CON MÁS LOGS)
 app.post('/agregar-carrito', async (req: Request, res: Response) => {
   try {
     const { ID_usuario, ID_publicacion } = req.body;
-    console.log('ID_usuario recibido:', ID_usuario);
-    console.log('ID_publicacion recibido:', ID_publicacion);
+    console.log('🛒 Agregando al carrito - Usuario:', ID_usuario, 'Publicación:', ID_publicacion);
 
     if (!ID_usuario || !ID_publicacion) {
       return res.status(400).json({ error: 'IDs de usuario y publicación son obligatorios' });
@@ -484,41 +515,179 @@ app.post('/agregar-carrito', async (req: Request, res: Response) => {
     if (!articulo_existe) return res.status(404).json({ error: 'Artículo no encontrado' });
     if (en_carrito) return res.status(409).json({ error: 'Artículo ya está en el carrito' });
 
-    // Insertar en carrito
-    await pool.query(
-      'INSERT INTO carrito (ID_usuario, ID_publicacion) VALUES ($1, $2)',
-      [ID_usuario, ID_publicacion]
-    );
-
-    // Obtener datos del vendedor
-    const datosVendedor = await pool.query(
-      `SELECT u.ID_usuario, u.nombre
+    // Obtener datos del artículo y vendedor
+    const datosArticulo = await pool.query(
+      `SELECT cv.nombre_articulo, cv.ID_usuario as id_vendedor, u.nombre as nombre_vendedor
        FROM com_ventas cv
        JOIN usuario u ON cv.ID_usuario = u.ID_usuario
        WHERE cv.ID_publicacion = $1`,
       [ID_publicacion]
     );
 
-    const vendedor = datosVendedor.rows[0];
-    if (vendedor) {
-      const tokensRes = await pool.query("SELECT token FROM user_tokens WHERE ID_usuario = $1", [vendedor.ID_usuario]);
-      const tokens = tokensRes.rows.map(r => r.token);
-      if (tokens.length > 0) {
-        await enviarNotificacion(
-          tokens,
-          "¡Nuevo interés en tu artículo!",
-          "Un usuario agregó tu artículo al carrito 🚀",
-          [vendedor.ID_usuario]
-        );
-      }
-    } 
+    if (datosArticulo.rows.length === 0) {
+      return res.status(404).json({ error: 'Artículo no encontrado' });
+    }
 
-    res.status(201).json({ mensaje: 'Artículo agregado al carrito correctamente' });
-  } catch (error) {
-    console.error('Error al agregar al carrito:', error);
+    const articulo = datosArticulo.rows[0];
+    console.log(`📦 Artículo: ${articulo.nombre_articulo}, Vendedor: ${articulo.id_vendedor}`);
+
+    // Insertar en carrito
+    await pool.query(
+      'INSERT INTO carrito (ID_usuario, ID_publicacion) VALUES ($1, $2)',
+      [ID_usuario, ID_publicacion]
+    );
+
+    console.log('✅ Artículo agregado al carrito');
+
+    // Crear notificación para el VENDEDOR
+    if (articulo.id_vendedor && articulo.id_vendedor !== ID_usuario) {
+      console.log(`👤 Creando notificación para vendedor: ${articulo.id_vendedor}`);
+      
+      await guardarNotificacionBD(
+        articulo.id_vendedor,
+        '¡Nuevo interés en tu artículo! 🛒',
+        `Alguien agregó "${articulo.nombre_articulo}" al carrito. Revisa tus ventas.`,
+        {
+          tipo: 'interes_carrito',
+          ID_publicacion: ID_publicacion,
+          nombre_articulo: articulo.nombre_articulo,
+          timestamp: new Date().toISOString()
+        }
+      );
+      console.log(`✅ Notificación creada para vendedor ${articulo.nombre_vendedor} (ID: ${articulo.id_vendedor})`);
+    } else {
+      console.log('ℹ️ No se crea notificación (mismo usuario o vendedor no encontrado)');
+    }
+
+    res.status(201).json({ 
+      mensaje: 'Artículo agregado al carrito correctamente',
+      notificacion_creada: !!articulo.id_vendedor && articulo.id_vendedor !== ID_usuario
+    });
+
+  } catch (error: any) {
+    console.error('❌ Error al agregar al carrito:', error);
     res.status(500).json({ error: 'Error en el servidor' });
   }
 });
+
+
+// 📍 ENDPOINT: Probar notificaciones manualmente
+app.post('/probar-notificacion', async (req: Request, res: Response) => {
+  try {
+    const { ID_usuario, mensaje } = req.body;
+
+    if (!ID_usuario) {
+      return res.status(400).json({ error: 'ID_usuario es obligatorio' });
+    }
+
+    console.log(`🧪 Probando notificación para usuario ${ID_usuario}`);
+
+    await guardarNotificacionBD(
+      ID_usuario,
+      'Notificación de prueba ✅',
+      mensaje || '¡Esta es una notificación de prueba!',
+      {
+        tipo: 'test',
+        timestamp: new Date().toISOString()
+      }
+    );
+
+    res.json({ 
+      mensaje: 'Notificación de prueba creada correctamente',
+      ID_usuario: ID_usuario
+    });
+
+  } catch (error: any) {
+    console.error('❌ Error en prueba de notificación:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+});
+// 📍 ENDPOINT: Marcar como vendido (versión simplificada)
+app.delete('/marcar-vendido/:id', async (req: Request, res: Response) => {
+  const idPublicacion = Number(req.params.id);
+  
+  try {
+    console.log(`💰 Marcando como vendido publicación ${idPublicacion}`);
+
+    // Obtener datos de la publicación
+    const pubRes = await pool.query(
+      'SELECT nombre_articulo, ID_usuario FROM com_ventas WHERE ID_publicacion = $1', 
+      [idPublicacion]
+    );
+    
+    if (pubRes.rowCount === 0) return res.status(404).json({ error: 'Publicación no encontrada' });
+    
+    const publicacion = pubRes.rows[0];
+    const nombreArticulo = publicacion.nombre_articulo || 'Artículo';
+
+    // Obtener compradores que tenían este artículo en carrito
+    const compradoresRes = await pool.query(
+      `SELECT c.ID_usuario, u.nombre
+       FROM carrito c
+       JOIN usuario u ON c.ID_usuario = u.ID_usuario
+       WHERE c.ID_publicacion = $1`,
+      [idPublicacion]
+    );
+
+    console.log(`👥 ${compradoresRes.rows.length} compradores encontrados`);
+
+    const compradores = compradoresRes.rows;
+
+    // Transacción: eliminar publicación y carrito
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      
+      await client.query('DELETE FROM com_ventas WHERE ID_publicacion = $1', [idPublicacion]);
+      await client.query('DELETE FROM carrito WHERE ID_publicacion = $1', [idPublicacion]);
+      
+      await client.query('COMMIT');
+      console.log('🗑️ Publicación y carrito eliminados');
+      
+    } catch (txErr: any) {
+      await client.query('ROLLBACK');
+      console.error('❌ Error en transacción:', txErr);
+      return res.status(500).json({ error: 'Error en transacción al eliminar publicación' });
+    } finally {
+      client.release();
+    }
+
+    // Crear notificaciones para los compradores
+    let notificacionesCreadas = 0;
+    for (const comprador of compradores) {
+      if (comprador.id_usuario !== publicacion.id_usuario) { // No notificar al vendedor
+        await guardarNotificacionBD(
+          comprador.id_usuario,
+          'Artículo ya no disponible ❌',
+          `El artículo "${nombreArticulo}" que tenías en tu carrito ya fue vendido.`,
+          {
+            tipo: 'articulo_vendido',
+            ID_publicacion: idPublicacion.toString(),
+            nombre_articulo: nombreArticulo,
+            timestamp: new Date().toISOString()
+          }
+        );
+        notificacionesCreadas++;
+      }
+    }
+
+    console.log(`✅ ${notificacionesCreadas} notificaciones creadas para compradores`);
+
+    res.json({ 
+      message: 'Publicación eliminada y compradores notificados',
+      notificacionesCreadas: notificacionesCreadas,
+      totalCompradores: compradores.length
+    });
+    
+  } catch (err: any) {
+    console.error('❌ Error en marcar-vendido:', err);
+    res.status(500).json({ 
+      error: 'Error en el servidor',
+      details: err.message 
+    });
+  }
+});
+
 
 
 
@@ -705,6 +874,7 @@ app.get('/obtener-publicaciones/:ID_usuario', async (req, res) => {
 
   //eliminar publicacion - administrador
 
+
   app.delete('/eliminar-publicaciones-admin/:id', async (req, res) => {
     try {
       const { id } = req.params;
@@ -762,74 +932,7 @@ app.get('/obtener-publicaciones-usuario-logueado/:ID_usuario', async (req, res) 
   }
 });
 
-  
-  //marcar como vendido
-app.delete('/marcar-vendido/:id', async (req, res) => {
-  const idPublicacion = Number(req.params.id);
-  try {
-  
-    const pubRes = await pool.query('SELECT * FROM com_ventas WHERE ID_publicacion = $1', [idPublicacion]);
-    if (pubRes.rowCount === 0) return res.status(404).json({ error: 'Publicación no encontrada' });
-    const publicacion = pubRes.rows[0];
 
-    const nombreArticulo = publicacion.nombre_articulo ?? publicacion.nombre_Articulo ?? publicacion.nombre_Articulo ?? 'Artículo';
-
-   
-    const compradoresRes = await pool.query(
-      `SELECT c.ID_usuario AS id_usuario, u.nombre
-       FROM carrito c
-       JOIN usuario u ON c.ID_usuario = u.ID_usuario
-       WHERE c.ID_publicacion = $1`,
-      [idPublicacion]
-    );
-    console.log('👥 Compradores encontrados:', compradoresRes.rows);
-
-    // 2) obtener tokens de esos compradores
-   const compradoresIds = compradoresRes.rows.map(r => r.ID_usuario);
-    const tokensRes = await pool.query(
-      `SELECT ID_usuario, token FROM user_tokens WHERE ID_usuario = ANY($1::int[])`,
-      [compradoresIds]
-    );
-    const tokens = tokensRes.rows.map(r => r.token);
-
-    // 3) borrar publicación y limpiar carrito dentro de transacción (consistencia)
-    const client = await pool.connect();
-    try {
-      await client.query('BEGIN');
-      const delPub = await client.query('DELETE FROM com_ventas WHERE ID_publicacion = $1 RETURNING *', [idPublicacion]);
-      await client.query('DELETE FROM carrito WHERE ID_publicacion = $1', [idPublicacion]);
-      await client.query('COMMIT');
-      console.log('🗑️ Publicación y carrito eliminados en BD');
-    } catch (txErr) {
-      await client.query('ROLLBACK');
-      client.release();
-      console.error('❌ Error en transacción:', txErr);
-      return res.status(500).json({ error: 'Error en transacción al eliminar publicación' });
-    }
-    client.release();
-
-    // 4) enviar notificaciones a cada token usando el mismo endpoint que ya FUNCIONA (axios -> exp.host)
-   if (tokens.length > 0) {
-      await enviarNotificacion(
-        tokens,
-        'Artículo ya no disponible ❌',
-        `El artículo "${nombreArticulo}" que tenías en tu carrito ya fue vendido.`,
-        compradoresIds
-      );
-    }
-
-    res.json({ message: 'Publicación eliminada y compradores notificados' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error en el servidor' });
-  }
-   
-});
-
-
-
-  
-  
  // Ruta para el chat
 app.post("/chat", async (req: Request, res: Response) => {
   const { message } = req.body;
@@ -1031,4 +1134,3 @@ process.on('SIGINT', () => {
     process.exit(0);
   });
 });
-

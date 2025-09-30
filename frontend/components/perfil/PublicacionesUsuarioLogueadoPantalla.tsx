@@ -126,74 +126,83 @@ const PublicacionesUsuarioLogueado: React.FC = () => {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     textAlign: 'center',
     marginTop: 50,
     marginBottom: 20,
-    color: '#ffffffff',
+    color: '#20eb4c', // Verde neón llamativo
+    textShadowColor: 'rgba(0,0,0,0.8)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 6,
   },
   card: {
     flexDirection: 'row',
-    marginBottom: 20,
-    backgroundColor: '#ffffff',
+    marginBottom: 18,
+    backgroundColor: 'rgba(255,255,255,0.07)', // Fondo translúcido
     padding: 12,
-    borderRadius: 12,
+    borderRadius: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 4,
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+    marginHorizontal: 16,
   },
   imagen: {
-    width: 110,
-    height: 110,
-    borderRadius: 10,
-    backgroundColor: '#e0e0e0',
+    width: 120,
+    height: 120,
+    borderRadius: 14,
+    backgroundColor: '#1c1c1c',
   },
   info: {
     flex: 1,
     marginLeft: 15,
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
   },
   nombre: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#1a1a1a', // Negro fuerte para resaltar el título
+    color: '#ffffff',
+    marginBottom: 4,
   },
   descripcion: {
     fontSize: 14,
-    color: '#444', // Gris oscuro legible
-    marginTop: 2,
+    color: '#ccc',
+    marginBottom: 6,
   },
   precio: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#e63946', // Rojo fuerte para destacar el precio
-    marginTop: 4,
+    color: '#1adc00', // Verde brillante
+    marginBottom: 4,
   },
   tipo: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#006d77', // Azul verdoso para diferenciar tipo
-    marginTop: 2,
+    color: '#20c997', // Verde azulado
   },
   lista: {
-    paddingBottom: 20,
+    paddingBottom: 80, // espacio para botón flotante
   },
   refreshButton: {
-    flexDirection: 'row',
-    backgroundColor: '#007bff',
-    padding: 12,
-    borderRadius: 6,
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    backgroundColor: '#20eb4c',
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 6,
+    elevation: 8,
   },
   refreshButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    marginLeft: 8,
+    display: 'none', // oculto porque ahora es solo ícono
   },
 });
 

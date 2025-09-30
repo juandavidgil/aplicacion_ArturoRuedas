@@ -9,7 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { UserContext } from "../inicio de sesion/userContext"; // 👈 ajusta la ruta
 import { useContext } from "react";
-
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 interface Usuario {
   id_usuario: number;
   nombre: string;
@@ -27,7 +27,7 @@ const PerfilPantalla: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false);
   const { logout } = useContext(UserContext);
-
+  const insets = useSafeAreaInsets();
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("userToken"); 
@@ -116,7 +116,12 @@ const PerfilPantalla: React.FC = () => {
 
           
           <Text style={styles.name}>{usuario?.nombre}</Text>
-          <Text style={styles.info}>Correo: {usuario?.correo}</Text>
+          
+  <Text style={[styles.info, { fontWeight: "600", marginRight: 4 }]}>Correo:</Text>
+  <Text style={styles.info}>{usuario?.correo}</Text>
+
+
+
           <Text style={styles.info}>Telefono: {usuario?.telefono}</Text>
 
           {/* Botones */}
@@ -174,7 +179,7 @@ const PerfilPantalla: React.FC = () => {
         </TouchableOpacity>
       </View>
   {/* foother */}
-            <View style={styles.iconBar}>
+            <View style={[styles.iconBar, { paddingBottom: insets.bottom + 10 }]}>
           <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
             <Ionicons name='storefront-outline' size={28} color="#fff" />
           </TouchableOpacity>
@@ -267,6 +272,7 @@ headerTitle: {
     fontSize: 16,
     color: "#ddd",
     marginBottom: 5,
+    alignItems: 'center',
   },
   button: {
     marginTop: 15,

@@ -22,19 +22,19 @@
     },
     "android": {
       "package": "com.juandavidgil.aplicacionarturoRuedas",
-      "permissions": ["NOTIFICATIONS"],
-  "googleServicesFile": "android/app/google-services.json",
-      "intentFilters": [
+      "googleServicesFile": "./android/app/google-services.json",
+      "permissions": ["RECEIVE_BOOT_COMPLETED", "WAKE_LOCK"]
+    },
+    "plugins": [
+      [
+        "expo-notifications",
         {
-          "action": "VIEW",
-          "data": [
-            {
-              "scheme": "whatsapp"
-            }
-          ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "icon": "./assets/icon.jpg",
+          "color": "#0c2b2a",
+          "sounds": ["./assets/notification.wav"],
+          "defaultChannel": "default"
         }
       ]
-    }
+    ]
   }
 }

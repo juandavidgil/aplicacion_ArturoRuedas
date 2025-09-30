@@ -22,9 +22,11 @@ import { StackParamList } from '../../types/types';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { URL } from '../../config/UrlApi';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Modelo3D } from './Modelo3D';
 import { cargarMTB } from './Modelos3D';
+import CustomModal from '../detalle y publicaciones/CustomModal';
+
 
 interface Articulo {
   id: number;
@@ -53,6 +55,22 @@ const MtbPantalla: React.FC = () => {
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
   const route = useRoute();
   const { tipoBicicleta } = route.params as RouteParams;
+  const insets = useSafeAreaInsets();
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalSuccess, setModalSuccess] = useState(true);
+  
+  const mostrarModal = (mensaje: string, exito: boolean) => {
+    setModalMessage(mensaje);
+    setModalSuccess(exito);
+    setModalVisible(true);
+  
+    setTimeout(() => {
+      setModalVisible(false);
+    }, 2000);
+  };
+  
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -111,10 +129,10 @@ const MtbPantalla: React.FC = () => {
       });
       const responseData = await response.json();
       if (!response.ok) throw new Error(responseData.error || 'Error al agregar al carrito');
-      Alert.alert('Éxito', 'Artículo agregado al carrito');
+      mostrarModal("Articulo agregado al carrito", true);
     } catch (error) {
       console.error('Error completo en AgregarCarrito:', error);
-      Alert.alert('Error al agregar al carrito');
+      mostrarModal("Tu articulo ya esta en el carrito", false);
     }
   };
 
@@ -253,7 +271,7 @@ const MtbPantalla: React.FC = () => {
         </SafeAreaView>
 
         {/* Barra inferior */}
-        <View style={styles.iconBar}>
+        <View style={[styles.iconBar,  { paddingBottom: insets.bottom + 10 }]}>
           <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
             <Ionicons name="storefront-outline" size={28} color="#fff" />
           </TouchableOpacity>
@@ -380,6 +398,13 @@ const MtbPantalla: React.FC = () => {
     )}
 
       </SafeAreaProvider>
+
+       <CustomModal 
+        visible={modalVisible}
+        message={modalMessage}
+        success={modalSuccess}
+        onClose={() => setModalVisible(false)}
+      />
     </LinearGradient>
   );
 };
@@ -403,7 +428,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: width * 0.08,
     paddingHorizontal: width * 0.06,
-    paddingVertical: 20,
+    
+    height: 55,
     elevation: 3,
     shadowColor: '#000',
     shadowOpacity: 0.15,
@@ -485,7 +511,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: -2 },
     shadowRadius: 6,
-    paddingBottom: '7%',
+    
   },
   iconoComponentes: { width: 35, height: 35, marginHorizontal: 15 },
   barraComponentes: {
@@ -496,7 +522,7 @@ const styles = StyleSheet.create({
     borderColor: '#004f4d',
     borderRadius: 30,
     position: 'absolute',
-    bottom: 80,
+    bottom: 110,
     left: 16,
     right: 16,
   },

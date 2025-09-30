@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "896340467253",
+    "project_id": "arturo-ruedas-75b8c",
+    "storage_bucket": "arturo-ruedas-75b8c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:896340467253:android:396681dcd7d7f30be11b7c",
+        "android_client_info": {
+          "package_name": "com.juandavidgil.aplicacionarturoRuedas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCytCggxI6OLkGZcKHyvgguB1vYhg_D9wI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

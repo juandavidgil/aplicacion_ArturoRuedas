@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { URL } from '../../config/UrlApi';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface Articulo {
   id: number;
@@ -36,7 +37,7 @@ const CarritoPantalla: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
 const [modalMessage, setModalMessage] = useState("");
 const [modalSuccess, setModalSuccess] = useState(true); // true = éxito, false = error
-
+ const insets = useSafeAreaInsets();
 
   
   const obtenerCarrito = async () => {
@@ -211,7 +212,7 @@ const [modalSuccess, setModalSuccess] = useState(true); // true = éxito, false 
             </TouchableOpacity>
 
             {/* Barra inferior */}
-            <View style={styles.iconBar}>
+            <View style={[styles.iconBar, { paddingBottom: insets.bottom + 10 }]}>
               <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
                 <Ionicons name='storefront-outline' size={28} color="#fff" />
               </TouchableOpacity>
@@ -373,7 +374,7 @@ modalText: { marginTop: 10, fontSize: 16, fontWeight: "600", textAlign: "center"
     bottom: 0, 
     left: 0,
     right: 0,
-    paddingBottom:"7%",
+    
   },
 });
 

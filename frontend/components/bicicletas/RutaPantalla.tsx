@@ -22,9 +22,11 @@ import { StackParamList } from '../../types/types';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import { URL } from '../../config/UrlApi';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Modelo3D } from './Modelo3D';
 import { cargarRuta } from './Modelos3D';
+import CustomModal from '../detalle y publicaciones/CustomModal';
+
 
 interface Articulo {
   id: number;
@@ -50,6 +52,22 @@ const RutaPantalla: React.FC = () => {
   const navigation = useNavigation<StackNavigationProp<StackParamList>>();
   const route = useRoute();
   const { tipoBicicleta } = route.params as RouteParams;
+  const insets = useSafeAreaInsets();
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalSuccess, setModalSuccess] = useState(true);
+  
+  const mostrarModal = (mensaje: string, exito: boolean) => {
+    setModalMessage(mensaje);
+    setModalSuccess(exito);
+    setModalVisible(true);
+  
+    setTimeout(() => {
+      setModalVisible(false);
+    }, 2000);
+  };
+  
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -99,10 +117,11 @@ const RutaPantalla: React.FC = () => {
       });
       const responseData = await response.json();
       if (!response.ok) throw new Error(responseData.error || 'Error al agregar al carrito');
-      Alert.alert('Éxito', 'Artículo agregado al carrito');
+      mostrarModal("Articulo agregado al carrito", true);
     } catch (error) {
       console.error('Error completo en AgregarCarrito:', error);
-      Alert.alert('Error al agregar al carrito');
+      mostrarModal("Tu articulo ya esta en el carrito", false);
+      
     }
   };
 
@@ -205,7 +224,7 @@ const RutaPantalla: React.FC = () => {
         </SafeAreaView>
 
         {/* Barra inferior */}
-        <View style={styles.iconBar}>
+        <View style={[styles.iconBar, { paddingBottom: insets.bottom + 10 }]}>
           <TouchableOpacity onPress={() => navigation.navigate('Publicar')}><Ionicons name='storefront-outline' size={28} color="#fff" /></TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Carrito')}><Ionicons name='cart-outline' size={28} color="#fff" /></TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}><Ionicons name='notifications-outline' size={28} color="#fff" /></TouchableOpacity>
@@ -327,8 +346,8 @@ const styles = StyleSheet.create({
   headerWrapper: { width: '100%', paddingBottom: 20 },
   header: { backgroundColor: '#004f4d', paddingVertical: height * 0.02, paddingHorizontal: width * 0.2, alignItems: 'center', justifyContent: 'center', borderRadius: 10, marginBottom: height * 0.02 },
   headerTitle: { fontSize: width * 0.06, fontWeight: 'bold', color: '#fff', marginTop:30 },
-  searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: width * 0.08, paddingHorizontal: width * 0.06, paddingVertical: 20, elevation: 3, shadowColor: '#000', shadowOpacity: 0.15, shadowOffset: { width:0,height:0 }, shadowRadius:6, width:'90%', alignSelf:'center' },
-  searchInput: { flex: 1, paddingHorizontal: 16, fontSize:16, color:'#333' },
+  searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: width * 0.08, paddingHorizontal: width * 0.06,  elevation: 3, shadowColor: '#000', shadowOpacity: 0.15, shadowOffset: { width:0,height:0 }, shadowRadius:6, width:'90%', alignSelf:'center' },
+  searchInput: { flex: 1, paddingHorizontal: 16,  height: 55, fontSize:16, color:'#333' },
   cardMTB: { flexDirection:'row', marginBottom:20, backgroundColor:'#fff', padding:12, borderRadius:12, shadowColor:'#000', shadowOffset:{width:0,height:4}, shadowOpacity:0.1, shadowRadius:6, elevation:4 },
   imagenMTB: { width:110, height:110, borderRadius:10, backgroundColor:'#e0e0e0' },
   infoMTB: { flex:1, marginLeft:15, justifyContent:'space-around' },
@@ -365,9 +384,19 @@ const styles = StyleSheet.create({
 
   screen: { justifyContent:'center', alignItems:'center', padding:16 },
   card: { backgroundColor:'#fff', borderRadius:16, shadowColor:'#000', shadowOffset:{width:0,height:3}, shadowOpacity:0.1, shadowRadius:6, elevation:4, width:'100%', maxWidth:350, aspectRatio:10/12, overflow:'hidden', marginTop:15 },
-  iconBar: { flexDirection:'row', justifyContent:'space-around', paddingVertical:height*0.015, backgroundColor:'#004f4d', borderTopLeftRadius:10, borderTopRightRadius:10, position:'absolute', bottom:0, left:0, right:0, shadowOpacity:0.1, shadowOffset:{width:0,height:-2}, shadowRadius:6, paddingBottom:'7%' },
+  iconBar: { flexDirection:'row', justifyContent:'space-around', paddingVertical:height*0.015, backgroundColor:'#004f4d', borderTopLeftRadius:10, borderTopRightRadius:10, position:'absolute', bottom:0, left:0, right:0, shadowOpacity:0.1, shadowOffset:{width:0,height:-2}, shadowRadius:6 },
   iconoComponentes:{ width:35, height:35, marginHorizontal:15 },
-  barraComponentes: { flexDirection:'row', paddingVertical:12, backgroundColor:'#fff', borderWidth:1, borderColor:'#004f4d', borderRadius:30, position:'absolute', bottom:80, left:16, right:16 },
+  barraComponentes: { 
+    flexDirection:'row', 
+    paddingVertical:12, 
+    backgroundColor:'#fff', 
+    borderWidth:1, 
+    borderColor:'#004f4d', 
+    borderRadius:30, 
+    position:'absolute', 
+    bottom:110, 
+    left:16, 
+    right:16 },
 });
 
 export default RutaPantalla;
