@@ -6,11 +6,20 @@ import {
   FlatList, 
   TouchableOpacity, 
   Alert,
-  ActivityIndicator 
+  ActivityIndicator, Dimensions
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { URL } from '../../config/UrlApi';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { StackParamList } from '../../types/types';
+import { Platform } from "react-native";
+import { Center } from '@react-three/drei';
+
+
 
 // Interfaces TypeScript
 interface NotificationData {
@@ -36,12 +45,21 @@ interface UserData {
   usuario?: any;
 }
 
+const { width, height } = Dimensions.get('window');
+
 // Componente principal
+type NavigationProp = NativeStackNavigationProp<StackParamList>;
+
 const NotificacionesPantalla: React.FC = () => {
+   
+  const insets = useSafeAreaInsets();
   const [notifications, setNotifications] = useState<Notificacion[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const navigation = useNavigation<NavigationProp>();
+
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [userId, setUserId] = useState<number | null>(null);
+  const [mostrarBarraComponentes, setMostrarBarraComponentes] = useState(false); 
 
   // Obtener ID del usuario desde AsyncStorage
   const getUserIdFromStorage = async (): Promise<number | null> => {
@@ -60,6 +78,7 @@ const NotificacionesPantalla: React.FC = () => {
         idUsuario: idUsuarioString ? 'Sí' : 'No'
       });
 
+      
       // Primero intenta con userData
       if (userDataString && userDataString !== 'undefined') {
         try {
@@ -117,6 +136,8 @@ const NotificacionesPantalla: React.FC = () => {
       console.error('❌ Error obteniendo usuario de AsyncStorage:', error);
       return null;
     }
+
+    
   };
 
   // Obtener notificaciones desde tu API
@@ -322,12 +343,10 @@ const NotificacionesPantalla: React.FC = () => {
       return null;
     }
 
-    return (
+    return (  
       <TouchableOpacity 
         style={[
-          styles.notificationCard,
-          isUnread && styles.unreadCard
-        ]}
+          styles.notificationCard, isUnread && styles.unreadCard]}
         onPress={() => markAsRead(notificationId)}
         activeOpacity={0.7}
       >
@@ -373,6 +392,7 @@ const NotificacionesPantalla: React.FC = () => {
 
   if (loading) {
     return (
+      
       <View style={styles.centerContainer}>
         <ActivityIndicator size="large" color="#007AFF" />
         <Text style={styles.loadingText}>Cargando notificaciones...</Text>
@@ -383,18 +403,35 @@ const NotificacionesPantalla: React.FC = () => {
   const unreadCount = notifications.filter(n => !n.leida).length;
 
   return (
+    <LinearGradient colors={['#0c2b2aff', '#000000']} style={{ flex: 1 }}>
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Notificaciones</Text>
+      
+        <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
+  <TouchableOpacity 
+    onPress={() => navigation.goBack()} 
+    style={styles.backButton}
+    activeOpacity={0.7}
+  >
+    <Ionicons name="chevron-back" size={28} color="#fff" />
+  </TouchableOpacity>
+
+  <Text style={styles.headerTitle}>Notificaciones</Text>
+
+  {/* Espacio simétrico a la derecha para centrar el título */}
+  <View style={{ width: 40 }} />
+</View>
+
+      
         {userId && (
-          <Text style={styles.userIdText}>Usuario ID: {userId}</Text>
+          <Text style={{ display: "none" }}>Usuario ID: {userId}</Text>
         )}
         {unreadCount > 0 && (
           <Text style={styles.headerSubtitle}>
             {unreadCount} {unreadCount === 1 ? 'sin leer' : 'sin leer'}
           </Text>
         )}
-      </View>
+
+     
 
       <FlatList
         data={notifications.filter(item => getNotificationId(item) !== 0)} // Filtrar notificaciones sin ID
@@ -426,7 +463,25 @@ const NotificacionesPantalla: React.FC = () => {
           </View>
         }
       />
+    <View style={[styles.iconBar, { paddingBottom: insets.bottom + 10 }]}>
+                  <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
+                    <Ionicons name='storefront-outline' size={28} color="#fff" />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => navigation.navigate('Carrito')}>
+                    <Ionicons name='cart-outline' size={28} color="#fff" />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
+                    <Ionicons name='notifications-outline' size={28} color="#fff" />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => navigation.navigate('Perfil')}>
+                    <Ionicons name="person-circle-outline" size={28} color="#fff" />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}>
+                    <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#fff" />
+                  </TouchableOpacity> 
+                </View>
     </View>
+    </LinearGradient>
   );
 };
 
@@ -434,36 +489,57 @@ const NotificacionesPantalla: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
   },
+
   header: {
-    backgroundColor: 'white',
-    paddingHorizontal: 20,
+    flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between",
+  paddingHorizontal: 16,
+  paddingBottom: 12,
+  backgroundColor: '#004f4d', // semitransparente
+  borderBottomLeftRadius: 20,
+  borderBottomRightRadius: 20,
+  shadowColor: "#000",
+  shadowOpacity: 0.2,
+  shadowRadius: 6,
+  elevation: 6,
+},
+
+backButton: {
+  
+  justifyContent: "center",
+  alignItems: "center",
+},
+  customHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingTop: 60,
     paddingBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e9ecef',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
+    paddingHorizontal: 16,
   },
+
   headerTitle: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: 'bold',
-    color: '#1a1a1a',
+    color: '#fff',
+    textAlign: 'center',
   },
   userIdText: {
     fontSize: 12,
-    color: '#666',
+    color: '#9e9e9e',
     marginTop: 4,
+    alignItems: 'center'
   },
   headerSubtitle: {
-    fontSize: 16,
-    color: '#007AFF',
-    marginTop: 8,
-    fontWeight: '600',
+       fontSize: 16,
+  color: "#B0BEC5",          
+  marginTop: 6,              
+  fontWeight: "400",         
+  letterSpacing: 0.5,        
+  textAlign: "center",      
+  fontStyle: "italic", 
   },
   listContent: {
     padding: 16,
@@ -474,24 +550,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   notificationCard: {
-    backgroundColor: 'white',
-    borderRadius: 16,
+backgroundColor: '#000000ff',
+    borderRadius: 20,
     padding: 16,
-    marginBottom: 12,
+    marginBottom: 14,
     flexDirection: 'row',
     alignItems: 'flex-start',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowColor: '#2c2222ff',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
     elevation: 3,
-    borderWidth: 1,
-    borderColor: '#f1f3f4',
   },
   unreadCard: {
     borderLeftWidth: 4,
-    borderLeftColor: '#007AFF',
-    backgroundColor: '#f8fbff',
+    borderLeftColor: '#00bcd4',
   },
   iconContainer: {
     marginRight: 16,
@@ -504,39 +577,39 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 6,
-    color: '#6c757d',
+    color: '#eaeaea',
     lineHeight: 20,
   },
   unreadTitle: {
-    color: '#1a1a1a',
+    color: '#ffff',
   },
   bodyText: {
     fontSize: 14,
-    color: '#495057',
+    color: '#cfcfcf',
     marginBottom: 8,
     lineHeight: 18,
   },
   articleInfo: {
-    backgroundColor: '#e7f3ff',
+    backgroundColor: '#263238',
     padding: 8,
     borderRadius: 8,
     marginBottom: 8,
   },
   articleText: {
     fontSize: 13,
-    color: '#007AFF',
+    color: '#4FC3F7',
     fontWeight: '500',
   },
   timestampText: {
     fontSize: 12,
-    color: '#adb5bd',
+    color: '#9e9e9e',
     fontWeight: '500',
   },
   unreadIndicator: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#00bcd4',
     marginLeft: 8,
     marginTop: 4,
   },
@@ -589,6 +662,20 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
     fontSize: 16,
+  },
+
+   iconBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: height * 0.015, 
+    backgroundColor: '#004f4d',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    position: 'absolute',
+    bottom: 0, 
+    left: 0,
+    right: 0,
+    
   },
 });
 

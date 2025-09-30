@@ -10,7 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { URL } from '@frontend/config/UrlApi';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CustomModal from '../detalle y publicaciones/CustomModal';
 
 
@@ -43,6 +43,7 @@ const PublicacionesRelacionadasVendedor: React.FC<Props> = ({ route }) => {
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const [articulos, setArticulos] = useState<Publicacion[]>([]);
   const [cargando, setCargando] = useState(true);
+  const insets = useSafeAreaInsets();
 
   // 🔹 Estados para el modal
   const [modalVisible, setModalVisible] = useState(false);
@@ -194,7 +195,7 @@ const PublicacionesRelacionadasVendedor: React.FC<Props> = ({ route }) => {
 
   return (
     <LinearGradient colors={['#0c2b2aff', '#000000']} style={{ flex: 1 }}>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={{  flex: 1, paddingBottom: insets.bottom + 90 }}>
         {cargando ? (
           <ActivityIndicator size="large" color="#4d82bc" style={styles.loader} />
         ) : articulos.length === 0 ? (
@@ -210,7 +211,7 @@ const PublicacionesRelacionadasVendedor: React.FC<Props> = ({ route }) => {
             />
 
             {/* Barra inferior */}
-            <View style={styles.iconBar}>
+            <View style={[styles.iconBar, { paddingBottom: insets.bottom + 10 }]}> 
               <TouchableOpacity onPress={() => navigation.navigate('Publicar')}>
                 <Ionicons name="storefront-outline" size={28} color="#fff" />
               </TouchableOpacity>

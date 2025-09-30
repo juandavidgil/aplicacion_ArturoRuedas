@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#20eb4ca4", // verde como en otras pantallas
+    color: "#fdfffdff", // verde como en otras pantallas
     marginBottom: 6,
     textAlign: "center",
   },

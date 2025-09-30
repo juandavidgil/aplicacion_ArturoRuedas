@@ -61,16 +61,48 @@ const MtbPantalla: React.FC = () => {
   const [modalMessage, setModalMessage] = useState("");
   const [modalSuccess, setModalSuccess] = useState(true);
   
-  const mostrarModal = (mensaje: string, exito: boolean) => {
-    setModalMessage(mensaje);
-    setModalSuccess(exito);
-    setModalVisible(true);
+
   
-    setTimeout(() => {
-      setModalVisible(false);
-    }, 2000);
+  // Estado para el puntito rojo de notificaciones
+  const [tieneNotificacionesNoLeidas, setTieneNotificacionesNoLeidas] = useState(false);
+
+  // Función para verificar notificaciones no leídas
+  const verificarNotificacionesNoLeidas = async () => {
+    try {
+      const usuarioStr = await AsyncStorage.getItem('usuario');
+      if (!usuarioStr) return;
+
+      const usuario = JSON.parse(usuarioStr);
+      const userId = usuario.ID_usuario || usuario.id_usuario;
+      
+      if (!userId) return;
+
+      const response = await fetch(`${URL}/notificaciones/${userId}`);
+      
+      if (response.ok) {
+        const notificaciones = await response.json();
+        const notificacionesNoLeidas = notificaciones.filter((notif: any) => !notif.leida);
+        setTieneNotificacionesNoLeidas(notificacionesNoLeidas.length > 0);
+      }
+    } catch (error) {
+      console.error('Error verificando notificaciones:', error);
+    }
   };
-  
+
+  // Verificar notificaciones al montar el componente
+  useEffect(() => {
+    verificarNotificacionesNoLeidas();
+  }, []);
+
+  // Verificar notificaciones cuando la pantalla recibe foco
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      verificarNotificacionesNoLeidas();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -131,9 +163,20 @@ const MtbPantalla: React.FC = () => {
       if (!response.ok) throw new Error(responseData.error || 'Error al agregar al carrito');
       mostrarModal("Articulo agregado al carrito", true);
     } catch (error) {
-      console.error('Error completo en AgregarCarrito:', error);
+     
       mostrarModal("Tu articulo ya esta en el carrito", false);
     }
+  };
+
+  
+  const mostrarModal = (mensaje: string, exito: boolean) => {
+    setModalMessage(mensaje);
+    setModalSuccess(exito);
+    setModalVisible(true);
+  
+    setTimeout(() => {
+      setModalVisible(false);
+    }, 2000);
   };
 
   const enviarWhatsApp = (numero: string, mensaje: string) => {
@@ -157,7 +200,7 @@ const MtbPantalla: React.FC = () => {
       <SafeAreaProvider>
         <View style={styles.headerWrapper}>
           <View style={styles.header}>
-            <Text style={styles.headerTitle}>Mountain Bike (MTB)</Text>
+            <Text style={styles.headerTitle}>MTB</Text>
           </View>
           <View style={styles.searchContainer}>
             <TextInput
@@ -259,7 +302,7 @@ const MtbPantalla: React.FC = () => {
                     <View style={styles.screen}>
                       <View style={styles.card}>
                         <Suspense fallback={<ActivityIndicator size="large" color="#00ffb3" />}>
-                          <Modelo3D cargar={cargarMTB} scale={7} position={[0, -3.5, 0]} />
+                          <Modelo3D cargar={cargarMTB} scale={1.7} position={[0, -0.2, 0]} />
                         </Suspense>
                       </View>
                     </View>
@@ -278,9 +321,14 @@ const MtbPantalla: React.FC = () => {
           <TouchableOpacity onPress={() => navigation.navigate('Carrito')}>
             <Ionicons name="cart-outline" size={28} color="#fff" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
-            <Ionicons name="notifications-outline" size={28} color="#fff" />
-          </TouchableOpacity>
+         {/* Icono de notificaciones con puntito rojo */}
+                  <TouchableOpacity 
+                    onPress={() => navigation.navigate('Notificaciones')}
+                    style={styles.notificationIconContainer}
+                  >
+                    <Ionicons name="notifications-outline" size={28} color="#fff" />
+                    {tieneNotificacionesNoLeidas && <View style={styles.notificationDot} />}
+                  </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Perfil')}>
             <Ionicons name="person-circle-outline" size={28} color="#fff" />
           </TouchableOpacity>
@@ -451,7 +499,13 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 4,
   },
-  imagenMTB: { width: 110, height: 110, borderRadius: 10, backgroundColor: '#e0e0e0' },
+ imagenMTB: { 
+  width: 110, 
+  height: 110, 
+  borderRadius: 10, 
+  backgroundColor: '#e0e0e0',
+  alignSelf: 'center' // Esta línea centra la imagen verticalmente
+},
   infoMTB: { flex: 1, marginLeft: 15, justifyContent: 'space-around' },
 
   nombreMTB: { fontSize: 18, fontWeight: 'bold', color: '#004f4d' },
@@ -525,6 +579,20 @@ const styles = StyleSheet.create({
     bottom: 110,
     left: 16,
     right: 16,
+  },
+  notificationIconContainer: {
+    position: 'relative',
+  },
+  notificationDot: {
+    position: 'absolute',
+    top: -2,
+    right: -2,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#FF3B30',
+    borderWidth: 1.5,
+    borderColor: '#004f4d',
   },
 });
 

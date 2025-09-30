@@ -58,16 +58,46 @@ const RutaPantalla: React.FC = () => {
   const [modalMessage, setModalMessage] = useState("");
   const [modalSuccess, setModalSuccess] = useState(true);
   
-  const mostrarModal = (mensaje: string, exito: boolean) => {
-    setModalMessage(mensaje);
-    setModalSuccess(exito);
-    setModalVisible(true);
-  
-    setTimeout(() => {
-      setModalVisible(false);
-    }, 2000);
+
+  // Estado para el puntito rojo de notificaciones
+  const [tieneNotificacionesNoLeidas, setTieneNotificacionesNoLeidas] = useState(false);
+
+  // Función para verificar notificaciones no leídas
+  const verificarNotificacionesNoLeidas = async () => {
+    try {
+      const usuarioStr = await AsyncStorage.getItem('usuario');
+      if (!usuarioStr) return;
+
+      const usuario = JSON.parse(usuarioStr);
+      const userId = usuario.ID_usuario || usuario.id_usuario;
+      
+      if (!userId) return;
+
+      const response = await fetch(`${URL}/notificaciones/${userId}`);
+      
+      if (response.ok) {
+        const notificaciones = await response.json();
+        const notificacionesNoLeidas = notificaciones.filter((notif: any) => !notif.leida);
+        setTieneNotificacionesNoLeidas(notificacionesNoLeidas.length > 0);
+      }
+    } catch (error) {
+      console.error('Error verificando notificaciones:', error);
+    }
   };
-  
+
+  // Verificar notificaciones al montar el componente
+  useEffect(() => {
+    verificarNotificacionesNoLeidas();
+  }, []);
+
+  // Verificar notificaciones cuando la pantalla recibe foco
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      verificarNotificacionesNoLeidas();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -123,6 +153,16 @@ const RutaPantalla: React.FC = () => {
       mostrarModal("Tu articulo ya esta en el carrito", false);
       
     }
+  };
+
+  const mostrarModal = (mensaje: string, exito: boolean) => {
+    setModalMessage(mensaje);
+    setModalSuccess(exito);
+    setModalVisible(true);
+  
+    setTimeout(() => {
+      setModalVisible(false);
+    }, 2000);
   };
 
   const enviarWhatsApp = (numero: string, mensaje: string) => {
@@ -214,7 +254,7 @@ const RutaPantalla: React.FC = () => {
                 <View style={styles.screen}>
                   <View style={styles.card}>
                     <Suspense fallback={<ActivityIndicator size="large" color="#00ffb3" />}>
-                      <Modelo3D cargar={cargarRuta} scale={7} position={[0, -3.5, 0]} />
+                      <Modelo3D cargar={cargarRuta} scale={0.8} position={[0, -1, 0]} />
                     </Suspense>
                   </View>
                 </View>
@@ -227,7 +267,14 @@ const RutaPantalla: React.FC = () => {
         <View style={[styles.iconBar, { paddingBottom: insets.bottom + 10 }]}>
           <TouchableOpacity onPress={() => navigation.navigate('Publicar')}><Ionicons name='storefront-outline' size={28} color="#fff" /></TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Carrito')}><Ionicons name='cart-outline' size={28} color="#fff" /></TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}><Ionicons name='notifications-outline' size={28} color="#fff" /></TouchableOpacity>
+           {/* Icono de notificaciones con puntito rojo */}
+                    <TouchableOpacity 
+                      onPress={() => navigation.navigate('Notificaciones')}
+                      style={styles.notificationIconContainer}
+                    >
+                      <Ionicons name="notifications-outline" size={28} color="#fff" />
+                      {tieneNotificacionesNoLeidas && <View style={styles.notificationDot} />}
+                    </TouchableOpacity>
           <TouchableOpacity onPress={()=> navigation.navigate('Perfil')}><Ionicons name="person-circle-outline" size={28} color="#fff" /></TouchableOpacity>
           <TouchableOpacity onPress={() => setMostrarBarraComponentes(!mostrarBarraComponentes)}>
             <Ionicons name={mostrarBarraComponentes ? 'close-outline' : 'menu-outline'} size={28} color="#fff" />
@@ -349,7 +396,13 @@ const styles = StyleSheet.create({
   searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: width * 0.08, paddingHorizontal: width * 0.06,  elevation: 3, shadowColor: '#000', shadowOpacity: 0.15, shadowOffset: { width:0,height:0 }, shadowRadius:6, width:'90%', alignSelf:'center' },
   searchInput: { flex: 1, paddingHorizontal: 16,  height: 55, fontSize:16, color:'#333' },
   cardMTB: { flexDirection:'row', marginBottom:20, backgroundColor:'#fff', padding:12, borderRadius:12, shadowColor:'#000', shadowOffset:{width:0,height:4}, shadowOpacity:0.1, shadowRadius:6, elevation:4 },
-  imagenMTB: { width:110, height:110, borderRadius:10, backgroundColor:'#e0e0e0' },
+  imagenMTB: { 
+  width: 110, 
+  height: 110, 
+  borderRadius: 10, 
+  backgroundColor: '#e0e0e0',
+  alignSelf: 'center' // Esta línea centra la imagen verticalmente
+},
   infoMTB: { flex:1, marginLeft:15, justifyContent:'space-around' },
 
   // 🎨 Textos con contraste
@@ -397,6 +450,21 @@ const styles = StyleSheet.create({
     bottom:110, 
     left:16, 
     right:16 },
+      // Nuevos estilos para el puntito rojo de notificaciones
+  notificationIconContainer: {
+    position: 'relative',
+  },
+  notificationDot: {
+    position: 'absolute',
+    top: -2,
+    right: -2,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#FF3B30',
+    borderWidth: 1.5,
+    borderColor: '#004f4d',
+  },
 });
 
 export default RutaPantalla;

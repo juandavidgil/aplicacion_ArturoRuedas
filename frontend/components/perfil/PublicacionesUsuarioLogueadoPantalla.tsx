@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 50,
     marginBottom: 20,
-    color: '#20eb4c', // Verde neón llamativo
+    color: '#ffffffff', // Verde neón llamativo
     textShadowColor: 'rgba(0,0,0,0.8)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 6,
